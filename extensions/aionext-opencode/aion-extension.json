@@ -7,12 +7,10 @@
                 "id": "opencode",
                 "name": "OpenCode",
                 "description": "Official OpenCode adapter",
-                "connectionType": "stdio",
                 "cliCommand": "opencode",
-                "acpArgs": ["acp"],
                 "defaultCliPath": "bunx opencode-ai",
-                "authRequired": false,
-                "supportsStreaming": false
+                "acpArgs": ["acp"],
+                "installedBinaryPath": "node_modules/.bin/opencode"
             }
         ]
     },
@@ -25,7 +23,7 @@
         "onInstall": {
             "shell": {
                 "cliCommand": "bun",
-                "args": ["install", "-g", "--trust", "opencode-ai"]
+                "args": ["run", "scripts/install.ts"]
             },
             "timeout": 60000
         }

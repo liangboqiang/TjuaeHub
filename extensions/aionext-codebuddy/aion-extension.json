@@ -7,12 +7,11 @@
                 "id": "codebuddy",
                 "name": "CodeBuddy",
                 "description": "Official CodeBuddy adapter",
-                "connectionType": "stdio",
                 "cliCommand": "codebuddy",
                 "defaultCliPath": "bunx @tencent-ai/codebuddy-code",
                 "acpArgs": ["--acp"],
-                "authRequired": true,
-                "supportsStreaming": false
+                "installedBinaryPath": "node_modules/.bin/codebuddy",
+                "skillsDirs": [".codebuddy/skills"]
             }
         ]
     },

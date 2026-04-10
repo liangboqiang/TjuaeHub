@@ -1,5 +1,11 @@
 import { $ } from "bun";
 
+const dir = process.env.AIONUI_AGENT_INSTALL_DIR;
+if (!dir) {
+  console.error("[install] AIONUI_AGENT_INSTALL_DIR is not set");
+  process.exit(1);
+}
+
 const PKG = "@tencent-ai/codebuddy-code";
 
 const registries: { name: string; url: string }[] = [
@@ -12,10 +18,9 @@ const registries: { name: string; url: string }[] = [
 let installed = false;
 
 for (const reg of registries) {
-  const cmd = `bun install -g ${PKG} --registry=${reg.url}`;
-  console.log(`[install] $ ${cmd} | 尝试 ${reg.name} (${reg.url}) ...`);
+  console.log(`[install] 尝试 ${reg.name} (${reg.url}) ...`);
   try {
-    await $`bun install -g ${PKG} --registry=${reg.url}`.quiet();
+    await $`bun install --cwd ${dir} ${PKG} --registry=${reg.url}`.quiet();
     console.log(`[install] 通过 ${reg.name} 安装成功`);
     installed = true;
     break;

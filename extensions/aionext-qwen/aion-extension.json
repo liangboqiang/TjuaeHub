@@ -7,12 +7,11 @@
                 "id": "qwen",
                 "name": "Qwen Code",
                 "description": "Official Qwen Code adapter",
-                "connectionType": "stdio",
                 "cliCommand": "qwen",
-                "acpArgs": ["--acp"],
                 "defaultCliPath": "bunx @qwen-code/qwen-code",
-                "authRequired": true,
-                "supportsStreaming": true
+                "acpArgs": ["--acp"],
+                "installedBinaryPath": "node_modules/.bin/qwen",
+                "skillsDirs": [".qwen/skills"]
             }
         ]
     },
@@ -25,7 +24,7 @@
         "onInstall": {
             "shell": {
                 "cliCommand": "bun",
-                "args": ["install", "-g", "@qwen-code/qwen-code"]
+                "args": ["run", "scripts/install.ts"]
             },
             "timeout": 30000
         }

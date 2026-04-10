@@ -7,12 +7,10 @@
                 "id": "auggie",
                 "name": "Augment Code",
                 "description": "Official Augment Code adapter",
-                "connectionType": "stdio",
                 "cliCommand": "auggie",
                 "defaultCliPath": "bunx @augmentcode/auggie",
                 "acpArgs": ["--acp"],
-                "authRequired": false,
-                "supportsStreaming": false
+                "installedBinaryPath": "node_modules/.bin/auggie"
             }
         ]
     },
@@ -25,7 +23,7 @@
         "onInstall": {
             "shell": {
                 "cliCommand": "bun",
-                "args": ["install", "-g", "@augmentcode/auggie"]
+                "args": ["run", "scripts/install.ts"]
             },
             "timeout": 30000
         }
