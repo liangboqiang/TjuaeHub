@@ -1,12 +1,53 @@
+/**
+ * @license
+ * Copyright 2025 AionUi (aionui.com)
+ * SPDX-License-Identifier: Apache-2.0
+ */
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-
-// Use a deterministic zip generator like yazl or archiver if installed.
-// Since we don't know if 'yazl' is in dependencies, we'll keep using system zip 
-// BUT we tell zip to use a fixed timestamp for everything, which makes it 
-// identical across platforms (if file content is same).
 const { execSync } = require('child_process');
+
+/**
+ * Recursively collect all file paths under `dir`, sorted for deterministic ordering.
+ * Skips: node_modules, .git, .DS_Store, __MACOSX
+ */
+function getAllFiles(dir) {
+  const results = [];
+  const SKIP = new Set(['node_modules', '.git', '.DS_Store', '__MACOSX']);
+
+  function walk(current) {
+    const entries = fs.readdirSync(current, { withFileTypes: true });
+    for (const entry of entries) {
+      if (SKIP.has(entry.name)) continue;
+      const fullPath = path.join(current, entry.name);
+      if (entry.isDirectory()) {
+        walk(fullPath);
+      } else if (entry.isFile()) {
+        results.push(fullPath);
+      }
+    }
+  }
+
+  walk(dir);
+  return results.sort();
+}
+
+/**
+ * Compute a deterministic SHA-256 hash of all file contents in an extension directory.
+ * Hash input: sorted sequence of (relative_path, file_content) pairs.
+ */
+function computeContentHash(extPath) {
+  const hash = crypto.createHash('sha256');
+  const files = getAllFiles(extPath);
+  for (const file of files) {
+    // Normalize to forward slashes for cross-platform determinism.
+    const rel = path.relative(extPath, file).split(path.sep).join('/');
+    hash.update(rel);
+    hash.update(fs.readFileSync(file));
+  }
+  return hash.digest('hex');
+}
 
 async function main() {
   const extensionsDir = path.join(__dirname, '../../extensions');
@@ -57,15 +98,14 @@ async function main() {
     // run touch to standardize the modification time before zipping,
     // ensuring byte-for-byte consistent zip files across environments.
     try {
-      execSync(`cd "${extPath}" && find . -exec touch -t 202401010000 {} + && zip -r -X "${zipPath}" . -x "*.DS_Store"`, { stdio: 'inherit' });
+      execSync(`cd "${extPath}" && find . -exec touch -t 202401010000 {} + && zip -r -X "${zipPath}" . -x "*.DS_Store" -x "*.git*" -x "__MACOSX/*" -x "node_modules/*"`, { stdio: 'inherit' });
     } catch (e) {
       console.error(`Failed to zip ${extDirName}`, e.message);
       continue;
     }
 
-    const zipBuffer = fs.readFileSync(zipPath);
-    const hashSum = crypto.createHash('sha512').update(zipBuffer).digest('base64');
-    const integrity = `sha512-${hashSum}`;
+    const contentHash = computeContentHash(extPath);
+    const integrity = `sha256-${contentHash}`;
     const size = fs.statSync(zipPath).size;
 
     const hubs = [];
