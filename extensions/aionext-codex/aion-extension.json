@@ -7,11 +7,11 @@
                 "id": "codex",
                 "name": "Codex",
                 "description": "Official OpenAI Codex adapter (via ACP adapter)",
-                "connectionType": "stdio",
                 "cliCommand": "codex",
-                "defaultCliPath": "bunx @zed-industries/codex-acp@0.9.5",
-                "authRequired": true,
-                "supportsStreaming": false
+                "defaultCliPath": "bunx @zed-industries/codex-acp",
+                "acpArgs": [],
+                "installedBinaryPath": "node_modules/.bin/codex-acp",
+                "skillsDirs": [".codex/skills"]
             }
         ]
     },
@@ -24,10 +24,7 @@
         "onInstall": {
             "shell": {
                 "cliCommand": "bun",
-                "args": [
-                    "run",
-                    "scripts/install.ts"
-                ]
+                "args": ["run", "scripts/install.ts"]
             },
             "timeout": 120000
         }

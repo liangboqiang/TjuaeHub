@@ -7,13 +7,10 @@
                 "id": "goose",
                 "name": "Goose",
                 "description": "Official Goose adapter",
-                "connectionType": "stdio",
                 "cliCommand": "goose",
-                "authRequired": false,
-                "supportsStreaming": false,
-                "acpArgs": [
-                    "acp"
-                ]
+                "acpArgs": ["acp"],
+                "installedBinaryPath": "goose",
+                "skillsDirs": [".goose/skills"]
             }
         ]
     },
@@ -26,10 +23,7 @@
         "onInstall": {
             "shell": {
                 "cliCommand": "bun",
-                "args": [
-                    "run",
-                    "scripts/install.ts"
-                ]
+                "args": ["run", "scripts/install.ts"]
             },
             "timeout": 120000
         }
