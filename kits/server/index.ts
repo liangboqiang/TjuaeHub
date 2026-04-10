@@ -26,12 +26,13 @@ function parsePort(): number {
 }
 
 const port = parsePort();
-const distDir = path.resolve(import.meta.dir, '..', 'dist');
+const distDir = path.resolve(import.meta.dir, '..', '..', 'dist');
 
 const server = Bun.serve({
   port,
   async fetch(req) {
     const url = new URL(req.url);
+    console.log(`${req.method} ${url.pathname}`);
     const filePath = path.join(distDir, url.pathname);
 
     // Prevent directory traversal

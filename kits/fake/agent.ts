@@ -671,5 +671,34 @@ class FakeAcpAgent {
 
 export { FakeAcpAgent }
 
-const agent = new FakeAcpAgent()
-agent.start()
+// ── CLI entry point ───────────────────────────────────────────
+
+const HELP = `fake-agent — Fake ACP Agent for protocol compliance testing
+
+Usage:
+  fake-agent acp            Start ACP agent over stdio (subcommand style)
+  fake-agent --acp          Start ACP agent over stdio (flag style)
+
+Examples:
+  bun run kits/fake/agent.ts acp
+  bun run kits/fake/agent.ts --acp`
+
+function main(): void {
+    const args = process.argv.slice(2)
+
+    if (args.includes('--help') || args.includes('-h')) {
+        console.log(HELP)
+        process.exit(0)
+    }
+
+    if (args.includes('acp') || args.includes('--acp')) {
+        const agent = new FakeAcpAgent()
+        agent.start()
+        return
+    }
+
+    console.error(HELP)
+    process.exit(1)
+}
+
+if (require.main === module) main()
