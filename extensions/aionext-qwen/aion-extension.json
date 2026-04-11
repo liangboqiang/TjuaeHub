@@ -1,34 +1,35 @@
 {
-    "$schema": "https://raw.githubusercontent.com/iOfficeAI/AionHub/spec/v0/extension-manifest.schema.json",
-    "author": "Aionui Official",
-    "contributes": {
-        "acpAdapters": [
-            {
-                "id": "qwen",
-                "name": "Qwen Code",
-                "description": "Official Qwen Code adapter",
-                "cliCommand": "qwen",
-                "defaultCliPath": "bunx @qwen-code/qwen-code",
-                "acpArgs": ["--acp"],
-                "installedBinaryPath": "node_modules/.bin/qwen",
-                "skillsDirs": [".qwen/skills"]
-            }
-        ]
-    },
-    "description": "Integrates Qwen CLI as an ACP adapter in AionUi.",
-    "displayName": "Qwen Code",
-    "engine": {
-        "aionui": "^1.0.0"
-    },
-    "lifecycle": {
-        "onInstall": {
-            "shell": {
-                "cliCommand": "bun",
-                "args": ["run", "scripts/install.ts"]
-            },
-            "timeout": 30000
-        }
-    },
-    "name": "aionext-qwen",
-    "version": "1.0.0"
+  "$schema": "https://raw.githubusercontent.com/iOfficeAI/AionHub/spec/v0/extension-manifest.schema.json",
+  "author": "Aionui Official",
+  "contributes": {
+    "acpAdapters": [
+      {
+        "id": "qwen",
+        "name": "Qwen Code",
+        "icon": "resources/icon.svg",
+        "description": "Official Qwen Code adapter",
+        "cliCommand": "qwen",
+        "defaultCliPath": "bunx @qwen-code/qwen-code",
+        "acpArgs": ["--acp"],
+        "installedBinaryPath": "node_modules/.bin/qwen",
+        "skillsDirs": [".qwen/skills"]
+      }
+    ]
+  },
+  "description": "Integrates Qwen CLI as an ACP adapter in AionUi.",
+  "displayName": "Qwen Code",
+  "engine": {
+    "aionui": "^1.0.0"
+  },
+  "lifecycle": {
+    "onInstall": {
+      "shell": {
+        "cliCommand": "bun",
+        "args": ["run", "scripts/install.ts"]
+      },
+      "timeout": 30000
+    }
+  },
+  "name": "aionext-qwen",
+  "version": "1.0.0"
 }

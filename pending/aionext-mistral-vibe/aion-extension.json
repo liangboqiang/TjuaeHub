@@ -1,36 +1,34 @@
 {
-    "$schema": "https://raw.githubusercontent.com/iOfficeAI/AionHub/spec/v0/extension-manifest.schema.json",
-    "author": "Aionui Official",
-    "contributes": {
-        "acpAdapters": [
-            {
-                "id": "mistral-vibe",
-                "name": "Mistral Vibe",
-                "description": "Official Mistral Vibe adapter",
-                "connectionType": "stdio",
-                "cliCommand": "vibe-acp",
-                "authRequired": true,
-                "supportsStreaming": false
-            }
-        ]
-    },
-    "description": "Integrates Mistral Vibe as an ACP adapter in AionUi.",
-    "displayName": "Mistral Vibe",
-    "engine": {
-        "aionui": "^1.0.0"
-    },
-    "lifecycle": {
-        "onInstall": {
-            "shell": {
-                "cliCommand": "bun",
-                "args": [
-                    "run",
-                    "scripts/install.ts"
-                ]
-            },
-            "timeout": 120000
-        }
-    },
-    "name": "aionext-mistral-vibe",
-    "version": "1.0.0"
+  "$schema": "https://raw.githubusercontent.com/iOfficeAI/AionHub/spec/v0/extension-manifest.schema.json",
+  "author": "Aionui Official",
+  "contributes": {
+    "acpAdapters": [
+      {
+        "id": "mistral-vibe",
+        "name": "Mistral Vibe",
+        "icon": "resources/icon.svg",
+        "description": "Official Mistral Vibe adapter",
+        "connectionType": "stdio",
+        "cliCommand": "vibe-acp",
+        "authRequired": true,
+        "supportsStreaming": false
+      }
+    ]
+  },
+  "description": "Integrates Mistral Vibe as an ACP adapter in AionUi.",
+  "displayName": "Mistral Vibe",
+  "engine": {
+    "aionui": "^1.0.0"
+  },
+  "lifecycle": {
+    "onInstall": {
+      "shell": {
+        "cliCommand": "bun",
+        "args": ["run", "scripts/install.ts"]
+      },
+      "timeout": 120000
+    }
+  },
+  "name": "aionext-mistral-vibe",
+  "version": "1.0.0"
 }

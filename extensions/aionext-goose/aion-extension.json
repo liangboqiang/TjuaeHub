@@ -1,33 +1,34 @@
 {
-    "$schema": "https://raw.githubusercontent.com/iOfficeAI/AionHub/spec/v0/extension-manifest.schema.json",
-    "author": "Aionui Official",
-    "contributes": {
-        "acpAdapters": [
-            {
-                "id": "goose",
-                "name": "Goose",
-                "description": "Official Goose adapter",
-                "cliCommand": "goose",
-                "acpArgs": ["acp"],
-                "installedBinaryPath": "goose",
-                "skillsDirs": [".goose/skills"]
-            }
-        ]
-    },
-    "description": "Integrates Goose as an ACP adapter in AionUi.",
-    "displayName": "Goose",
-    "engine": {
-        "aionui": "^1.0.0"
-    },
-    "lifecycle": {
-        "onInstall": {
-            "shell": {
-                "cliCommand": "bun",
-                "args": ["run", "scripts/install.ts"]
-            },
-            "timeout": 120000
-        }
-    },
-    "name": "aionext-goose",
-    "version": "1.0.0"
+  "$schema": "https://raw.githubusercontent.com/iOfficeAI/AionHub/spec/v0/extension-manifest.schema.json",
+  "author": "Aionui Official",
+  "contributes": {
+    "acpAdapters": [
+      {
+        "id": "goose",
+        "name": "Goose",
+        "icon": "resources/icon.svg",
+        "description": "Official Goose adapter",
+        "cliCommand": "goose",
+        "acpArgs": ["acp"],
+        "installedBinaryPath": "goose",
+        "skillsDirs": [".goose/skills"]
+      }
+    ]
+  },
+  "description": "Integrates Goose as an ACP adapter in AionUi.",
+  "displayName": "Goose",
+  "engine": {
+    "aionui": "^1.0.0"
+  },
+  "lifecycle": {
+    "onInstall": {
+      "shell": {
+        "cliCommand": "bun",
+        "args": ["run", "scripts/install.ts"]
+      },
+      "timeout": 120000
+    }
+  },
+  "name": "aionext-goose",
+  "version": "1.0.0"
 }

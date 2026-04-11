@@ -1,33 +1,34 @@
 {
-    "$schema": "https://raw.githubusercontent.com/iOfficeAI/AionHub/spec/v0/extension-manifest.schema.json",
-    "author": "Aionui Official",
-    "contributes": {
-        "acpAdapters": [
-            {
-                "id": "opencode",
-                "name": "OpenCode",
-                "description": "Official OpenCode adapter",
-                "cliCommand": "opencode",
-                "defaultCliPath": "bunx opencode-ai",
-                "acpArgs": ["acp"],
-                "installedBinaryPath": "node_modules/.bin/opencode"
-            }
-        ]
-    },
-    "description": "Integrates OpenCode as an ACP adapter in AionUi.",
-    "displayName": "OpenCode",
-    "engine": {
-        "aionui": "^1.0.0"
-    },
-    "lifecycle": {
-        "onInstall": {
-            "shell": {
-                "cliCommand": "bun",
-                "args": ["run", "scripts/install.ts"]
-            },
-            "timeout": 60000
-        }
-    },
-    "name": "aionext-opencode",
-    "version": "1.0.0"
+  "$schema": "https://raw.githubusercontent.com/iOfficeAI/AionHub/spec/v0/extension-manifest.schema.json",
+  "author": "Aionui Official",
+  "contributes": {
+    "acpAdapters": [
+      {
+        "id": "opencode",
+        "name": "OpenCode",
+        "icon": "resources/icon.svg",
+        "description": "Official OpenCode adapter",
+        "cliCommand": "opencode",
+        "defaultCliPath": "bunx opencode-ai",
+        "acpArgs": ["acp"],
+        "installedBinaryPath": "node_modules/.bin/opencode"
+      }
+    ]
+  },
+  "description": "Integrates OpenCode as an ACP adapter in AionUi.",
+  "displayName": "OpenCode",
+  "engine": {
+    "aionui": "^1.0.0"
+  },
+  "lifecycle": {
+    "onInstall": {
+      "shell": {
+        "cliCommand": "bun",
+        "args": ["run", "scripts/install.ts"]
+      },
+      "timeout": 60000
+    }
+  },
+  "name": "aionext-opencode",
+  "version": "1.0.0"
 }
