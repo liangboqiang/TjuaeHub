@@ -11,7 +11,6 @@
         "cliCommand": "claude",
         "defaultCliPath": "bunx @agentclientprotocol/claude-agent-acp",
         "acpArgs": [],
-        "installedBinaryPath": "node_modules/.bin/claude-agent-acp",
         "skillsDirs": [".claude/skills"]
       }
     ]

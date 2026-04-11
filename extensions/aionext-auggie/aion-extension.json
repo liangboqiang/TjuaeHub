@@ -10,8 +10,7 @@
         "description": "Official Augment Code adapter",
         "cliCommand": "auggie",
         "defaultCliPath": "bunx @augmentcode/auggie",
-        "acpArgs": ["--acp"],
-        "installedBinaryPath": "node_modules/.bin/auggie"
+        "acpArgs": ["--acp"]
       }
     ]
   },

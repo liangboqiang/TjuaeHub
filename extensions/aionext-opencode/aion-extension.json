@@ -10,8 +10,7 @@
         "description": "Official OpenCode adapter",
         "cliCommand": "opencode",
         "defaultCliPath": "bunx opencode-ai",
-        "acpArgs": ["acp"],
-        "installedBinaryPath": "node_modules/.bin/opencode"
+        "acpArgs": ["acp"]
       }
     ]
   },

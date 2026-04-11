@@ -13,10 +13,12 @@ if (!dir) {
 const arch = process.arch === "arm64" ? "arm64" : "x86_64";
 const platform = process.platform === "darwin" ? "darwin" : "linux";
 const binaryUrl = `https://github.com/block/goose/releases/latest/download/goose-${platform}-${arch}`;
-const binaryPath = `${dir}/goose`;
+const binDir = `${dir}/bin`;
+const binaryPath = `${binDir}/goose`;
 
 console.log(`[install] Downloading goose from ${binaryUrl} ...`);
 try {
+  await $`mkdir -p ${binDir}`;
   await $`curl -fsSL ${binaryUrl} -o ${binaryPath}`;
   await $`chmod +x ${binaryPath}`;
   console.log(`[install] Goose installed to ${binaryPath}`);

@@ -1,4 +1,6 @@
 import { $ } from "bun";
+import { mkdirSync, symlinkSync, existsSync } from "fs";
+import { join } from "path";
 
 const dir = process.env.AIONUI_AGENT_INSTALL_DIR;
 if (!dir) {
@@ -32,4 +34,11 @@ for (const reg of registries) {
 if (!installed) {
   console.error("[install] 所有源均安装失败，请检查网络连接后重试");
   process.exit(1);
+}
+
+const binDir = join(dir, "bin");
+mkdirSync(binDir, { recursive: true });
+const link = join(binDir, "qwen");
+if (!existsSync(link)) {
+  symlinkSync(join(dir, "node_modules", ".bin", "qwen"), link);
 }

@@ -10,7 +10,6 @@
         "description": "Official Goose adapter",
         "cliCommand": "goose",
         "acpArgs": ["acp"],
-        "installedBinaryPath": "goose",
         "skillsDirs": [".goose/skills"]
       }
     ]
