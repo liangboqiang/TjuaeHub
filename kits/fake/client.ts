@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * ACP Client — minimal CLI for the Agent Client Protocol.
  *
@@ -19,7 +19,7 @@
  *   Examples:
  *     client.ts codex-acp initialize
  *     client.ts codex-acp prompt "Fix the type error in src/main.ts"
- *     client.ts node ./agent.js initialize --verbose
+ *     client.ts bun ./agent.js initialize --verbose
  *     client.ts codex-acp prompt "Explain this" --cwd ~/project
  *
  * ── Module usage ───────────────────────────────────────────────

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env bun
 /**
  * Fake ACP Agent — full ACP protocol coverage for testing.
  *
