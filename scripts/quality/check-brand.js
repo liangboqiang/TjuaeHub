@@ -4,7 +4,7 @@ const JSZip = require('jszip');
 
 const REPOSITORY_ROOT = path.resolve(__dirname, '..', '..');
 const LEGACY_BRAND_PATTERN = new RegExp([['ai', 'on'].join(''), ['i', 'office', 'ai'].join('')].join('|'), 'i');
-const ALLOWED_ATTRIBUTION_FILES = new Set(['LICENSE', 'UPSTREAM.md']);
+const ALLOWED_ATTRIBUTION_FILES = new Set(['UPSTREAM.md']);
 const EXCLUDED_DIRECTORIES = new Set(['.git', 'coverage', 'node_modules']);
 const TEXT_EXTENSIONS = new Set([
   '.css',
