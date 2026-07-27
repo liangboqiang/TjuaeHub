@@ -1,4 +1,4 @@
-name: Build Extensions
+name: 构建扩展
 
 on:
   push:
@@ -24,28 +24,28 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout repository
+      - name: 检出仓库
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - name: Setup Node.js
+      - name: 配置 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Setup Bun
+      - name: 配置 Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: '1.3.14'
 
-      - name: Install dependencies
+      - name: 安装依赖
         run: bun install --frozen-lockfile
 
-      - name: Verify source and build artifacts
+      - name: 验证源码与构建产物
         run: bun run verify
 
-      - name: Deploy dist branch
+      - name: 发布 dist 分支
         shell: bash
         run: |
           set -euo pipefail
@@ -69,7 +69,7 @@ jobs:
           git add -A
 
           if git diff --staged --quiet; then
-            echo "No changes to commit."
+            echo "分发产物没有变化。"
             exit 0
           fi
 
