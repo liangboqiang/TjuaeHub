@@ -9,6 +9,29 @@ const MANIFEST_FILENAME = 'tjuae-extension.json';
 const SCHEMA_PATH = path.join(REPOSITORY_ROOT, 'schemas', 'extension-manifest.v1.schema.json');
 const SCHEMA_URL =
   'https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json';
+const CONTRIBUTION_KEYS = Object.freeze([
+  'acpAdapters',
+  'mcpServers',
+  'assistants',
+  'agents',
+  'skills',
+  'channelPlugins',
+  'webui',
+  'themes',
+  'settingsTabs',
+  'modelProviders',
+]);
+const UNSAFE_FILE_REFERENCES = Object.freeze([
+  '$file: ../outside.json',
+  '$file:/absolute.json',
+  '$file:C:/absolute.json',
+  '$file:\\\\server\\share.json',
+  '$file:../outside.json',
+  '$file:contributes/../../outside.json',
+  '$file:contributes\\settings-tabs.json',
+  '$file:contributes//settings-tabs.json',
+  '$file:contributes/settings-tabs.jsonc',
+]);
 
 /**
  * Read and parse a JSON file.
@@ -18,6 +41,55 @@ const SCHEMA_URL =
  */
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+/**
+ * Create a minimal extension manifest for JSON Schema contract checks.
+ *
+ * @param {string} contributionKey
+ * @param {unknown} contribution
+ * @returns {Record<string, unknown>}
+ */
+function createManifestFixture(contributionKey, contribution) {
+  return {
+    name: 'schema-fixture',
+    displayName: 'Schema Fixture',
+    version: '1.0.0',
+    contributes: {
+      [contributionKey]: contribution,
+    },
+  };
+}
+
+/**
+ * Assert the external contribution file reference contract.
+ *
+ * @param {(value: unknown) => boolean} validateSchema
+ * @returns {{ contributionCount: number, rejectedReferenceCount: number }}
+ */
+function validateFileReferenceContract(validateSchema) {
+  const safeReference = '$file:contributes/nested/settings-tabs.json';
+
+  for (const contributionKey of CONTRIBUTION_KEYS) {
+    const manifest = createManifestFixture(contributionKey, safeReference);
+    if (!validateSchema(manifest)) {
+      throw new Error(`${contributionKey} rejected a safe $file reference: ${JSON.stringify(validateSchema.errors)}`);
+    }
+  }
+
+  for (const reference of UNSAFE_FILE_REFERENCES) {
+    for (const contributionKey of CONTRIBUTION_KEYS) {
+      const manifest = createManifestFixture(contributionKey, reference);
+      if (validateSchema(manifest)) {
+        throw new Error(`${contributionKey} accepted unsafe $file reference ${reference}`);
+      }
+    }
+  }
+
+  return {
+    contributionCount: CONTRIBUTION_KEYS.length,
+    rejectedReferenceCount: UNSAFE_FILE_REFERENCES.length,
+  };
 }
 
 /**
@@ -99,6 +171,7 @@ function validateExtensions() {
   const ajv = new Ajv2020({ allErrors: true, strict: false });
   addFormats(ajv);
   const validateSchema = ajv.compile(schema);
+  validateFileReferenceContract(validateSchema);
 
   const activePaths = listManifestPaths('extensions');
   const pendingPaths = listManifestPaths('pending');
@@ -134,9 +207,13 @@ if (require.main === module) {
 }
 
 module.exports = {
+  CONTRIBUTION_KEYS,
   MANIFEST_FILENAME,
   SCHEMA_URL,
+  UNSAFE_FILE_REFERENCES,
+  createManifestFixture,
   listManifestPaths,
   validateExtensions,
+  validateFileReferenceContract,
   validateManifest,
 };

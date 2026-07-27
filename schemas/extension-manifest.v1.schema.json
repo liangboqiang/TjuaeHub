@@ -109,6 +109,11 @@
     "contributes": { "$ref": "#/$defs/Contributes" }
   },
   "$defs": {
+    "ContributionFileReference": {
+      "type": "string",
+      "pattern": "^\\$file:(?!\\s)(?!\\.\\.(?:/|$))(?!.*\\/\\.\\.(?:/|$))[^/\\\\:\\u0000]+(?:/[^/\\\\:\\u0000]+)*\\.json$",
+      "description": "A forward-slash relative JSON path prefixed with $file:. Leading whitespace, absolute paths, Windows drive or UNC paths, backslashes, empty segments, and '..' traversal segments are not allowed."
+    },
     "LifecycleHook": {
       "description": "A lifecycle hook — either a script path string, or an object with script/shell. Runtime constraint: either 'script' or 'shell' must be provided.",
       "oneOf": [
@@ -446,45 +451,92 @@
     },
     "Contributes": {
       "type": "object",
-      "description": "Runtime constraint: IDs within each array must be unique; agent IDs must not collide with assistant IDs.",
+      "description": "Each contribution may be declared inline or in a safe relative JSON file referenced with $file:. Runtime constraint: IDs within each array must be unique; agent IDs must not collide with assistant IDs.",
       "properties": {
         "acpAdapters": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/AcpAdapter" }
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/AcpAdapter" }
+            },
+            { "$ref": "#/$defs/ContributionFileReference" }
+          ]
         },
         "mcpServers": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/McpServer" }
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/McpServer" }
+            },
+            { "$ref": "#/$defs/ContributionFileReference" }
+          ]
         },
         "assistants": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/Assistant" }
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/Assistant" }
+            },
+            { "$ref": "#/$defs/ContributionFileReference" }
+          ]
         },
         "agents": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/Assistant" },
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/Assistant" }
+            },
+            { "$ref": "#/$defs/ContributionFileReference" }
+          ],
           "description": "Agent presets — structurally identical to assistants but semantically represent autonomous agents"
         },
         "skills": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/Skill" }
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/Skill" }
+            },
+            { "$ref": "#/$defs/ContributionFileReference" }
+          ]
         },
         "channelPlugins": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/ChannelPlugin" }
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/ChannelPlugin" }
+            },
+            { "$ref": "#/$defs/ContributionFileReference" }
+          ]
         },
-        "webui": { "$ref": "#/$defs/Webui" },
+        "webui": {
+          "oneOf": [{ "$ref": "#/$defs/Webui" }, { "$ref": "#/$defs/ContributionFileReference" }]
+        },
         "themes": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/Theme" }
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/Theme" }
+            },
+            { "$ref": "#/$defs/ContributionFileReference" }
+          ]
         },
         "settingsTabs": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/SettingsTab" }
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/SettingsTab" }
+            },
+            { "$ref": "#/$defs/ContributionFileReference" }
+          ]
         },
         "modelProviders": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/ModelProvider" }
+          "oneOf": [
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/ModelProvider" }
+            },
+            { "$ref": "#/$defs/ContributionFileReference" }
+          ]
         }
       },
       "additionalProperties": false
