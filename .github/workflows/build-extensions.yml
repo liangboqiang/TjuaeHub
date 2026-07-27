@@ -53,7 +53,8 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           MAIN_SHA=$(git rev-parse --short HEAD)
-          cp -r dist /tmp/tjuae-hub-dist
+          DIST_TMP=$(mktemp -d)
+          cp dist/*.zip dist/index.json "${DIST_TMP}/"
 
           if git ls-remote --exit-code origin dist >/dev/null 2>&1; then
             git fetch origin dist
@@ -63,7 +64,8 @@ jobs:
           fi
 
           git rm -rf --ignore-unmatch .
-          cp /tmp/tjuae-hub-dist/*.zip /tmp/tjuae-hub-dist/index.json .
+          git clean -ffdx
+          cp "${DIST_TMP}/"*.zip "${DIST_TMP}/index.json" .
           git add -A
 
           if git diff --staged --quiet; then
