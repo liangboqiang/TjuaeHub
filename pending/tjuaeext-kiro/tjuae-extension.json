@@ -1,12 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
-  "author": "TjuaeUI",
+  "author": "Tjuae",
   "contributes": {
     "acpAdapters": [
       {
         "id": "kiro",
         "name": "Kiro CLI",
-        "description": "Kiro CLI adapter (AWS)",
+        "description": "Kiro CLI 适配器（AWS）",
         "connectionType": "stdio",
         "cliCommand": "kiro-cli",
         "authRequired": true,
@@ -15,7 +15,7 @@
       }
     ]
   },
-  "description": "Integrates Kiro CLI as an ACP adapter in TjuaeUI.",
+  "description": "将 Kiro CLI 作为 ACP 适配器集成到 TjuaeUI。",
   "displayName": "Kiro CLI",
   "engine": {
     "tjuae": "^1.0.0"

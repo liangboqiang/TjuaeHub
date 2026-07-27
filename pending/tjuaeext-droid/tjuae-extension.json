@@ -1,13 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
-  "author": "TjuaeUI",
+  "author": "Tjuae",
   "contributes": {
     "acpAdapters": [
       {
         "id": "droid",
         "name": "Droid",
         "icon": "resources/icon.svg",
-        "description": "Factory Droid adapter",
+        "description": "Factory Droid 适配器",
         "connectionType": "stdio",
         "cliCommand": "droid",
         "defaultCliPath": "bunx droid",
@@ -17,7 +17,7 @@
       }
     ]
   },
-  "description": "Integrates Factory Droid as an ACP adapter in TjuaeUI.",
+  "description": "将 Factory Droid 作为 ACP 适配器集成到 TjuaeUI。",
   "displayName": "Droid",
   "engine": {
     "tjuae": "^1.0.0"

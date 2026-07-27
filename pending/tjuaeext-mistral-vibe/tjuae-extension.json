@@ -1,13 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
-  "author": "TjuaeUI",
+  "author": "Tjuae",
   "contributes": {
     "acpAdapters": [
       {
         "id": "mistral-vibe",
         "name": "Mistral Vibe",
         "icon": "resources/icon.svg",
-        "description": "Mistral Vibe adapter",
+        "description": "Mistral Vibe 适配器",
         "connectionType": "stdio",
         "cliCommand": "vibe-acp",
         "authRequired": true,
@@ -15,7 +15,7 @@
       }
     ]
   },
-  "description": "Integrates Mistral Vibe as an ACP adapter in TjuaeUI.",
+  "description": "将 Mistral Vibe 作为 ACP 适配器集成到 TjuaeUI。",
   "displayName": "Mistral Vibe",
   "engine": {
     "tjuae": "^1.0.0"

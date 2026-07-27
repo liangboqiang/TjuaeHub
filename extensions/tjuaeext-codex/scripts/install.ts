@@ -4,7 +4,7 @@ import { join } from 'path';
 
 const dir = process.env.TJUAE_AGENT_INSTALL_DIR;
 if (!dir) {
-  console.error('[install] TJUAE_AGENT_INSTALL_DIR is not set');
+  console.error('[install] 未设置 TJUAE_AGENT_INSTALL_DIR');
   process.exit(1);
 }
 

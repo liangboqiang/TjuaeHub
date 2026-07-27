@@ -40,6 +40,7 @@ Zed 的 ACP Agent 认证架构分为三层：
 ```
 
 **核心设计原则**：Zed 不管理 ACP Agent 的凭证。认证完全委托给 Agent 进程本身，Zed 只负责：
+
 - 发现 Agent 支持的认证方法（`auth_methods`）
 - 触发认证（发送 `AuthenticateRequest` 或打开终端执行登录命令）
 - 检测认证失败（`ErrorCode::AuthRequired`）并在 UI 上引导用户重新登录
@@ -293,11 +294,11 @@ authenticate.await
 
 ACP 协议（`agent-client-protocol` crate）定义了三种认证方法：
 
-| 类型 | Rust 类型 | 说明 |
-|------|-----------|------|
-| `Terminal` | `AuthMethodTerminal` | 一等公民终端认证，包含 `args`、`env` 等字段 |
-| `Agent` | `AuthMethodAgent` | Agent 自管理认证，可选 `meta` 字段携带终端认证配置 |
-| `EnvVar` | `AuthMethodEnvVar` | 环境变量认证，可选 `meta` 字段 |
+| 类型       | Rust 类型            | 说明                                               |
+| ---------- | -------------------- | -------------------------------------------------- |
+| `Terminal` | `AuthMethodTerminal` | 一等公民终端认证，包含 `args`、`env` 等字段        |
+| `Agent`    | `AuthMethodAgent`    | Agent 自管理认证，可选 `meta` 字段携带终端认证配置 |
+| `EnvVar`   | `AuthMethodEnvVar`   | 环境变量认证，可选 `meta` 字段                     |
 
 每种 AuthMethod 都有一个 `AuthMethodId`（即 `MethodId`），由 Agent 在 `InitializeResponse` 中声明。
 
@@ -327,6 +328,7 @@ sequenceDiagram
 ```
 
 1. Zed 发送 `InitializeRequest`，声明客户端能力：
+
    ```rust
    acp::ClientCapabilities::new()
        .terminal(true)
@@ -422,11 +424,11 @@ let terminal_auth = serde_json::from_value::<MetaTerminalAuth>(meta.get("termina
 
 ### 3.5 已知 Agent 的 MethodId
 
-| Agent | MethodId | 认证类型 | 登录成功检测 |
-|-------|----------|----------|-------------|
-| Claude Code | `"claude-login"` | Terminal (meta) | 输出包含 "Login successful" 或 "Type your message" |
-| Gemini CLI | `"spawn-gemini-cli"` | Terminal (meta, 硬编码) | 输出包含 "Login successful" 或 "Type your message" |
-| 其他 Agent | 自定义 | Terminal 或 Protocol | 退出码 0 或 Agent 自行处理 |
+| Agent       | MethodId             | 认证类型                | 登录成功检测                                       |
+| ----------- | -------------------- | ----------------------- | -------------------------------------------------- |
+| Claude Code | `"claude-login"`     | Terminal (meta)         | 输出包含 "Login successful" 或 "Type your message" |
+| Gemini CLI  | `"spawn-gemini-cli"` | Terminal (meta, 硬编码) | 输出包含 "Login successful" 或 "Type your message" |
+| 其他 Agent  | 自定义               | Terminal 或 Protocol    | 退出码 0 或 Agent 自行处理                         |
 
 ---
 
@@ -521,6 +523,7 @@ pub fn request_connection(&mut self, key: Agent, server: Rc<dyn AgentServer>, cx
 ```
 
 同一个 Agent 的所有 `ConversationView`（会话标签页）共享：
+
 - **同一个 `AgentConnectionEntry`**
 - **同一个 `Rc<AcpConnection>`**
 - **同一个 Agent 进程**
@@ -577,11 +580,11 @@ stateDiagram-v2
 
 通过 ACP Registry 安装的 Agent 二进制确实存储在 Zed 的数据目录：
 
-| Agent 类型 | 安装路径 |
-|-----------|---------|
-| Binary Agent | `~/Library/Application Support/Zed/external_agents/registry/<agent-id>/v_<version>_<hash>/` |
-| NPX Agent | `~/Library/Application Support/Zed/external_agents/registry/npx/<agent-id>/` (npm prefix) |
-| Extension Agent | `~/Library/Application Support/Zed/external_agents/<extension-id>/<agent-id>/v_<version>/` |
+| Agent 类型      | 安装路径                                                                                    |
+| --------------- | ------------------------------------------------------------------------------------------- |
+| Binary Agent    | `~/Library/Application Support/Zed/external_agents/registry/<agent-id>/v_<version>_<hash>/` |
+| NPX Agent       | `~/Library/Application Support/Zed/external_agents/registry/npx/<agent-id>/` (npm prefix)   |
+| Extension Agent | `~/Library/Application Support/Zed/external_agents/<extension-id>/<agent-id>/v_<version>/`  |
 
 源码位置：`paths.rs:384-390`、`agent_server_store.rs:1371-1491`
 
@@ -611,11 +614,11 @@ Child::spawn(child, ...);
 
 因此 Agent 进程完整继承了 Zed 进程的环境变量，包括：
 
-| 变量 | 来源 | 说明 |
-|------|------|------|
-| `HOME` | 继承自 Zed 进程 | 例如 `/Users/username` |
-| `XDG_CONFIG_HOME` | 继承（如果设置了） | 默认未设置 |
-| `PATH` | 继承 + 项目 shell 环境 | 包含系统 PATH |
+| 变量              | 来源                   | 说明                   |
+| ----------------- | ---------------------- | ---------------------- |
+| `HOME`            | 继承自 Zed 进程        | 例如 `/Users/username` |
+| `XDG_CONFIG_HOME` | 继承（如果设置了）     | 默认未设置             |
+| `PATH`            | 继承 + 项目 shell 环境 | 包含系统 PATH          |
 
 ### 5.4 凭证实际存储位置
 
@@ -636,11 +639,11 @@ graph LR
     Binary -->|"HOME=/Users/username<br/>进程启动后写入凭证"| ClaudeCreds
 ```
 
-| Agent | 凭证存储位置 | 跨重启持久化 |
-|-------|-------------|-------------|
-| Claude Code | `~/.claude/` | 是 — 下次启动 Agent 进程时读取已有 token |
-| Gemini CLI | 操作系统凭证管理器 / `~/.config/gemini/` | 是 — 凭证管理器独立于进程生命周期 |
-| 其他 Agent | `~/.<config>/` (取决于实现) | 取决于 Agent 是否做了持久化 |
+| Agent       | 凭证存储位置                             | 跨重启持久化                             |
+| ----------- | ---------------------------------------- | ---------------------------------------- |
+| Claude Code | `~/.claude/`                             | 是 — 下次启动 Agent 进程时读取已有 token |
+| Gemini CLI  | 操作系统凭证管理器 / `~/.config/gemini/` | 是 — 凭证管理器独立于进程生命周期        |
+| 其他 Agent  | `~/.<config>/` (取决于实现)              | 取决于 Agent 是否做了持久化              |
 
 ### 5.5 重启 Zed 后的完整流程
 
@@ -677,6 +680,7 @@ sequenceDiagram
 ```
 
 **所以**：
+
 - **首次安装 Agent**：需要登录（Agent 进程的凭证目录还不存在）
 - **重启 Zed，凭证未过期**：**不需要重新登录**（Agent 进程启动后读取已有凭证文件，`new_session()` 正常返回）
 - **重启 Zed，凭证已过期**：需要重新登录（Agent 进程检测到 token 过期，返回 `AuthRequired`）
@@ -854,6 +858,7 @@ let sub = window.subscribe(&registry, cx, move |_, ev, window, cx| {
 ### 6.3 凭证过期不涉及 Token 刷新
 
 对于 ACP Agent，Zed **不进行** token 刷新。这是因为：
+
 - Zed 不持有任何 token
 - Token 的管理（获取、存储、刷新）完全在 Agent 进程内部
 - Zed 只通过 `ErrorCode::AuthRequired` 被动感知过期
@@ -864,72 +869,72 @@ let sub = window.subscribe(&registry, cx, move |_, ev, window, cx| {
 
 ### 协议层
 
-| 文件 | 行号 | 说明 |
-|------|------|------|
-| `crates/acp_thread/src/connection.rs` | 47-130 | `AgentConnection` trait 定义 |
-| `crates/acp_thread/src/connection.rs` | 114 | `auth_methods()` 方法 |
-| `crates/acp_thread/src/connection.rs` | 116-122 | `terminal_auth_task()` 方法 |
-| `crates/acp_thread/src/connection.rs` | 124 | `authenticate()` 方法 |
-| `crates/acp_thread/src/connection.rs` | 336-366 | `AuthRequired` 错误类型 |
-| `crates/acp_thread/src/connection.rs` | 25-45 | `build_terminal_auth_task()` 辅助函数 |
+| 文件                                  | 行号    | 说明                                  |
+| ------------------------------------- | ------- | ------------------------------------- |
+| `crates/acp_thread/src/connection.rs` | 47-130  | `AgentConnection` trait 定义          |
+| `crates/acp_thread/src/connection.rs` | 114     | `auth_methods()` 方法                 |
+| `crates/acp_thread/src/connection.rs` | 116-122 | `terminal_auth_task()` 方法           |
+| `crates/acp_thread/src/connection.rs` | 124     | `authenticate()` 方法                 |
+| `crates/acp_thread/src/connection.rs` | 336-366 | `AuthRequired` 错误类型               |
+| `crates/acp_thread/src/connection.rs` | 25-45   | `build_terminal_auth_task()` 辅助函数 |
 
 ### 连接层
 
-| 文件 | 行号 | 说明 |
-|------|------|------|
-| `crates/agent_servers/src/acp.rs` | 37 | `GEMINI_TERMINAL_AUTH_METHOD_ID` 常量 |
-| `crates/agent_servers/src/acp.rs` | 43-59 | `AcpConnection` 结构体 |
-| `crates/agent_servers/src/acp.rs` | 323-344 | `InitializeRequest` 发送（声明 auth 能力）|
-| `crates/agent_servers/src/acp.rs` | 370-388 | Gemini 硬编码 auth_methods |
-| `crates/agent_servers/src/acp.rs` | 515-565 | terminal_auth_task 构建函数 |
-| `crates/agent_servers/src/acp.rs` | 906-954 | `AgentConnection` impl（auth 方法）|
-| `crates/agent_servers/src/acp.rs` | 975-979 | prompt() 中 AuthRequired 检测 |
-| `crates/agent_servers/src/acp.rs` | 1099-1111 | `map_acp_error()` 错误转换 |
+| 文件                              | 行号      | 说明                                       |
+| --------------------------------- | --------- | ------------------------------------------ |
+| `crates/agent_servers/src/acp.rs` | 37        | `GEMINI_TERMINAL_AUTH_METHOD_ID` 常量      |
+| `crates/agent_servers/src/acp.rs` | 43-59     | `AcpConnection` 结构体                     |
+| `crates/agent_servers/src/acp.rs` | 323-344   | `InitializeRequest` 发送（声明 auth 能力） |
+| `crates/agent_servers/src/acp.rs` | 370-388   | Gemini 硬编码 auth_methods                 |
+| `crates/agent_servers/src/acp.rs` | 515-565   | terminal_auth_task 构建函数                |
+| `crates/agent_servers/src/acp.rs` | 906-954   | `AgentConnection` impl（auth 方法）        |
+| `crates/agent_servers/src/acp.rs` | 975-979   | prompt() 中 AuthRequired 检测              |
+| `crates/agent_servers/src/acp.rs` | 1099-1111 | `map_acp_error()` 错误转换                 |
 
 ### UI 层
 
-| 文件 | 行号 | 说明 |
-|------|------|------|
-| `crates/agent_ui/src/conversation_view.rs` | 601-609 | `AuthState` 枚举定义 |
-| `crates/agent_ui/src/conversation_view.rs` | 740-776 | `reset()` 认证成功后恢复会话 |
-| `crates/agent_ui/src/conversation_view.rs` | 877-891 | new_session 失败时捕获 AuthRequired |
-| `crates/agent_ui/src/conversation_view.rs` | 1163-1243 | `handle_auth_required()` 核心入口 |
-| `crates/agent_ui/src/conversation_view.rs` | 1638-1773 | `authenticate()` 执行认证 |
-| `crates/agent_ui/src/conversation_view.rs` | 1840-1965 | `spawn_external_agent_login()` 终端登录 |
+| 文件                                       | 行号      | 说明                                       |
+| ------------------------------------------ | --------- | ------------------------------------------ |
+| `crates/agent_ui/src/conversation_view.rs` | 601-609   | `AuthState` 枚举定义                       |
+| `crates/agent_ui/src/conversation_view.rs` | 740-776   | `reset()` 认证成功后恢复会话               |
+| `crates/agent_ui/src/conversation_view.rs` | 877-891   | new_session 失败时捕获 AuthRequired        |
+| `crates/agent_ui/src/conversation_view.rs` | 1163-1243 | `handle_auth_required()` 核心入口          |
+| `crates/agent_ui/src/conversation_view.rs` | 1638-1773 | `authenticate()` 执行认证                  |
+| `crates/agent_ui/src/conversation_view.rs` | 1840-1965 | `spawn_external_agent_login()` 终端登录    |
 | `crates/agent_ui/src/conversation_view.rs` | 1979-2092 | `render_auth_required_state()` 渲染登录 UI |
-| `crates/agent_ui/src/conversation_view.rs` | 2765-2777 | `reauthenticate()` 手动重新认证 |
+| `crates/agent_ui/src/conversation_view.rs` | 2765-2777 | `reauthenticate()` 手动重新认证            |
 
 ### 连接共享
 
-| 文件 | 行号 | 说明 |
-|------|------|------|
-| `crates/agent_ui/src/agent_connection_store.rs` | 15-23 | `AgentConnectionEntry` 状态机 |
-| `crates/agent_ui/src/agent_connection_store.rs` | 69-73 | `AgentConnectionStore` 结构体 |
-| `crates/agent_ui/src/agent_connection_store.rs` | 117-212 | `request_connection()` 连接复用 |
-| `crates/agent_ui/src/agent_panel.rs` | 1135-1145 | store 创建（每个 workspace 一个）|
-| `crates/acp_tools/src/acp_tools.rs` | 41-78 | `AcpConnectionRegistry` 全局注册 |
+| 文件                                            | 行号      | 说明                              |
+| ----------------------------------------------- | --------- | --------------------------------- |
+| `crates/agent_ui/src/agent_connection_store.rs` | 15-23     | `AgentConnectionEntry` 状态机     |
+| `crates/agent_ui/src/agent_connection_store.rs` | 69-73     | `AgentConnectionStore` 结构体     |
+| `crates/agent_ui/src/agent_connection_store.rs` | 117-212   | `request_connection()` 连接复用   |
+| `crates/agent_ui/src/agent_panel.rs`            | 1135-1145 | store 创建（每个 workspace 一个） |
+| `crates/acp_tools/src/acp_tools.rs`             | 41-78     | `AcpConnectionRegistry` 全局注册  |
 
 ### 其他入口
 
-| 文件 | 行号 | 说明 |
-|------|------|------|
-| `crates/agent_ui/src/conversation_view/thread_view.rs` | 977-999 | `/login` 斜杠命令 |
-| `crates/agent_ui/src/agent_panel.rs` | 4044-4046 | "Reauthenticate" 菜单项 |
-| `crates/zed_actions/src/lib.rs` | 460-461 | `ReauthenticateAgent` action 定义 |
+| 文件                                                   | 行号      | 说明                              |
+| ------------------------------------------------------ | --------- | --------------------------------- |
+| `crates/agent_ui/src/conversation_view/thread_view.rs` | 977-999   | `/login` 斜杠命令                 |
+| `crates/agent_ui/src/agent_panel.rs`                   | 4044-4046 | "Reauthenticate" 菜单项           |
+| `crates/zed_actions/src/lib.rs`                        | 460-461   | `ReauthenticateAgent` action 定义 |
 
 ---
 
 ## 总结
 
-| 方面 | 实现方式 |
-|------|---------|
-| Agent 安装位置 | `~/Library/Application Support/Zed/external_agents/registry/` (二进制和 npx prefix) |
-| 凭证存储 | **Zed 不存储**；Agent 进程继承 `HOME`，凭证写入 `~/.claude/` 等用户目录 |
-| 重启后是否需登录 | **通常不需要**——Agent 进程启动时读取已有凭证；仅首次或凭证过期时需要 |
-| 认证触发 | Agent 返回 `ErrorCode::AuthRequired` 时被动触发 |
-| 登录执行 | 终端交互（`SpawnInTerminal`）或协议请求（`AuthenticateRequest`）|
-| 登录成功检测 | 输出模式匹配（claude/gemini）或退出码（其他）或 Agent 协议响应 |
-| Session 共享 | 同一 Agent 共享一个进程，认证状态在进程内共享 |
-| UI 状态 | 每个 `ConversationView` 独立维护 `AuthState` |
-| 凭证过期 | 被动感知（Agent 返回 `AuthRequired`），不做 token 刷新 |
-| 重新认证 | 自动（prompt 失败时）、手动（菜单/命令）、订阅式（provider 状态变更）|
+| 方面             | 实现方式                                                                            |
+| ---------------- | ----------------------------------------------------------------------------------- |
+| Agent 安装位置   | `~/Library/Application Support/Zed/external_agents/registry/` (二进制和 npx prefix) |
+| 凭证存储         | **Zed 不存储**；Agent 进程继承 `HOME`，凭证写入 `~/.claude/` 等用户目录             |
+| 重启后是否需登录 | **通常不需要**——Agent 进程启动时读取已有凭证；仅首次或凭证过期时需要                |
+| 认证触发         | Agent 返回 `ErrorCode::AuthRequired` 时被动触发                                     |
+| 登录执行         | 终端交互（`SpawnInTerminal`）或协议请求（`AuthenticateRequest`）                    |
+| 登录成功检测     | 输出模式匹配（claude/gemini）或退出码（其他）或 Agent 协议响应                      |
+| Session 共享     | 同一 Agent 共享一个进程，认证状态在进程内共享                                       |
+| UI 状态          | 每个 `ConversationView` 独立维护 `AuthState`                                        |
+| 凭证过期         | 被动感知（Agent 返回 `AuthRequired`），不做 token 刷新                              |
+| 重新认证         | 自动（prompt 失败时）、手动（菜单/命令）、订阅式（provider 状态变更）               |

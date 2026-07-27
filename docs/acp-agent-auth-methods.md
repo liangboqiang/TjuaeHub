@@ -1,43 +1,43 @@
-# ACP Agent authMethods Survey
+# ACP 智能体 authMethods 调研
 
-> Generated: 2026-04-13
+> 生成日期：2026-04-13
 >
-> Image: `agent-research:latest` | Client: `acp-client` (`--verbose`)
+> 镜像：`agent-research:latest`｜客户端：`acp-client`（`--verbose`）
 >
-> Source: agents registered in `acpx@0.5.3` AGENT_REGISTRY (16 agents)
+> 数据来源：`acpx@0.5.3` 的 `AGENT_REGISTRY` 中注册的 16 个智能体
 
-## Summary
+## 摘要
 
-| #   | Agent                    | Version       | authMethods                                              | Status          |
-| --- | ------------------------ | ------------- | -------------------------------------------------------- | --------------- |
-| 1   | pi-acp                   | 0.0.25        | 1 (terminal login)                                       | OK              |
-| 2   | codex-acp (Codex)        | 0.11.1        | 3 (ChatGPT login, env CODEX_API_KEY, env OPENAI_API_KEY) | OK              |
-| 3   | claude-agent-acp         | 0.26.0        | 0 (empty array `[]`)                                     | OK              |
-| 4   | gemini-cli               | 0.35.2-termux | 4 (Google OAuth, API key, Vertex AI, Gateway)            | OK              |
-| 5   | copilot (GitHub Copilot) | 1.467.0       | 1 (GitHub OAuth)                                         | OK              |
-| 6   | droid (Factory Droid)    | 0.99.0        | 2 (device pairing, env FACTORY_API_KEY)                  | OK              |
-| 7   | iflow-agent              | 0.5.18        | 3 (OAuth, env IFLOW_API_KEY, OpenAI Compatible)          | OK              |
-| 8   | kilocode (Kilo)          | 7.2.0         | 1 (terminal login)                                       | OK*             |
-| 9   | opencode (OpenCode)      | 1.4.3         | 1 (terminal login)                                       | OK*             |
-| 10  | qodercli (Qoder)         | -             | 1 (terminal login)                                       | OK              |
-| 11  | qwen-code (Qwen Code)    | 0.14.3        | 2 (env OPENAI_API_KEY, Qwen OAuth)                       | OK              |
-| 12  | openclaw-acp             | 0.0.11        | -                                                        | ERROR (gateway) |
-| 13  | cursor                   | -             | -                                                        | NOT INSTALLABLE |
-| 14  | kimi                     | -             | -                                                        | NOT INSTALLABLE |
-| 15  | kiro                     | -             | -                                                        | NOT INSTALLABLE |
-| 16  | trae                     | -             | -                                                        | NOT INSTALLABLE |
+| #   | 智能体                   | 版本          | authMethods                                      | 状态         |
+| --- | ------------------------ | ------------- | ------------------------------------------------ | ------------ |
+| 1   | pi-acp                   | 0.0.25        | 1（终端登录）                                    | 正常         |
+| 2   | codex-acp (Codex)        | 0.11.1        | 3（ChatGPT 登录、CODEX_API_KEY、OPENAI_API_KEY） | 正常         |
+| 3   | claude-agent-acp         | 0.26.0        | 0（空数组 `[]`）                                 | 正常         |
+| 4   | gemini-cli               | 0.35.2-termux | 4（Google OAuth、API 密钥、Vertex AI、网关）     | 正常         |
+| 5   | copilot (GitHub Copilot) | 1.467.0       | 1（GitHub OAuth）                                | 正常         |
+| 6   | droid (Factory Droid)    | 0.99.0        | 2（设备配对、FACTORY_API_KEY）                   | 正常         |
+| 7   | iflow-agent              | 0.5.18        | 3（OAuth、IFLOW_API_KEY、OpenAI 兼容接口）       | 正常         |
+| 8   | kilocode (Kilo)          | 7.2.0         | 1（终端登录）                                    | 正常*        |
+| 9   | opencode (OpenCode)      | 1.4.3         | 1（终端登录）                                    | 正常*        |
+| 10  | qodercli (Qoder)         | -             | 1（终端登录）                                    | 正常         |
+| 11  | qwen-code (Qwen Code)    | 0.14.3        | 2（OPENAI_API_KEY、Qwen OAuth）                  | 正常         |
+| 12  | openclaw-acp             | 0.0.11        | -                                                | 错误（网关） |
+| 13  | cursor                   | -             | -                                                | 无法安装     |
+| 14  | kimi                     | -             | -                                                | 无法安装     |
+| 15  | kiro                     | -             | -                                                | 无法安装     |
+| 16  | trae                     | -             | -                                                | 无法安装     |
 
 \* kilocode/opencode 首次启动有 SQLite 迁移，导致 30s 超时，但随后返回了正常响应。
 
 ---
 
-## Per-Agent Details
+## 各智能体详情
 
 ### 1. pi-acp
 
-- **Package**: `pi-acp@0.0.25` (via `npx pi-acp@latest`)
-- **Agent command**: `npx pi-acp@^0.0.22`
-- **Agent info**: `{ name: "pi-acp", title: "pi ACP adapter", version: "0.0.25" }`
+- **软件包**：`pi-acp@0.0.25`（通过 `npx pi-acp@latest`）
+- **智能体命令**：`npx pi-acp@^0.0.22`
+- **智能体信息**：`{ name: "pi-acp", title: "pi ACP adapter", version: "0.0.25" }`
 
 **authMethods:**
 
@@ -54,7 +54,7 @@
 ]
 ```
 
-**Full initialize NDJSON:**
+**完整初始化 NDJSON：**
 
 ```json
 -> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":true,"writeTextFile":true},"terminal":true},"clientInfo":{"name":"acp-client","title":"ACP Client","version":"1.0.0"}}}
@@ -65,9 +65,9 @@
 
 ### 2. codex-acp (Codex)
 
-- **Package**: `@zed-industries/codex-acp@0.11.1` (via `npx @zed-industries/codex-acp@latest`)
-- **Agent command**: `npx @zed-industries/codex-acp@^0.11.1`
-- **Agent info**: `{ name: "codex-acp", title: "Codex", version: "0.11.1" }`
+- **软件包**：`@zed-industries/codex-acp@0.11.1`（通过 `npx @zed-industries/codex-acp@latest`）
+- **智能体命令**：`npx @zed-industries/codex-acp@^0.11.1`
+- **智能体信息**：`{ name: "codex-acp", title: "Codex", version: "0.11.1" }`
 
 **authMethods:**
 
@@ -95,7 +95,7 @@
 ]
 ```
 
-**Full initialize NDJSON:**
+**完整初始化 NDJSON：**
 
 ```json
 -> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":true,"writeTextFile":true},"terminal":true},"clientInfo":{"name":"acp-client","title":"ACP Client","version":"1.0.0"}}}
@@ -106,9 +106,9 @@
 
 ### 3. claude-agent-acp (Claude Agent)
 
-- **Package**: `@agentclientprotocol/claude-agent-acp@0.26.0` (via `npx -y @agentclientprotocol/claude-agent-acp@latest`)
-- **Agent command**: `npx -y @agentclientprotocol/claude-agent-acp@^0.25.0`
-- **Agent info**: `{ name: "@agentclientprotocol/claude-agent-acp", title: "Claude Agent", version: "0.26.0" }`
+- **软件包**：`@agentclientprotocol/claude-agent-acp@0.26.0`（通过 `npx -y @agentclientprotocol/claude-agent-acp@latest`）
+- **智能体命令**：`npx -y @agentclientprotocol/claude-agent-acp@^0.25.0`
+- **智能体信息**：`{ name: "@agentclientprotocol/claude-agent-acp", title: "Claude Agent", version: "0.26.0" }`
 
 **authMethods:**
 
@@ -118,7 +118,7 @@
 
 > Claude Agent 返回空的 authMethods 数组。认证可能通过外部环境变量（如 `ANTHROPIC_API_KEY`）处理，不走 ACP 协议层的 auth flow。
 
-**Full initialize NDJSON:**
+**完整初始化 NDJSON：**
 
 ```json
 -> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":true,"writeTextFile":true},"terminal":true},"clientInfo":{"name":"acp-client","title":"ACP Client","version":"1.0.0"}}}
@@ -129,9 +129,9 @@
 
 ### 4. gemini-cli (Gemini CLI)
 
-- **Package**: `@mmmbuto/gemini-cli-termux@0.35.2-termux` (fork of `google-gemini/gemini-cli`)
-- **Agent command**: `gemini --acp`
-- **Agent info**: `{ name: "gemini-cli", title: "Gemini CLI", version: "0.35.2-termux" }`
+- **软件包**：`@mmmbuto/gemini-cli-termux@0.35.2-termux`（`google-gemini/gemini-cli` 的派生版本）
+- **智能体命令**：`gemini --acp`
+- **智能体信息**：`{ name: "gemini-cli", title: "Gemini CLI", version: "0.35.2-termux" }`
 
 **authMethods:**
 
@@ -162,7 +162,7 @@
 ]
 ```
 
-**Full initialize NDJSON:**
+**完整初始化 NDJSON：**
 
 ```json
 -> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":true,"writeTextFile":true},"terminal":true},"clientInfo":{"name":"acp-client","title":"ACP Client","version":"1.0.0"}}}
@@ -173,9 +173,9 @@
 
 ### 5. copilot (GitHub Copilot)
 
-- **Package**: `@github/copilot-language-server@1.467.0`
-- **Agent command**: `copilot --acp --stdio` (via language-server.js)
-- **Agent info**: `{ name: "GitHub Copilot", version: "1.467.0" }`
+- **软件包**：`@github/copilot-language-server@1.467.0`
+- **智能体命令**：`copilot --acp --stdio`（通过 `language-server.js`）
+- **智能体信息**：`{ name: "GitHub Copilot", version: "1.467.0" }`
 
 **authMethods:**
 
@@ -189,7 +189,7 @@
 ]
 ```
 
-**Full initialize NDJSON:**
+**完整初始化 NDJSON：**
 
 ```json
 -> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":true,"writeTextFile":true},"terminal":true},"clientInfo":{"name":"acp-client","title":"ACP Client","version":"1.0.0"}}}
@@ -200,9 +200,9 @@
 
 ### 6. droid (Factory Droid)
 
-- **Package**: `droid@0.99.0`
-- **Agent command**: `droid exec --output-format acp`
-- **Agent info**: `{ name: "@factory/cli", title: "Factory Droid", version: "0.99.0" }`
+- **软件包**：`droid@0.99.0`
+- **智能体命令**：`droid exec --output-format acp`
+- **智能体信息**：`{ name: "@factory/cli", title: "Factory Droid", version: "0.99.0" }`
 
 **authMethods:**
 
@@ -221,7 +221,7 @@
 ]
 ```
 
-**Full initialize NDJSON:**
+**完整初始化 NDJSON：**
 
 ```json
 -> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":true,"writeTextFile":true},"terminal":true},"clientInfo":{"name":"acp-client","title":"ACP Client","version":"1.0.0"}}}
@@ -232,9 +232,9 @@
 
 ### 7. iflow-agent (iFlow)
 
-- **Package**: `@iflow-ai/iflow-cli@0.5.18`
-- **Agent command**: `iflow --experimental-acp`
-- **Agent info**: `{ name: "iflow-agent", title: "iFlow Agent", version: "0.5.18" }`
+- **软件包**：`@iflow-ai/iflow-cli@0.5.18`
+- **智能体命令**：`iflow --experimental-acp`
+- **智能体信息**：`{ name: "iflow-agent", title: "iFlow Agent", version: "0.5.18" }`
 
 **authMethods:**
 
@@ -258,7 +258,7 @@
 ]
 ```
 
-**Full initialize NDJSON:**
+**完整初始化 NDJSON：**
 
 ```json
 -> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":true,"writeTextFile":true},"terminal":true},"clientInfo":{"name":"acp-client","title":"ACP Client","version":"1.0.0"}}}
@@ -269,9 +269,9 @@
 
 ### 8. kilocode (Kilo)
 
-- **Package**: `@kilocode/cli` (via `npx -y @kilocode/cli acp`)
-- **Agent command**: `npx -y @kilocode/cli acp`
-- **Agent info**: `{ name: "Kilo", version: "7.2.0" }`
+- **软件包**：`@kilocode/cli`（通过 `npx -y @kilocode/cli acp`）
+- **智能体命令**：`npx -y @kilocode/cli acp`
+- **智能体信息**：`{ name: "Kilo", version: "7.2.0" }`
 
 **authMethods:**
 
@@ -285,7 +285,7 @@
 ]
 ```
 
-**Full initialize NDJSON:**
+**完整初始化 NDJSON：**
 
 ```json
 -> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":true,"writeTextFile":true},"terminal":true},"clientInfo":{"name":"acp-client","title":"ACP Client","version":"1.0.0"}}}
@@ -296,9 +296,9 @@
 
 ### 9. opencode (OpenCode)
 
-- **Package**: `opencode-ai` (via `npx -y opencode-ai acp`)
-- **Agent command**: `npx -y opencode-ai acp`
-- **Agent info**: `{ name: "OpenCode", version: "1.4.3" }`
+- **软件包**：`opencode-ai`（通过 `npx -y opencode-ai acp`）
+- **智能体命令**：`npx -y opencode-ai acp`
+- **智能体信息**：`{ name: "OpenCode", version: "1.4.3" }`
 
 **authMethods:**
 
@@ -312,7 +312,7 @@
 ]
 ```
 
-**Full initialize NDJSON:**
+**完整初始化 NDJSON：**
 
 ```json
 -> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":true,"writeTextFile":true},"terminal":true},"clientInfo":{"name":"acp-client","title":"ACP Client","version":"1.0.0"}}}
@@ -323,9 +323,9 @@
 
 ### 10. qodercli (Qoder)
 
-- **Package**: `@qoder-ai/qodercli`
-- **Agent command**: `qodercli --acp`
-- **Agent info**: not returned in result (protocol v1 only)
+- **软件包**：`@qoder-ai/qodercli`
+- **智能体命令**：`qodercli --acp`
+- **智能体信息**：响应中未返回（仅支持协议 v1）
 
 **authMethods:**
 
@@ -339,7 +339,7 @@
 ]
 ```
 
-**Full initialize NDJSON:**
+**完整初始化 NDJSON：**
 
 ```json
 -> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":true,"writeTextFile":true},"terminal":true},"clientInfo":{"name":"acp-client","title":"ACP Client","version":"1.0.0"}}}
@@ -350,9 +350,9 @@
 
 ### 11. qwen-code (Qwen Code)
 
-- **Package**: `@qwen-code/qwen-code@0.14.3`
-- **Agent command**: `qwen --acp`
-- **Agent info**: `{ name: "qwen-code", title: "Qwen Code", version: "0.14.3" }`
+- **软件包**：`@qwen-code/qwen-code@0.14.3`
+- **智能体命令**：`qwen --acp`
+- **智能体信息**：`{ name: "qwen-code", title: "Qwen Code", version: "0.14.3" }`
 
 **authMethods:**
 
@@ -379,7 +379,7 @@
 ]
 ```
 
-**Full initialize NDJSON:**
+**完整初始化 NDJSON：**
 
 ```json
 -> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":true,"writeTextFile":true},"terminal":true},"clientInfo":{"name":"acp-client","title":"ACP Client","version":"1.0.0"}}}
@@ -388,15 +388,15 @@
 
 ---
 
-### 12. openclaw-acp (ERROR)
+### 12. openclaw-acp（错误）
 
-- **Package**: `openclaw-acp@0.0.11`
-- **Agent command**: `openclaw-acp` (standalone) / `openclaw acp` (via acpx)
-- **Status**: ERROR — "Failed to connect to OpenClaw gateway"
+- **软件包**：`openclaw-acp@0.0.11`
+- **智能体命令**：`openclaw-acp`（独立运行）/ `openclaw acp`（通过 acpx）
+- **状态**：错误——无法连接到 OpenClaw 网关
 
 > openclaw-acp 是一个 Gateway 适配器，需要运行中的 OpenClaw gateway 才能初始化，无法独立运行。
 
-**NDJSON (error response):**
+**NDJSON（错误响应）：**
 
 ```json
 -> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":1,"clientCapabilities":{"fs":{"readTextFile":true,"writeTextFile":true},"terminal":true},"clientInfo":{"name":"acp-client","title":"ACP Client","version":"1.0.0"}}}
@@ -405,11 +405,11 @@
 
 ---
 
-### 13-16. Not Installable
+### 13—16. 无法安装
 
-The following agents could not be installed in a container via npm:
+以下智能体无法通过 npm 安装到容器中：
 
-| Agent      | acpx command        | Reason                                                                                                 |
+| 智能体     | acpx 命令           | 原因                                                                                                   |
 | ---------- | ------------------- | ------------------------------------------------------------------------------------------------------ |
 | **cursor** | `cursor-agent acp`  | Cursor IDE 专有，需从 cursor.com 安装。npm 上的 `cursor-agent` 是无关的任务调度工具。                  |
 | **kimi**   | `kimi acp`          | Moonshot AI 专有 CLI。npm 上的 `kimi-cli` 是 2018 年的无关 webpack 工具。GitHub: `MoonshotAI/kimi-cli` |
@@ -418,11 +418,11 @@ The following agents could not be installed in a container via npm:
 
 ---
 
-## Auth Pattern Analysis
+## 认证模式分析
 
-### Auth Method Types Observed
+### 已观察到的认证方式
 
-| Type                      | Agents                                                                                                       | Description                                  |
+| 类型                      | 智能体                                                                                                       | 说明                                         |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
 | **OAuth / Browser login** | gemini (Google), copilot (GitHub), codex (ChatGPT), iflow, qwen                                              | 打开浏览器完成 OAuth 授权                    |
 | **Terminal login**        | pi, kilocode, opencode, qodercli                                                                             | 在终端中运行登录命令                         |
@@ -431,7 +431,7 @@ The following agents could not be installed in a container via npm:
 | **API Gateway**           | gemini                                                                                                       | 自定义 AI API Gateway                        |
 | **Empty**                 | claude                                                                                                       | 不声明 authMethods，可能通过外部配置处理认证 |
 
-### Key Observations
+### 关键观察
 
 1. **大多数 agent 声明了 authMethods** — 11 个可测试的 agent 中，10 个声明了至少 1 个 method，只有 claude-agent-acp 返回空数组。
 2. **OAuth 是最常见的模式** — Google OAuth, GitHub OAuth, ChatGPT login, Qwen OAuth 等。

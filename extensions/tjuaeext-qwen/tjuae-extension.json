@@ -1,13 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
-  "author": "TjuaeUI",
+  "author": "Tjuae",
   "contributes": {
     "acpAdapters": [
       {
         "id": "qwen",
         "name": "Qwen Code",
         "icon": "resources/icon.svg",
-        "description": "Qwen Code adapter",
+        "description": "Qwen Code 适配器",
         "cliCommand": "qwen",
         "defaultCliPath": "bunx @qwen-code/qwen-code",
         "acpArgs": ["--acp"],
@@ -15,7 +15,7 @@
       }
     ]
   },
-  "description": "Integrates Qwen CLI as an ACP adapter in TjuaeUI.",
+  "description": "将 Qwen CLI 作为 ACP 适配器集成到 TjuaeUI。",
   "displayName": "Qwen Code",
   "engine": {
     "tjuae": "^1.0.0"

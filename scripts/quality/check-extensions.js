@@ -131,8 +131,8 @@ function validateManifest(manifest, directoryName, validateSchema) {
   if (manifest.name !== directoryName) {
     throw new Error(`${directoryName} does not match manifest name ${manifest.name}`);
   }
-  if (manifest.author !== 'TjuaeUI') {
-    throw new Error(`${directoryName} must use the TjuaeUI author identity`);
+  if (manifest.author !== 'Tjuae') {
+    throw new Error(`${directoryName} must use the Tjuae author identity`);
   }
   if (JSON.stringify(manifest).includes('Official')) {
     throw new Error(`${directoryName} contains an unsupported endorsement claim`);

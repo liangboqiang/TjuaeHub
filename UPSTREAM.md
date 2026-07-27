@@ -1,16 +1,14 @@
-# Upstream attribution
+# 上游归属说明
 
-TjuaeHub is derived from the Apache-2.0 licensed project formerly published at
-`https://github.com/iOfficeAI/AionHub`.
+TjuaeHub 派生自曾发布于 `https://github.com/iOfficeAI/AionHub`、采用
+Apache-2.0 许可证的项目。
 
-- Imported source revision: `a0272c9649ddf3a5e790ba2f09f88c8f54d78e90`
-- Imported schema revision: `781521c45e75fcff436f446ee9b3101357018b9a`
-- Original builder notice: Copyright 2025 AionUi
+- 导入的源码版本：`a0272c9649ddf3a5e790ba2f09f88c8f54d78e90`
+- 导入的模式版本：`781521c45e75fcff436f446ee9b3101357018b9a`
+- 原构建器声明：Copyright 2025 AionUi
 
-The product and protocol identifiers in the active source have been replaced
-with Tjuae identifiers. Historical names above are retained solely for source
-and legal attribution.
+当前源码中的产品和协议标识均已替换为 Tjuae 标识。上述历史名称仅为履行源码及
+许可证归属义务而保留。
 
-Third-party product names, command names, package names, URLs, and icons remain
-the property of their respective owners. Their inclusion identifies compatible
-integrations and does not imply sponsorship or endorsement.
+第三方产品名、命令名、包名、网址和图标仍归各自权利人所有；项目中出现这些名称
+仅用于标识兼容集成，不代表任何赞助或背书关系。

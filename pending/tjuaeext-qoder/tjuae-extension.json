@@ -1,13 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
-  "author": "TjuaeUI",
+  "author": "Tjuae",
   "contributes": {
     "acpAdapters": [
       {
         "id": "qoder",
         "name": "Qoder CLI",
         "icon": "resources/icon.png",
-        "description": "Qoder CLI adapter",
+        "description": "Qoder CLI 适配器",
         "connectionType": "stdio",
         "cliCommand": "qodercli",
         "defaultCliPath": "bunx @qoder-ai/qodercli",
@@ -17,7 +17,7 @@
       }
     ]
   },
-  "description": "Integrates Qoder CLI as an ACP adapter in TjuaeUI.",
+  "description": "将 Qoder CLI 作为 ACP 适配器集成到 TjuaeUI。",
   "displayName": "Qoder CLI",
   "engine": {
     "tjuae": "^1.0.0"

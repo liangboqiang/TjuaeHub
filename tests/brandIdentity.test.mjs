@@ -16,4 +16,10 @@ describe('brand identity', () => {
       { source: 'fixture.txt', line: 2 },
     ]);
   });
+
+  it('reports the retired publisher identity', () => {
+    const retiredPublisher = ['i', 'Office', 'AI'].join('');
+
+    expect(findBrandMatches(retiredPublisher, 'fixture.txt')).toEqual([{ source: 'fixture.txt', line: 1 }]);
+  });
 });

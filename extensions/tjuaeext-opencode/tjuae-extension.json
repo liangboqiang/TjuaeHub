@@ -1,20 +1,20 @@
 {
   "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
-  "author": "TjuaeUI",
+  "author": "Tjuae",
   "contributes": {
     "acpAdapters": [
       {
         "id": "opencode",
         "name": "OpenCode",
         "icon": "resources/icon.svg",
-        "description": "OpenCode adapter",
+        "description": "OpenCode 适配器",
         "cliCommand": "opencode",
         "defaultCliPath": "bunx opencode-ai",
         "acpArgs": ["acp"]
       }
     ]
   },
-  "description": "Integrates OpenCode as an ACP adapter in TjuaeUI.",
+  "description": "将 OpenCode 作为 ACP 适配器集成到 TjuaeUI。",
   "displayName": "OpenCode",
   "engine": {
     "tjuae": "^1.0.0"

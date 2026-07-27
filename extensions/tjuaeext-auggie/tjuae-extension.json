@@ -1,20 +1,20 @@
 {
   "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
-  "author": "TjuaeUI",
+  "author": "Tjuae",
   "contributes": {
     "acpAdapters": [
       {
         "id": "auggie",
         "name": "Augment Code",
         "icon": "resources/icon.svg",
-        "description": "Augment Code adapter",
+        "description": "Augment Code 适配器",
         "cliCommand": "auggie",
         "defaultCliPath": "bunx @augmentcode/auggie",
         "acpArgs": ["--acp"]
       }
     ]
   },
-  "description": "Integrates Augment Code as an ACP adapter in TjuaeUI.",
+  "description": "将 Augment Code 作为 ACP 适配器集成到 TjuaeUI。",
   "displayName": "Augment Code",
   "engine": {
     "tjuae": "^1.0.0"

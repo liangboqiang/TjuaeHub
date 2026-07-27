@@ -183,7 +183,7 @@ async function main() {
       displayName: manifest.displayName,
       version: manifest.version,
       description: manifest.description ?? '',
-      author: manifest.author ?? 'TjuaeUI',
+      author: manifest.author ?? 'Tjuae',
       icon: manifest.icon,
       engines: manifest.engine ?? {},
       hubs,

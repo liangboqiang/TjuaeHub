@@ -2,15 +2,15 @@
   "name": "@tjuae/hub",
   "private": true,
   "author": {
-    "name": "TjuaeUI"
+    "name": "Tjuae"
   },
   "scripts": {
     "build": "node .github/scripts/build-extensions.js",
     "check:brand": "node scripts/quality/check-brand.js",
     "check:build": "node scripts/quality/check-build.js",
     "check:extensions": "node scripts/quality/check-extensions.js",
-    "format": "prettier --write \".claude/skills/commit/SKILL.md\" \".github/**/*.{js,yml}\" \".vscode/settings.json\" \"README.md\" \"UPSTREAM.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"tests/**/*.mjs\" \"kits/server/index.ts\" \"extensions/**/tjuae-extension.json\" \"extensions/**/scripts/*.ts\" \"pending/**/tjuae-extension.json\" \"pending/**/scripts/*.ts\" \"tsconfig.json\"",
-    "format:check": "prettier --check \".claude/skills/commit/SKILL.md\" \".github/**/*.{js,yml}\" \".vscode/settings.json\" \"README.md\" \"UPSTREAM.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"tests/**/*.mjs\" \"kits/server/index.ts\" \"extensions/**/tjuae-extension.json\" \"extensions/**/scripts/*.ts\" \"pending/**/tjuae-extension.json\" \"pending/**/scripts/*.ts\" \"tsconfig.json\"",
+    "format": "prettier --write \".claude/skills/commit/SKILL.md\" \".github/**/*.{js,yml}\" \".vscode/settings.json\" \"AGENTS.md\" \"README.md\" \"UPSTREAM.md\" \"docs/**/*.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"tests/**/*.mjs\" \"kits/server/index.ts\" \"extensions/**/tjuae-extension.json\" \"extensions/**/scripts/*.ts\" \"pending/**/tjuae-extension.json\" \"pending/**/scripts/*.ts\" \"tsconfig.json\"",
+    "format:check": "prettier --check \".claude/skills/commit/SKILL.md\" \".github/**/*.{js,yml}\" \".vscode/settings.json\" \"AGENTS.md\" \"README.md\" \"UPSTREAM.md\" \"docs/**/*.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"tests/**/*.mjs\" \"kits/server/index.ts\" \"extensions/**/tjuae-extension.json\" \"extensions/**/scripts/*.ts\" \"pending/**/tjuae-extension.json\" \"pending/**/scripts/*.ts\" \"tsconfig.json\"",
     "server": "bun run build && bun run kits/server",
     "test": "bun run build && vitest run",
     "typecheck": "tsc --noEmit",

@@ -1,13 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
-  "author": "TjuaeUI",
+  "author": "Tjuae",
   "contributes": {
     "acpAdapters": [
       {
         "id": "codex",
         "name": "Codex",
         "icon": "resources/icon.svg",
-        "description": "OpenAI Codex adapter (via ACP adapter)",
+        "description": "通过 ACP 接入的 OpenAI Codex 适配器",
         "cliCommand": "codex",
         "defaultCliPath": "bunx @zed-industries/codex-acp",
         "acpArgs": [],
@@ -15,7 +15,7 @@
       }
     ]
   },
-  "description": "Integrates OpenAI Codex CLI as an ACP adapter in TjuaeUI.",
+  "description": "将 OpenAI Codex CLI 作为 ACP 适配器集成到 TjuaeUI。",
   "displayName": "Codex",
   "engine": {
     "tjuae": "^1.0.0"

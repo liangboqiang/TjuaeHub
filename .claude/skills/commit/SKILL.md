@@ -1,146 +1,151 @@
 ---
 name: commit
-description: Generate commit messages following project conventions and commit staged changes. Use when the user explicitly asks to commit, create a commit, or run /commit.
-argument-hint: '[message advice]'
+description: 按项目规范生成提交信息并提交已暂存的改动。仅在用户明确要求提交、创建提交或执行 /commit 时使用。
+argument-hint: '[提交信息建议]'
 disable-model-invocation: true
 allowed-tools: Bash(rm -f ./.git/index.lock)
 ---
 
-# Commit Skill
+# 提交技能
 
-Generate well-formatted commit messages and commit staged changes for TjuaeHub.
+为 TjuaeHub 生成规范的提交信息，并提交已经暂存的改动。
 
-## Usage
+## 用法
 
-- `/commit` - Generates a commit message based on staged changes
-- `/commit <advice>` - Uses provided advice to guide commit message generation
+- `/commit`：根据已暂存改动生成提交信息。
+- `/commit <建议>`：结合用户给出的建议生成提交信息。
 
-## Guidelines
+## 基本要求
 
-- **Only commit staged files** - Never add files with `git add`. The user controls staging.
-- **Analyze all staged changes** - Review both previously staged and newly added changes
-- **Follow commit message format** - Use the project format shown below
-- **Match the project style** - Check recent commits (`git log`) to match existing style
+- **只提交已暂存文件**：绝不自行执行 `git add`，暂存范围由用户控制。
+- **检查全部改动**：同时查看已暂存与未暂存改动，防止提交信息遗漏或混入无关内容。
+- **遵守提交格式**：使用下方规定的 Conventional Commit 风格。
+- **匹配项目习惯**：先查看近期 `git log`，与仓库现有风格保持一致。
 
-## Format
+## 格式
 
+```text
+<type>[!](<scope>): <标题>
+
+- 变更摘要
+- 变更摘要
+
+[如有需要，在此填写 BREAKING CHANGE]
 ```
-<Type>[!](<scope>): <message title>
 
-<bullet points summarizing changes>
+`type` 必须使用小写，例如 `feat`、`fix`、`chore`，不得写成 `Feat`、`Fix`、`Chore`。
 
-[optional BREAKING CHANGE section if applicable]
-```
+## 示例
 
-**Key convention: Type is always lowercase** (e.g., `feat`, `fix`, `chore`, not `Feat`, `Fix`, `Chore`).
+### 常规提交
 
-## Examples
-
-### Basic commits
-
-```
+```text
 feat(extensions): add new ACP agent extension
 
-- Added tjuae-extension.json manifest and install script
-- Registered extension in build pipeline
+- Add tjuae-extension.json manifest and install script
+- Register extension in the build pipeline
 ```
 
-```
-fix(kits): resolve server startup crash on missing config
+```text
+fix(kits): handle missing server configuration
 
-- Added fallback for undefined port in dev server
-- Improved error message when config file is absent
-```
-
-```
-refactor(build): use content-based SHA-256 for deterministic integrity
-
-- Replaced timestamp-based hashing with file content hashing
-- Ensures reproducible builds across environments
+- Add a fallback for an undefined development port
+- Improve the error message for a missing configuration file
 ```
 
-```
-chore(extensions): promote claude, codex, goose from pending to extensions
+```text
+refactor(build): use deterministic content hashes
 
-- Moved directories from pending/ to extensions/
-- Updated build script to include new entries
-```
-
-### No scope (cross-cutting changes)
-
-```
-chore: add .gitignore and remove dist from tracking
-
-- Created .gitignore with standard Node/dist patterns
-- Removed previously tracked dist artifacts
+- Replace timestamp-based hashing with SHA-256 content hashing
+- Keep builds reproducible across environments
 ```
 
-### Breaking change
+```text
+chore(extensions): promote verified agent extensions
 
+- Move verified entries from pending to extensions
+- Include the promoted extensions in the build
 ```
-refactor!(extensions): redesign manifest schema from v1 to v2
 
-- Replaced flat fields with nested contributes block
-- Updated all existing manifests to new format
+### 跨模块提交
+
+跨越多个目录且没有合适作用域时，可以省略 `scope`：
+
+```text
+chore: stop tracking generated distribution files
+
+- Add generated outputs to .gitignore
+- Remove previously tracked distribution artifacts
+```
+
+### 破坏性变更
+
+```text
+refactor!(extensions): redesign manifest schema
+
+- Replace flat fields with the contributes structure
+- Update every checked-in manifest
 
 BREAKING CHANGE: tjuae-extension.json schema v1 is no longer supported.
 ```
 
-## Rules
+## 规则
 
-- **Type**: Always lowercase (feat, fix, chore, etc.), no period at end
-- **Title**: Lowercase after colon, max 50 characters total
-- **Breaking changes**: Use "!" after type/scope AND include "BREAKING CHANGE:" section
-- **Scope**: Optional, lowercase, aligned with project directory/module name
-- **Body**: Use bullet points, explain WHY not just WHAT
-- **Be specific**: Avoid vague titles like "update" or "fix stuff"
+- **类型**：始终使用小写，标题末尾不加句号。
+- **标题**：冒号后使用小写开头，总长度不超过 50 个字符。
+- **破坏性变更**：在类型或作用域后添加 `!`，并同时提供 `BREAKING CHANGE:` 段落。
+- **作用域**：可省略；使用时必须小写，并对应仓库目录或模块。
+- **正文**：使用项目符号，重点说明原因和影响，而不只是罗列操作。
+- **措辞明确**：避免 `update`、`fix stuff` 等含糊标题。
+- **敏感信息**：不得提交 `.env`、`credentials.json` 或其他疑似包含密钥的文件。
 
-## Allowed Types
+## 允许的类型
 
-| Type     | Description                            |
-| -------- | -------------------------------------- |
-| feat     | New feature or extension               |
-| fix      | Bug fix                                |
-| chore    | Maintenance (deps, config, file moves) |
-| perf     | Performance improvements               |
-| refactor | Code restructure (no behavior change)  |
-| docs     | Documentation changes                  |
-| test     | Adding or refactoring tests            |
-| style    | Code formatting (no logic change)      |
-| build    | Changes to the build system or scripts |
-| ci       | Changes to CI/CD workflows             |
+| 类型       | 用途                           |
+| ---------- | ------------------------------ |
+| `feat`     | 新功能或新扩展                 |
+| `fix`      | 缺陷修复                       |
+| `chore`    | 依赖、配置、文件移动等维护工作 |
+| `perf`     | 性能改进                       |
+| `refactor` | 不改变行为的代码重构           |
+| `docs`     | 文档改动                       |
+| `test`     | 新增或重构测试                 |
+| `style`    | 不改变逻辑的格式调整           |
+| `build`    | 构建系统或脚本改动             |
+| `ci`       | CI/CD 工作流改动               |
 
-## Common Scopes
+## 常用作用域
 
-| Scope      | When to use                                          |
-| ---------- | ---------------------------------------------------- |
-| extensions | Changes under `extensions/` (manifests, installs)    |
-| kits       | Changes under `kits/` (server, fake agent, toolkits) |
-| build      | Build scripts under `.github/scripts/`               |
-| ci         | CI workflows under `.github/workflows/`              |
-| docs       | Documentation under `docs/`                          |
+| 作用域       | 使用场景                               |
+| ------------ | -------------------------------------- |
+| `extensions` | `extensions/` 下的清单与安装逻辑       |
+| `kits`       | `kits/` 下的服务器、模拟智能体或工具包 |
+| `build`      | `.github/scripts/` 下的构建脚本        |
+| `ci`         | `.github/workflows/` 下的工作流        |
+| `docs`       | `docs/` 下的文档                       |
 
-Omit scope for cross-cutting changes that span multiple areas.
+跨越多个区域且无法归入单一模块时省略作用域。
 
-## Workflow
+## 工作流程
 
-1. **Review changes in parallel**:
-   - Run `git status` (never use `-uall` flag)
-   - Run `git diff --cached` (staged changes)
-   - Run `git diff` (unstaged changes)
-   - Run `git log -5 --oneline` to confirm current commit style
+1. **并行检查仓库状态**
 
-2. **Draft commit message**:
-   - Summarize the nature of changes (new feature, bug fix, etc.)
-   - Ensure message accurately reflects changes and purpose
-   - Use lowercase type matching the project convention
-   - Pick the most fitting scope from the table above
-   - Focus on WHY rather than WHAT
-   - Never commit files that likely contain secrets (.env, credentials.json, etc.)
+   - 执行 `git status`，不要使用 `-uall`。
+   - 执行 `git diff --cached` 查看已暂存改动。
+   - 执行 `git diff` 查看未暂存改动。
+   - 执行 `git log -5 --oneline` 确认近期提交风格。
 
-3. **Commit**:
-   - Create commit with proper message format
-   - Always use HEREDOC for commit messages:
+2. **起草提交信息**
+
+   - 判断变更属于功能、修复、重构还是维护。
+   - 确保标题与正文准确覆盖已暂存范围和目的。
+   - 选择项目允许的小写类型及最合适的作用域。
+   - 优先解释为什么修改以及修改带来的影响。
+
+3. **创建提交**
+
+   - 使用符合规范的提交信息。
+   - 多行提交信息始终通过 HEREDOC 传入：
 
    ```bash
    git commit -m "$(cat <<'EOF'
@@ -153,19 +158,20 @@ Omit scope for cross-cutting changes that span multiple areas.
    )"
    ```
 
-   - Verify with `git status` after commit
+   - 提交后再次执行 `git status` 验证状态。
 
-4. **If pre-commit hook fails**:
-   - Fix the issue
-   - Create a NEW commit (do not use `--amend`)
-   - Never skip hooks unless explicitly requested
+4. **预提交钩子失败时**
 
-## Important Notes
+   - 修复导致失败的问题。
+   - 创建一个新提交，不使用 `--amend`。
+   - 除非用户明确要求，否则绝不跳过钩子。
 
-- **Never push** unless user explicitly requests it
-- **Never stage files without asking** - Must ask the user for confirmation before running any `git add` command
-- **Never use interactive flags** (`-i`) as they require user input
-- **No empty commits** - If nothing is staged, inform the user instead
-- **Always use HEREDOC** for commit messages to ensure proper formatting
-- **Never add Co-Authored-By** - Do not append any `Co-Authored-By` trailer for any agent
-- **One commit per concern** - If staged changes span multiple unrelated concerns, split into separate commits. Each commit should have a single, clear purpose
+## 重要限制
+
+- 未经用户明确要求，绝不推送。
+- 未经用户确认，绝不自行暂存文件。
+- 不使用需要交互输入的 `-i` 等参数。
+- 没有已暂存改动时不得创建空提交，应直接告知用户。
+- 多行提交信息始终使用 HEREDOC，保证格式正确。
+- 不添加 `Co-Authored-By` 或任何 AI 署名。
+- 每个提交只处理一个关注点；无关改动必须拆分。

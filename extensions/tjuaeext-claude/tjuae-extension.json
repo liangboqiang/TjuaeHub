@@ -1,13 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
-  "author": "TjuaeUI",
+  "author": "Tjuae",
   "contributes": {
     "acpAdapters": [
       {
         "id": "claude",
         "name": "Claude Code",
         "icon": "resources/icon.svg",
-        "description": "Claude Code adapter (via ACP adapter)",
+        "description": "通过 ACP 接入的 Claude Code 适配器",
         "cliCommand": "claude",
         "defaultCliPath": "bunx @agentclientprotocol/claude-agent-acp",
         "acpArgs": [],
@@ -15,7 +15,7 @@
       }
     ]
   },
-  "description": "Integrates Anthropic's Claude Code CLI as an ACP adapter in TjuaeUI.",
+  "description": "将 Anthropic Claude Code CLI 作为 ACP 适配器集成到 TjuaeUI。",
   "displayName": "Claude Code",
   "engine": {
     "tjuae": "^1.0.0"

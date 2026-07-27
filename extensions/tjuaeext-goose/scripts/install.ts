@@ -1,14 +1,12 @@
 import { $ } from 'bun';
 
 if (process.platform === 'win32') {
-  throw new Error(
-    'Goose does not support Windows. Please visit https://github.com/block/goose for manual installation.'
-  );
+  throw new Error('Goose 不支持 Windows。手动安装方法请参阅 https://github.com/block/goose。');
 }
 
 const dir = process.env.TJUAE_AGENT_INSTALL_DIR;
 if (!dir) {
-  console.error('[install] TJUAE_AGENT_INSTALL_DIR is not set');
+  console.error('[install] 未设置 TJUAE_AGENT_INSTALL_DIR');
   process.exit(1);
 }
 
@@ -18,13 +16,13 @@ const binaryUrl = `https://github.com/block/goose/releases/latest/download/goose
 const binDir = `${dir}/bin`;
 const binaryPath = `${binDir}/goose`;
 
-console.log(`[install] Downloading goose from ${binaryUrl} ...`);
+console.log(`[install] 正在从 ${binaryUrl} 下载 Goose ...`);
 try {
   await $`mkdir -p ${binDir}`;
   await $`curl -fsSL ${binaryUrl} -o ${binaryPath}`;
   await $`chmod +x ${binaryPath}`;
-  console.log(`[install] Goose installed to ${binaryPath}`);
+  console.log(`[install] Goose 已安装到 ${binaryPath}`);
 } catch {
-  console.error('[install] Failed to download goose binary');
+  console.error('[install] Goose 二进制文件下载失败');
   process.exit(1);
 }
