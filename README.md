@@ -21,14 +21,14 @@ flowchart LR
   Source["main 分支中的扩展源码"] --> Verify["bun run verify"]
   Verify --> Archive["生成确定性 ZIP 与 index.json"]
   Archive --> Dist["更新 dist 分支"]
-  Dist --> Tag["更新 dist-<commit> 与 dist-latest 标签"]
+  Dist --> Tag["创建不可变的 dist-<commit> 标签"]
   Tag --> UI["TjuaeUI 构建时获取扩展资源"]
 ```
 
-推送到 `main` 后，GitHub Actions 会重新验证源码和产物，再发布 `dist` 分支、
-不可变的 `dist-<commit>` 标签以及指向最新产物的 `dist-latest` 标签。索引同时记录
-解压后规范内容的 `integrity` 与实际 ZIP 字节的 `archiveIntegrity`；客户端先验证归档
-哈希，再解压或安装。确定性构建不依赖本地时间戳。
+推送到 `main` 后，GitHub Actions 会重新验证源码和产物，再发布 `dist` 分支和
+不可变的 `dist-<commit>` 标签。TjuaeUI 必须引用明确的分发提交，禁止使用可变标签。
+索引同时记录解压后规范内容的 `integrity` 与实际 ZIP 字节的 `archiveIntegrity`；
+客户端先验证归档哈希，再解压或安装。确定性构建不依赖本地时间戳。
 
 ## 扩展契约
 

@@ -77,5 +77,3 @@ jobs:
           git push origin dist
           git tag "dist-${MAIN_SHA}"
           git push origin "dist-${MAIN_SHA}"
-          git tag -f dist-latest
-          git push origin dist-latest --force
