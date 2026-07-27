@@ -164,10 +164,10 @@ async function main() {
     for (const violation of violations) {
       console.error(`${violation.source}:${violation.line}`);
     }
-    throw new Error(`Found ${violations.length} retired identity or integration occurrence(s)`);
+    throw new Error(`发现 ${violations.length} 处已停用的身份或集成标识`);
   }
 
-  console.log(`Brand check passed${includeDist ? ' for source and dist' : ' for source'}.`);
+  console.log(`品牌门禁通过${includeDist ? '（源码与分发产物）' : '（源码）'}。`);
 }
 
 if (require.main === module) {

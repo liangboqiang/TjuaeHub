@@ -5,12 +5,12 @@ import { describe, expect, it } from 'vitest';
 const require = createRequire(import.meta.url);
 const { validateBuild, validateIndexShape } = require('../scripts/quality/check-build');
 
-describe('extension build artifacts', () => {
-  it('keeps the generated index and all archives consistent', async () => {
+describe('扩展构建产物', () => {
+  it('保持生成索引与全部归档一致', async () => {
     await expect(validateBuild()).resolves.toEqual({ extensionCount: 7 });
   });
 
-  it('rejects an obsolete index contract', () => {
+  it('拒绝已过时的索引契约', () => {
     expect(() =>
       validateIndexShape({
         schemaVersion: 1,
@@ -20,7 +20,7 @@ describe('extension build artifacts', () => {
     ).toThrow('schemaVersion 2');
   });
 
-  it('publishes only a clean, flat dist payload', async () => {
+  it('只发布干净且扁平的 dist 载荷', async () => {
     const workflow = await readFile('.github/workflows/build-extensions.yml', 'utf8');
 
     expect(workflow).toContain('DIST_TMP=$(mktemp -d)');

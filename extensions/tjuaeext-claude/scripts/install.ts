@@ -4,7 +4,7 @@ import { join } from 'path';
 
 const dir = process.env.TJUAE_AGENT_INSTALL_DIR;
 if (!dir) {
-  console.error('[install] 未设置 TJUAE_AGENT_INSTALL_DIR');
+  console.error('[安装] 未设置 TJUAE_AGENT_INSTALL_DIR');
   process.exit(1);
 }
 
@@ -20,19 +20,19 @@ const registries: { name: string; url: string }[] = [
 let installed = false;
 
 for (const reg of registries) {
-  console.log(`[install] 尝试 ${reg.name} (${reg.url}) ...`);
+  console.log(`[安装] 正在尝试 ${reg.name}（${reg.url}）……`);
   try {
     await $`bun install --cwd ${dir} ${PKGS[0]} ${PKGS[1]} --registry=${reg.url}`.quiet();
-    console.log(`[install] 通过 ${reg.name} 安装成功`);
+    console.log(`[安装] 已通过 ${reg.name} 安装成功`);
     installed = true;
     break;
   } catch {
-    console.warn(`[install] ${reg.name} 安装失败，尝试下一个源...`);
+    console.warn(`[安装] ${reg.name} 安装失败，正在尝试下一个源……`);
   }
 }
 
 if (!installed) {
-  console.error('[install] 所有源均安装失败，请检查网络连接后重试');
+  console.error('[安装] 所有源均安装失败，请检查网络连接后重试');
   process.exit(1);
 }
 

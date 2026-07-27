@@ -40,31 +40,31 @@ allowed-tools: Bash(rm -f ./.git/index.lock)
 ### 常规提交
 
 ```text
-feat(extensions): add new ACP agent extension
+feat(extensions): 新增 ACP 智能体扩展
 
-- Add tjuae-extension.json manifest and install script
-- Register extension in the build pipeline
+- 新增 tjuae-extension.json 清单和安装脚本
+- 将扩展注册到构建流水线
 ```
 
 ```text
-fix(kits): handle missing server configuration
+fix(kits): 处理服务器配置缺失
 
-- Add a fallback for an undefined development port
-- Improve the error message for a missing configuration file
+- 为未定义的开发端口增加后备值
+- 改进配置文件缺失时的错误提示
 ```
 
 ```text
-refactor(build): use deterministic content hashes
+refactor(build): 使用确定性内容哈希
 
-- Replace timestamp-based hashing with SHA-256 content hashing
-- Keep builds reproducible across environments
+- 使用 SHA-256 内容哈希替代基于时间戳的哈希
+- 保持跨环境构建可复现
 ```
 
 ```text
-chore(extensions): promote verified agent extensions
+chore(extensions): 启用已验证的智能体扩展
 
-- Move verified entries from pending to extensions
-- Include the promoted extensions in the build
+- 将已验证条目从 pending 移至 extensions
+- 在构建中包含已启用扩展
 ```
 
 ### 跨模块提交
@@ -72,21 +72,21 @@ chore(extensions): promote verified agent extensions
 跨越多个目录且没有合适作用域时，可以省略 `scope`：
 
 ```text
-chore: stop tracking generated distribution files
+chore: 停止跟踪生成的分发文件
 
-- Add generated outputs to .gitignore
-- Remove previously tracked distribution artifacts
+- 将生成产物加入 .gitignore
+- 移除先前跟踪的分发产物
 ```
 
 ### 破坏性变更
 
 ```text
-refactor!(extensions): redesign manifest schema
+refactor!(extensions): 重新设计清单模式
 
-- Replace flat fields with the contributes structure
-- Update every checked-in manifest
+- 使用 contributes 结构替代扁平字段
+- 更新仓库中的全部清单
 
-BREAKING CHANGE: tjuae-extension.json schema v1 is no longer supported.
+BREAKING CHANGE: 不再支持 tjuae-extension.json 模式 v1。
 ```
 
 ## 规则
@@ -96,7 +96,7 @@ BREAKING CHANGE: tjuae-extension.json schema v1 is no longer supported.
 - **破坏性变更**：在类型或作用域后添加 `!`，并同时提供 `BREAKING CHANGE:` 段落。
 - **作用域**：可省略；使用时必须小写，并对应仓库目录或模块。
 - **正文**：使用项目符号，重点说明原因和影响，而不只是罗列操作。
-- **措辞明确**：避免 `update`、`fix stuff` 等含糊标题。
+- **措辞明确**：避免“更新”“修点东西”等含糊标题。
 - **敏感信息**：不得提交 `.env`、`credentials.json` 或其他疑似包含密钥的文件。
 
 ## 允许的类型

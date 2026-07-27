@@ -1,28 +1,27 @@
 #!/usr/bin/env bun
 /**
- * ACP Client — minimal CLI for the Agent Client Protocol.
+ * ACP 客户端——智能体客户端协议的精简命令行工具。
  *
- * Spawns any ACP-compatible Agent as a child process and communicates
- * via JSON-RPC over stdio. Implements all Client-side capabilities
- * (fs, terminal, permissions) so agents can use them during prompts.
+ * 将任意兼容 ACP 的智能体作为子进程启动，并通过标准输入输出上的 JSON-RPC
+ * 与其通信。实现文件系统、终端和许可等全部客户端能力，供智能体处理提示词时使用。
  *
  * ── CLI ────────────────────────────────────────────────────────
  *
  *   client.ts <agent-command> [agent-args...] initialize [options]
  *   client.ts <agent-command> [agent-args...] prompt <text> [options]
  *
- *   Options:
- *     --cwd <path>       Working directory (default: cwd)
- *     --timeout <ms>     Timeout in ms (default: 300000)
- *     --verbose          Print raw JSON-RPC to stderr
+ *   参数：
+ *     --cwd <path>       工作目录（默认：当前目录）
+ *     --timeout <ms>     超时时间，单位为毫秒（默认：300000）
+ *     --verbose          将原始 JSON-RPC 输出到标准错误
  *
- *   Examples:
+ *   示例：
  *     client.ts codex-acp initialize
- *     client.ts codex-acp prompt "Fix the type error in src/main.ts"
+ *     client.ts codex-acp prompt "修复 src/main.ts 中的类型错误"
  *     client.ts bun ./agent.js initialize --verbose
- *     client.ts codex-acp prompt "Explain this" --cwd ~/project
+ *     client.ts codex-acp prompt "讲解这个项目" --cwd ~/project
  *
- * ── Module usage ───────────────────────────────────────────────
+ * ── 模块用法 ───────────────────────────────────────────────────
  *
  *   import { AcpClient } from './client';
  *   const c = new AcpClient({ command: 'codex-acp' });
@@ -158,7 +157,7 @@ class AcpClient {
         }
         this._clientInfo = opts.clientInfo || {
             name: 'acp-client',
-            title: 'ACP Client',
+            title: 'ACP 客户端',
             version: '1.0.0',
         }
 
@@ -199,7 +198,7 @@ class AcpClient {
 
         this._child.on('exit', (code: number | null) => {
             for (const [, { reject }] of this._pending) {
-                reject(new Error(`Agent exited with code ${code}`))
+                reject(new Error(`智能体退出，代码为 ${code}`))
             }
             this._pending.clear()
         })
@@ -255,7 +254,7 @@ class AcpClient {
                 this._sendRaw({
                     jsonrpc: JSONRPC_VERSION,
                     id,
-                    error: { code: -32601, message: `Method not found: ${method}` },
+                    error: { code: -32601, message: `未找到方法：${method}` },
                 })
                 return
             }
@@ -279,7 +278,7 @@ class AcpClient {
     }
 
     private async _handleFsRead(params: any): Promise<any> {
-        if (!params?.path) throw new Error('path is required')
+        if (!params?.path) throw new Error('必须提供 path')
         const content = await fs.promises.readFile(params.path, 'utf-8')
         if (params.line || params.limit) {
             const lines = content.split('\n')
@@ -290,15 +289,15 @@ class AcpClient {
     }
 
     private async _handleFsWrite(params: any): Promise<any> {
-        if (!params?.path) throw new Error('path is required')
-        if (params.content === undefined) throw new Error('content is required')
+        if (!params?.path) throw new Error('必须提供 path')
+        if (params.content === undefined) throw new Error('必须提供 content')
         await fs.promises.mkdir(path.dirname(params.path), { recursive: true })
         await fs.promises.writeFile(params.path, params.content, 'utf-8')
         return {}
     }
 
     private async _handleTerminalCreate(params: any): Promise<any> {
-        if (!params?.command) throw new Error('command is required')
+        if (!params?.command) throw new Error('必须提供 command')
         const terminalId = `term_${++this._terminalCounter}`
         const env: Record<string, string> = { ...(process.env as Record<string, string>) }
         for (const { name, value } of params.env || []) env[name] = value
@@ -366,7 +365,7 @@ class AcpClient {
 
     private _getTerm(id: string): Terminal {
         const t = this._terminals.get(id)
-        if (!t) throw new Error(`Unknown terminal: ${id}`)
+        if (!t) throw new Error(`未知终端：${id}`)
         return t
     }
 
@@ -524,33 +523,33 @@ async function withTimeout<T>(promise: Promise<T>, ms: number, label: string): P
     if (ms <= 0) return promise
     let timer: ReturnType<typeof setTimeout>
     const timeout = new Promise<never>((_, reject) => {
-        timer = setTimeout(() => reject(new Error(`${label}: timeout after ${ms}ms`)), ms)
+        timer = setTimeout(() => reject(new Error(`${label}：${ms}ms 后超时`)), ms)
     })
     return Promise.race([promise, timeout]).finally(() => clearTimeout(timer!))
 }
 
-const HELP = `ACP Client — talk to any ACP-compatible agent
+const HELP = `ACP 客户端——与任意兼容 ACP 的智能体通信
 
-Usage:
+用法：
   client.ts <agent> [agent-args...] initialize [options]
   client.ts <agent> [agent-args...] prompt <text> [options]
 
-Subcommands:
-  initialize          Initialize agent, print capabilities as JSON
-  prompt <text>       Full lifecycle: initialize -> session/new -> prompt
-                      Streams agent text to stdout
+子命令：
+  initialize          初始化智能体，并以 JSON 输出能力
+  prompt <text>       执行完整生命周期：initialize -> session/new -> prompt
+                      将智能体文本流式输出到标准输出
 
-Options:
-  --cwd <path>        Working directory (default: cwd)
-  --timeout <ms>      Timeout in ms (default: 300000)
-  --verbose           Print raw JSON-RPC to stderr
-  --help              Show this help
+参数：
+  --cwd <path>        会话工作目录（默认：当前目录）
+  --timeout <ms>      超时时间，单位为毫秒（默认：300000）
+  --verbose           将原始 JSON-RPC 输出到标准错误
+  --help              显示此帮助
 
-Examples:
+示例：
   client.ts codex-acp initialize
-  client.ts codex-acp prompt "Fix the type error in src/main.ts"
+  client.ts codex-acp prompt "修复 src/main.ts 中的类型错误"
   client.ts node ./agent.js initialize --verbose
-  client.ts codex-acp prompt "Explain this codebase" --cwd ~/project`
+  client.ts codex-acp prompt "讲解这个代码库" --cwd ~/project`
 
 async function main(): Promise<void> {
     const opts = parseArgs(process.argv.slice(2))
@@ -586,29 +585,29 @@ async function main(): Promise<void> {
                 if (opts.verbose) {
                     const name = init.agentInfo?.name || 'unknown'
                     const ver = init.agentInfo?.version || '?'
-                    process.stderr.write(`Agent: ${name} v${ver}\n`)
+                    process.stderr.write(`智能体：${name} v${ver}\n`)
                 }
 
                 const session = await withTimeout(client.sessionNew(opts.cwd), 30_000, 'session/new')
                 if (opts.verbose) {
-                    process.stderr.write(`Session: ${session.sessionId}\n`)
+                    process.stderr.write(`会话：${session.sessionId}\n`)
                 }
 
                 const result = await withTimeout(
-                    client.sessionPrompt(session.sessionId, opts.promptText || 'Say hello'),
+                    client.sessionPrompt(session.sessionId, opts.promptText || '你好'),
                     opts.timeout,
                     'session/prompt',
                 )
 
                 process.stdout.write('\n')
                 if (opts.verbose) {
-                    process.stderr.write(`Stop reason: ${result?.stopReason}\n`)
+                    process.stderr.write(`停止原因：${result?.stopReason}\n`)
                 }
                 break
             }
         }
     } catch (err: any) {
-        process.stderr.write(`Error: ${err.message}\n`)
+        process.stderr.write(`错误：${err.message}\n`)
         process.exitCode = 1
     } finally {
         client.close()

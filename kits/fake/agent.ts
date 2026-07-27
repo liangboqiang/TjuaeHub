@@ -47,16 +47,16 @@ interface Mode {
 // ── Constants ─────────────────────────────────────────────────
 
 const MODES: Mode[] = [
-    { id: 'ask', name: 'Ask', description: 'Request permission before making any changes' },
-    { id: 'code', name: 'Code', description: 'Write and modify code with full tool access' },
+    { id: 'ask', name: '询问', description: '执行任何变更前先请求许可' },
+    { id: 'code', name: '编码', description: '使用完整工具权限编写和修改代码' },
 ]
 
 const PLAN_STEPS: string[] = [
-    'Request permission',
-    'Read project files',
-    'Write analysis result',
-    'Apply edits & run commands',
-    'Generate response',
+    '请求许可',
+    '读取项目文件',
+    '编写分析结果',
+    '应用编辑并运行命令',
+    '生成响应',
 ]
 
 // Minimal 1x1 transparent PNG (base64)
@@ -85,13 +85,13 @@ class FakeAcpAgent {
         return [
             {
                 id: 'mode',
-                name: 'Session Mode',
+                name: '会话模式',
                 category: 'mode',
                 type: 'select',
                 currentValue: this._currentModeId,
                 options: [
-                    { value: 'ask', name: 'Ask', description: 'Request permission before changes' },
-                    { value: 'code', name: 'Code', description: 'Full tool access' },
+                    { value: 'ask', name: '询问', description: '变更前请求许可' },
+                    { value: 'code', name: '编码', description: '完整工具权限' },
                 ],
             },
             {
@@ -101,8 +101,8 @@ class FakeAcpAgent {
                 type: 'select',
                 currentValue: this._currentModelId,
                 options: [
-                    { value: 'fake-model-1', name: 'Fake Model 1', description: 'Fast but less capable' },
-                    { value: 'fake-model-2', name: 'Fake Model 2', description: 'Slower but more capable' },
+                    { value: 'fake-model-1', name: '模拟模型 1', description: '速度较快，能力较弱' },
+                    { value: 'fake-model-2', name: '模拟模型 2', description: '速度较慢，能力较强' },
                 ],
             },
         ]
@@ -209,7 +209,7 @@ class FakeAcpAgent {
             case 'session/set_config_option':
                 return this.handleSetConfigOption(id!, message.params)
             default:
-                if (id !== undefined) this.sendError(id, -32601, `Method not found: ${method}`)
+                if (id !== undefined) this.sendError(id, -32601, `未找到方法：${method}`)
         }
     }
 
@@ -225,8 +225,8 @@ class FakeAcpAgent {
                 mcpCapabilities: { http: true, sse: true },
                 sessionCapabilities: { list: true },
             },
-            agentInfo: { name: 'fake-acp-agent', title: 'Fake ACP Agent', version: '1.0.0' },
-            authMethods: [{ id: 'api-key', description: 'API key authentication' }],
+            agentInfo: { name: 'fake-acp-agent', title: 'ACP 模拟智能体', version: '1.0.0' },
+            authMethods: [{ id: 'api-key', description: 'API 密钥身份验证' }],
         })
     }
 
@@ -251,7 +251,7 @@ class FakeAcpAgent {
             cwd,
             mcpServers,
             createdAt: new Date().toISOString(),
-            title: `Session ${this._sessionCounter}`,
+            title: `会话 ${this._sessionCounter}`,
         })
 
         this.sendResponse(id, {
@@ -266,9 +266,9 @@ class FakeAcpAgent {
             update: {
                 sessionUpdate: 'available_commands_update',
                 availableCommands: [
-                    { name: 'test', description: 'Run tests' },
-                    { name: 'plan', description: 'Create implementation plan', input: { hint: 'description' } },
-                    { name: 'compact', description: 'Compact conversation history' },
+                    { name: 'test', description: '运行测试' },
+                    { name: 'plan', description: '创建实施计划', input: { hint: '描述' } },
+                    { name: 'compact', description: '压缩会话历史' },
                 ],
             },
         })
@@ -276,7 +276,7 @@ class FakeAcpAgent {
         // MCP acknowledgment
         if (mcpServers.length > 0) {
             const names = mcpServers.map((s: any) => `${s.name}(${s.type || 'unknown'})`).join(', ')
-            this.emitChunk(sessionId, `[MCP] Loaded ${mcpServers.length} server(s): ${names}\n`)
+            this.emitChunk(sessionId, `[MCP] 已加载 ${mcpServers.length} 个服务：${names}\n`)
         }
     }
 
@@ -286,7 +286,7 @@ class FakeAcpAgent {
             sessionId,
             update: {
                 sessionUpdate: 'user_message_chunk',
-                content: { type: 'text', text: 'How do I read a file in Node.js?' },
+                content: { type: 'text', text: '如何在 Node.js 中读取文件？' },
             },
         })
         this.sendNotification('session/update', {
@@ -372,7 +372,7 @@ class FakeAcpAgent {
         this.emitPlan(sessionId, -1)
 
         // ── 2. Opening chunks ──
-        const opening = `Processing: "${promptText}"\n\n`
+        const opening = `正在处理：“${promptText}”\n\n`
         for (let i = 0; i < opening.length; i += 20) this.emitChunk(sessionId, opening.slice(i, i + 20))
 
         // ── Cancel checkpoint ──
@@ -386,14 +386,14 @@ class FakeAcpAgent {
                 sessionId,
                 toolCall: { toolCallId: 'call_perm' },
                 options: [
-                    { optionId: 'allow-once', name: 'Allow once', kind: 'allow_once' },
-                    { optionId: 'allow-always', name: 'Always allow', kind: 'allow_always' },
-                    { optionId: 'reject-once', name: 'Reject', kind: 'reject_once' },
+                    { optionId: 'allow-once', name: '允许一次', kind: 'allow_once' },
+                    { optionId: 'allow-always', name: '始终允许', kind: 'allow_always' },
+                    { optionId: 'reject-once', name: '拒绝一次', kind: 'reject_once' },
                 ],
             })
-            this.emitChunk(sessionId, `Permission: ${perm.outcome?.outcome ?? 'unknown'}\n`)
+            this.emitChunk(sessionId, `许可结果：${perm.outcome?.outcome ?? '未知'}\n`)
         } catch (err: any) {
-            this.emitChunk(sessionId, `Permission error: ${err.message}\n`)
+            this.emitChunk(sessionId, `许可错误：${err.message}\n`)
         }
         this.emitPlan(sessionId, 0, 'completed')
 
@@ -405,7 +405,7 @@ class FakeAcpAgent {
         let toolN = 0
         if (this._clientCapabilities?.fs?.readTextFile) {
             const callId = `call_${++toolN}`
-            this.emitToolCall(sessionId, callId, 'Reading file', 'read')
+            this.emitToolCall(sessionId, callId, '正在读取文件', 'read')
 
             // Write a multi-line file first so we can test line/limit
             if (this._clientCapabilities?.fs?.writeTextFile) {
@@ -430,7 +430,7 @@ class FakeAcpAgent {
                     limit: 2,
                 })
                 this.completeToolCall(sessionId, callId, `full=${full.content?.length}c, partial="${partial.content}"`)
-                this.emitChunk(sessionId, `Read OK (partial lines 2-3: "${partial.content}")\n`)
+                this.emitChunk(sessionId, `读取成功（第 2 至 3 行：“${partial.content}”）\n`)
             } catch (err: any) {
                 this.failToolCall(sessionId, callId, err.message)
             }
@@ -441,7 +441,7 @@ class FakeAcpAgent {
         this.emitPlan(sessionId, 2, 'in_progress')
         if (this._clientCapabilities?.fs?.writeTextFile) {
             const callId = `call_${++toolN}`
-            this.emitToolCall(sessionId, callId, 'Writing analysis', 'write')
+            this.emitToolCall(sessionId, callId, '正在编写分析', 'write')
             try {
                 const content = JSON.stringify(
                     {
@@ -454,8 +454,8 @@ class FakeAcpAgent {
                     2,
                 )
                 await this.callClient('fs/write_text_file', { sessionId, path: '/tmp/acp-analysis.json', content })
-                this.completeToolCall(sessionId, callId, `Wrote ${content.length} bytes`)
-                this.emitChunk(sessionId, `Wrote analysis (${content.length}b)\n`)
+                this.completeToolCall(sessionId, callId, `已写入 ${content.length} 字节`)
+                this.emitChunk(sessionId, `分析已写入（${content.length} 字节）\n`)
             } catch (err: any) {
                 this.failToolCall(sessionId, callId, err.message)
             }
@@ -466,7 +466,7 @@ class FakeAcpAgent {
         this.emitPlan(sessionId, 3, 'in_progress')
         {
             const callId = `call_${++toolN}`
-            this.emitToolCall(sessionId, callId, 'Editing config', 'edit')
+            this.emitToolCall(sessionId, callId, '正在编辑配置', 'edit')
             if (this._clientCapabilities?.fs?.writeTextFile) {
                 try {
                     await this.callClient('fs/write_text_file', {
@@ -494,18 +494,18 @@ class FakeAcpAgent {
                     ],
                 },
             })
-            this.emitChunk(sessionId, 'Applied config edit\n')
+            this.emitChunk(sessionId, '配置编辑已应用\n')
         }
 
         // ── 7. Tool: execute — terminal create+output+wait+release (TM1-3,5) ──
         if (this._clientCapabilities?.terminal) {
             const callId = `call_${++toolN}`
-            this.emitToolCall(sessionId, callId, 'Running echo', 'execute')
+            this.emitToolCall(sessionId, callId, '正在运行 echo', 'execute')
             try {
                 const term: any = await this.callClient('terminal/create', {
                     sessionId,
                     command: 'echo',
-                    args: ['hello from fake-acp-agent'],
+                    args: ['来自 fake-acp-agent 的问候'],
                 })
                 this.sendNotification('session/update', {
                     sessionId,
@@ -519,8 +519,8 @@ class FakeAcpAgent {
                 await this.callClient('terminal/wait_for_exit', { sessionId, terminalId: term.terminalId })
                 const output: any = await this.callClient('terminal/output', { sessionId, terminalId: term.terminalId })
                 await this.callClient('terminal/release', { sessionId, terminalId: term.terminalId })
-                this.completeToolCall(sessionId, callId, `Output: ${(output.output || '').trim()}`)
-                this.emitChunk(sessionId, `Terminal: ${(output.output || '').trim()}\n`)
+                this.completeToolCall(sessionId, callId, `输出：${(output.output || '').trim()}`)
+                this.emitChunk(sessionId, `终端：${(output.output || '').trim()}\n`)
             } catch (err: any) {
                 this.failToolCall(sessionId, callId, err.message)
             }
@@ -529,7 +529,7 @@ class FakeAcpAgent {
         // ── 8. Tool: execute — terminal/kill (TM4) ──
         if (this._clientCapabilities?.terminal) {
             const callId = `call_${++toolN}`
-            this.emitToolCall(sessionId, callId, 'Kill long process', 'execute')
+            this.emitToolCall(sessionId, callId, '终止长时间运行的进程', 'execute')
             try {
                 const term: any = await this.callClient('terminal/create', {
                     sessionId,
@@ -542,10 +542,10 @@ class FakeAcpAgent {
                 const output: any = await this.callClient('terminal/output', { sessionId, terminalId: term.terminalId })
                 await this.callClient('terminal/release', { sessionId, terminalId: term.terminalId })
                 const info = output.exitStatus
-                    ? `exit=${output.exitStatus.exitCode}, signal=${output.exitStatus.signal}`
-                    : 'killed'
-                this.completeToolCall(sessionId, callId, `Killed (${info})`)
-                this.emitChunk(sessionId, `Killed process (${info})\n`)
+                    ? `退出码=${output.exitStatus.exitCode}，信号=${output.exitStatus.signal}`
+                    : '已终止'
+                this.completeToolCall(sessionId, callId, `已终止（${info}）`)
+                this.emitChunk(sessionId, `进程已终止（${info}）\n`)
             } catch (err: any) {
                 this.failToolCall(sessionId, callId, err.message)
             }
@@ -554,7 +554,7 @@ class FakeAcpAgent {
         // ── 9. Tool: failed (TC2 failed status) ──
         {
             const callId = `call_${++toolN}`
-            this.emitToolCall(sessionId, callId, 'Risky operation', 'execute')
+            this.emitToolCall(sessionId, callId, '高风险操作', 'execute')
             this.sendNotification('session/update', {
                 sessionId,
                 update: { sessionUpdate: 'tool_call_update', toolCallId: callId, status: 'in_progress' },
@@ -565,10 +565,10 @@ class FakeAcpAgent {
                     sessionUpdate: 'tool_call_update',
                     toolCallId: callId,
                     status: 'failed',
-                    content: [{ type: 'content', content: { type: 'text', text: 'Simulated failure for testing' } }],
+                    content: [{ type: 'content', content: { type: 'text', text: '用于测试的模拟失败' } }],
                 },
             })
-            this.emitChunk(sessionId, 'Tool failed (expected)\n')
+            this.emitChunk(sessionId, '工具按预期失败\n')
         }
         this.emitPlan(sessionId, 3, 'completed')
 
@@ -577,32 +577,32 @@ class FakeAcpAgent {
 
         // CT2: ImageContent
         this.emitContentChunk(sessionId, { type: 'image', data: TINY_PNG, mimeType: 'image/png' })
-        this.emitChunk(sessionId, 'Sent image\n')
+        this.emitChunk(sessionId, '图片已发送\n')
 
         // CT3: AudioContent
         this.emitContentChunk(sessionId, { type: 'audio', data: TINY_WAV, mimeType: 'audio/wav' })
-        this.emitChunk(sessionId, 'Sent audio\n')
+        this.emitChunk(sessionId, '音频已发送\n')
 
         // CT4: EmbeddedResource
         this.emitContentChunk(sessionId, {
             type: 'resource',
             resource: { uri: 'file:///tmp/acp-analysis.json', mimeType: 'application/json', text: '{"embedded":true}' },
         })
-        this.emitChunk(sessionId, 'Sent embedded resource\n')
+        this.emitChunk(sessionId, '嵌入资源已发送\n')
 
         // CT5: ResourceLink
         this.emitContentChunk(sessionId, {
             type: 'resource_link',
             uri: 'file:///workspace/README.md',
-            title: 'Project README',
+            title: '项目 README',
             mimeType: 'text/markdown',
         })
-        this.emitChunk(sessionId, 'Sent resource link\n')
+        this.emitChunk(sessionId, '资源链接已发送\n')
 
         this.emitPlan(sessionId, 4, 'completed')
 
         // ── 11. Final ──
-        this.emitChunk(sessionId, `\nDone. ${toolN} tool calls executed.\n`)
+        this.emitChunk(sessionId, `\n完成，共执行 ${toolN} 次工具调用。\n`)
         this.sendResponse(id, { stopReason: 'end_turn' })
     }
 
@@ -673,13 +673,13 @@ export { FakeAcpAgent }
 
 // ── CLI entry point ───────────────────────────────────────────
 
-const HELP = `fake-agent — Fake ACP Agent for protocol compliance testing
+const HELP = `fake-agent — 用于协议合规测试的 ACP 模拟智能体
 
-Usage:
-  fake-agent acp            Start ACP agent over stdio (subcommand style)
-  fake-agent --acp          Start ACP agent over stdio (flag style)
+用法：
+  fake-agent acp            通过标准输入输出启动 ACP 智能体（子命令形式）
+  fake-agent --acp          通过标准输入输出启动 ACP 智能体（参数形式）
 
-Examples:
+示例：
   bun run kits/fake/agent.ts acp
   bun run kits/fake/agent.ts --acp`
 

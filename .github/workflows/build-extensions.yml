@@ -73,7 +73,7 @@ jobs:
             exit 0
           fi
 
-          git commit -m "chore(dist): build from main@${MAIN_SHA}"
+          git commit -m "chore(dist): 基于 main@${MAIN_SHA} 构建"
           git push origin dist
           git tag "dist-${MAIN_SHA}"
           git push origin "dist-${MAIN_SHA}"

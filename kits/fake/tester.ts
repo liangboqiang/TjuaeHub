@@ -22,7 +22,7 @@ class TestRunner {
 
     constructor(harness: AcpClient, opts: TestRunnerOptions) {
         this._h = harness
-        this._prompt = opts.prompt || 'Say hello'
+        this._prompt = opts.prompt || '你好'
         this._cwd = opts.cwd || process.cwd()
         this._timeout = opts.timeout || 30000
         this._passed = 0
@@ -32,21 +32,21 @@ class TestRunner {
 
     pass(desc: string): void {
         this._passed++
-        console.log(`[PASS] ${desc}`)
+        console.log(`[通过] ${desc}`)
     }
     fail(desc: string, reason: string): void {
         this._failed++
-        console.log(`[FAIL] ${desc}: ${reason}`)
+        console.log(`[失败] ${desc}：${reason}`)
     }
     skip(desc: string, reason: string): void {
         this._skipped++
-        console.log(`[SKIP] ${desc}: ${reason}`)
+        console.log(`[跳过] ${desc}：${reason}`)
     }
 
     private async _withTimeout<T>(promise: Promise<T>, label: string): Promise<T> {
         let timer: ReturnType<typeof setTimeout>
         const timeout = new Promise<never>((_, reject) => {
-            timer = setTimeout(() => reject(new Error(`timeout after ${this._timeout}ms`)), this._timeout)
+            timer = setTimeout(() => reject(new Error(`${this._timeout}ms 后超时`)), this._timeout)
         })
         try {
             const result = await Promise.race([promise, timeout])
@@ -54,7 +54,7 @@ class TestRunner {
             return result
         } catch (err: any) {
             clearTimeout(timer!)
-            throw new Error(`${label}: ${err.message}`)
+            throw new Error(`${label}：${err.message}`)
         }
     }
 
@@ -77,17 +77,17 @@ class TestRunner {
         }
 
         if (typeof init?.protocolVersion !== 'number') {
-            this.fail('L1 initialize', `protocolVersion missing (got ${JSON.stringify(init?.protocolVersion)})`)
+            this.fail('L1 initialize', `缺少 protocolVersion（实际为 ${JSON.stringify(init?.protocolVersion)}）`)
             return this._summary()
         }
-        this.pass(`L1 initialize — protocol v${init.protocolVersion}`)
+        this.pass(`L1 initialize——协议 v${init.protocolVersion}`)
 
         // agentInfo
         const info = init.agentInfo
         if (info?.name) {
-            this.pass(`L1 agentInfo — ${info.name}${info.version ? ' v' + info.version : ''}`)
+            this.pass(`L1 agentInfo——${info.name}${info.version ? ' v' + info.version : ''}`)
         } else {
-            this.fail('L1 agentInfo', 'agentInfo.name missing')
+            this.fail('L1 agentInfo', '缺少 agentInfo.name')
         }
 
         // ══════════════════════════════════════════════════════════
@@ -97,25 +97,25 @@ class TestRunner {
         const caps = init.agentCapabilities || {}
 
         // C2: loadSession
-        this.pass(`C2 loadSession — ${caps.loadSession ? 'supported' : 'not supported'}`)
+        this.pass(`C2 loadSession——${caps.loadSession ? '支持' : '不支持'}`)
 
         // C3: image
         const pc = caps.promptCapabilities || {}
-        this.pass(`C3 promptCapabilities.image — ${pc.image ?? false}`)
+        this.pass(`C3 promptCapabilities.image——${pc.image ?? false}`)
 
         // C4: audio
-        this.pass(`C4 promptCapabilities.audio — ${pc.audio ?? false}`)
+        this.pass(`C4 promptCapabilities.audio——${pc.audio ?? false}`)
 
         // C5: embeddedContext
-        this.pass(`C5 promptCapabilities.embeddedContext — ${pc.embeddedContext ?? false}`)
+        this.pass(`C5 promptCapabilities.embeddedContext——${pc.embeddedContext ?? false}`)
 
         // C6: mcpCapabilities.http
         const mc = caps.mcpCapabilities || {}
-        this.pass(`C6 mcpCapabilities.http — ${mc.http ?? false}`)
+        this.pass(`C6 mcpCapabilities.http——${mc.http ?? false}`)
 
         // C7: sessionCapabilities.list
         const sc = caps.sessionCapabilities || {}
-        this.pass(`C7 sessionCapabilities.list — ${sc.list ?? false}`)
+        this.pass(`C7 sessionCapabilities.list——${sc.list ?? false}`)
 
         // ══════════════════════════════════════════════════════════
         // L2: authenticate
@@ -125,15 +125,15 @@ class TestRunner {
             try {
                 const authResult = await this._withTimeout(this._h.authenticate(init.authMethods[0].id), 'authenticate')
                 if (authResult.authenticated) {
-                    this.pass(`L2 authenticate — method "${init.authMethods[0].id}", user="${authResult.user?.name}"`)
+                    this.pass(`L2 authenticate——方式“${init.authMethods[0].id}”，用户“${authResult.user?.name}”`)
                 } else {
-                    this.fail('L2 authenticate', 'not authenticated')
+                    this.fail('L2 authenticate', '未通过身份验证')
                 }
             } catch (err: any) {
                 this.fail('L2 authenticate', err.message)
             }
         } else {
-            this.skip('L2 authenticate', 'no authMethods advertised')
+            this.skip('L2 authenticate', '智能体未声明 authMethods')
         }
 
         // ══════════════════════════════════════════════════════════
@@ -148,25 +148,25 @@ class TestRunner {
         }
 
         if (typeof session?.sessionId !== 'string' || !session.sessionId) {
-            this.fail('S1 session/new', `sessionId missing (got ${JSON.stringify(session?.sessionId)})`)
+            this.fail('S1 session/new', `缺少 sessionId（实际为 ${JSON.stringify(session?.sessionId)}）`)
             return this._summary()
         }
-        this.pass(`S1 session/new — sessionId="${session.sessionId}"`)
+        this.pass(`S1 session/new——sessionId=“${session.sessionId}”`)
 
         // modes
         if (session.modes?.availableModes?.length) {
             const modeNames = session.modes.availableModes.map((m: any) => m.id).join(', ')
-            this.pass(`S1 modes — current="${session.modes.currentModeId}" available=[${modeNames}]`)
+            this.pass(`S1 modes——当前=“${session.modes.currentModeId}”，可用=[${modeNames}]`)
         } else {
-            this.skip('S1 modes', 'not provided')
+            this.skip('S1 modes', '未提供')
         }
 
         // configOptions
         if (session.configOptions?.length) {
             const optNames = session.configOptions.map((o: any) => o.id).join(', ')
-            this.pass(`S1 configOptions — [${optNames}]`)
+            this.pass(`S1 configOptions——[${optNames}]`)
         } else {
-            this.skip('S1 configOptions', 'not provided')
+            this.skip('S1 configOptions', '未提供')
         }
 
         // slash commands
@@ -175,9 +175,9 @@ class TestRunner {
         const cmdUpdate = postSessionNotifs.find((n) => n.params?.update?.sessionUpdate === 'available_commands_update')
         if (cmdUpdate) {
             const cmds = cmdUpdate.params.update.availableCommands.map((c: any) => `/${c.name}`).join(', ')
-            this.pass(`S1 slash commands — ${cmds}`)
+            this.pass(`S1 斜杠命令——${cmds}`)
         } else {
-            this.skip('S1 slash commands', 'no available_commands_update received')
+            this.skip('S1 斜杠命令', '未收到 available_commands_update')
         }
 
         // ══════════════════════════════════════════════════════════
@@ -200,9 +200,9 @@ class TestRunner {
         // P8: StopReason (end_turn)
         const validStopReasons = ['end_turn', 'max_tokens', 'max_turn_requests', 'refusal', 'cancelled']
         if (!validStopReasons.includes(promptResult?.stopReason)) {
-            this.fail('P1 session/prompt stopReason', `got "${promptResult?.stopReason}"`)
+            this.fail('P1 session/prompt stopReason', `实际为“${promptResult?.stopReason}”`)
         } else {
-            this.pass(`P1 session/prompt — stopReason="${promptResult.stopReason}"`)
+            this.pass(`P1 session/prompt——stopReason=“${promptResult.stopReason}”`)
         }
 
         const turnNotifs = this._h.drainNotifications()
@@ -211,26 +211,26 @@ class TestRunner {
         // P2: agent_message_chunk
         const chunks = updates.filter((u: any) => u?.sessionUpdate === 'agent_message_chunk')
         if (chunks.length > 0) {
-            this.pass(`P2 streaming — ${chunks.length} chunks`)
+            this.pass(`P2 流式输出——${chunks.length} 个数据块`)
         } else {
-            this.fail('P2 streaming', 'no agent_message_chunk received')
+            this.fail('P2 流式输出', '未收到 agent_message_chunk')
         }
 
         // P3: tool_call + tool_call_update
         const toolCalls = updates.filter((u: any) => u?.sessionUpdate === 'tool_call')
         const toolUpdates = updates.filter((u: any) => u?.sessionUpdate === 'tool_call_update')
         if (toolCalls.length > 0) {
-            this.pass(`P3 tool calls — ${toolCalls.length} created, ${toolUpdates.length} updates`)
+            this.pass(`P3 工具调用——创建 ${toolCalls.length} 个，更新 ${toolUpdates.length} 次`)
         } else {
-            this.fail('P3 tool calls', 'none observed')
+            this.fail('P3 工具调用', '未观察到工具调用')
         }
 
         // P4: plan
         const plans = updates.filter((u: any) => u?.sessionUpdate === 'plan')
         if (plans.length > 0) {
-            this.pass(`P4 plan — ${plans.length} updates, ${plans[plans.length - 1].entries?.length || 0} entries`)
+            this.pass(`P4 计划——更新 ${plans.length} 次，共 ${plans[plans.length - 1].entries?.length || 0} 个条目`)
         } else {
-            this.fail('P4 plan', 'none observed')
+            this.fail('P4 计划', '未观察到计划')
         }
 
         // ══════════════════════════════════════════════════════════
@@ -242,13 +242,13 @@ class TestRunner {
         const hasInProgress = toolUpdates.some((u: any) => u.status === 'in_progress')
         const hasCompleted = toolUpdates.some((u: any) => u.status === 'completed')
         if (hasInProgress && hasCompleted && hasFailed) {
-            this.pass('TC2 tool status — pending→in_progress→completed + failed')
+            this.pass('TC2 工具状态——pending→in_progress→completed，并包含 failed')
         } else {
             const missing: string[] = []
             if (!hasInProgress) missing.push('in_progress')
             if (!hasCompleted) missing.push('completed')
             if (!hasFailed) missing.push('failed')
-            this.fail('TC2 tool status', `missing: ${missing.join(', ')}`)
+            this.fail('TC2 工具状态', `缺少：${missing.join(', ')}`)
         }
 
         // TC3: tool kinds — read, edit, execute
@@ -256,9 +256,9 @@ class TestRunner {
         const requiredKinds = ['read', 'edit', 'execute']
         const missingKinds = requiredKinds.filter((k) => !kinds.has(k))
         if (missingKinds.length === 0) {
-            this.pass(`TC3 tool kinds — ${[...kinds].join(', ')}`)
+            this.pass(`TC3 工具类型——${[...kinds].join(', ')}`)
         } else {
-            this.fail('TC3 tool kinds', `missing: ${missingKinds.join(', ')} (got: ${[...kinds].join(', ')})`)
+            this.fail('TC3 工具类型', `缺少：${missingKinds.join(', ')}（实际为：${[...kinds].join(', ')}）`)
         }
 
         // TC4: tool content types — text, file_diff, terminal
@@ -267,11 +267,11 @@ class TestRunner {
         const requiredContent = ['content', 'file_diff', 'terminal']
         const missingContent = requiredContent.filter((t) => !contentTypes.has(t))
         if (missingContent.length === 0) {
-            this.pass(`TC4 tool content — ${[...contentTypes].join(', ')}`)
+            this.pass(`TC4 工具内容——${[...contentTypes].join(', ')}`)
         } else {
             this.fail(
-                'TC4 tool content',
-                `missing: ${missingContent.join(', ')} (got: ${[...contentTypes].join(', ')})`,
+                'TC4 工具内容',
+                `缺少：${missingContent.join(', ')}（实际为：${[...contentTypes].join(', ')}）`,
             )
         }
 
@@ -283,41 +283,41 @@ class TestRunner {
 
         // CT1: TextContent
         if (chunkTypes.has('text')) {
-            this.pass('CT1 TextContent')
+            this.pass('CT1 TextContent 文本内容')
         } else {
-            this.fail('CT1 TextContent', 'no text chunks')
+            this.fail('CT1 TextContent', '没有文本数据块')
         }
 
         // CT2: ImageContent
         if (chunkTypes.has('image')) {
             const img = chunks.find((c: any) => c.content?.type === 'image')
-            this.pass(`CT2 ImageContent — ${img.content.mimeType}`)
+            this.pass(`CT2 ImageContent——${img.content.mimeType}`)
         } else {
-            this.fail('CT2 ImageContent', 'no image chunks')
+            this.fail('CT2 ImageContent', '没有图片数据块')
         }
 
         // CT3: AudioContent
         if (chunkTypes.has('audio')) {
             const aud = chunks.find((c: any) => c.content?.type === 'audio')
-            this.pass(`CT3 AudioContent — ${aud.content.mimeType}`)
+            this.pass(`CT3 AudioContent——${aud.content.mimeType}`)
         } else {
-            this.fail('CT3 AudioContent', 'no audio chunks')
+            this.fail('CT3 AudioContent', '没有音频数据块')
         }
 
         // CT4: EmbeddedResource
         if (chunkTypes.has('resource')) {
             const res = chunks.find((c: any) => c.content?.type === 'resource')
-            this.pass(`CT4 EmbeddedResource — ${res.content.resource?.uri}`)
+            this.pass(`CT4 EmbeddedResource——${res.content.resource?.uri}`)
         } else {
-            this.fail('CT4 EmbeddedResource', 'no resource chunks')
+            this.fail('CT4 EmbeddedResource', '没有资源数据块')
         }
 
         // CT5: ResourceLink
         if (chunkTypes.has('resource_link')) {
             const rl = chunks.find((c: any) => c.content?.type === 'resource_link')
-            this.pass(`CT5 ResourceLink — ${rl.content.uri}`)
+            this.pass(`CT5 ResourceLink——${rl.content.uri}`)
         } else {
-            this.fail('CT5 ResourceLink', 'no resource_link chunks')
+            this.fail('CT5 ResourceLink', '没有 resource_link 数据块')
         }
 
         // ══════════════════════════════════════════════════════════
@@ -329,9 +329,9 @@ class TestRunner {
         // PM1: session/request_permission
         const permReqs = handled.filter((r) => r.method === 'session/request_permission')
         if (permReqs.length > 0) {
-            this.pass('PM1 request_permission — handled')
+            this.pass('PM1 request_permission——已处理')
         } else {
-            this.fail('PM1 request_permission', 'agent never requested permission')
+            this.fail('PM1 request_permission', '智能体从未请求许可')
         }
 
         // PM2: PermissionOptionKind
@@ -339,69 +339,69 @@ class TestRunner {
         const requiredPermKinds = ['allow_once', 'allow_always', 'reject_once']
         const missingPermKinds = requiredPermKinds.filter((k) => !permKinds.has(k))
         if (missingPermKinds.length === 0) {
-            this.pass(`PM2 PermissionOptionKind — ${[...permKinds].join(', ')}`)
+            this.pass(`PM2 PermissionOptionKind——${[...permKinds].join(', ')}`)
         } else {
-            this.fail('PM2 PermissionOptionKind', `missing: ${missingPermKinds.join(', ')}`)
+            this.fail('PM2 PermissionOptionKind', `缺少：${missingPermKinds.join(', ')}`)
         }
 
         // FS1: fs/read_text_file
         const fsReads = handled.filter((r) => r.method === 'fs/read_text_file')
         if (fsReads.length > 0) {
-            this.pass(`FS1 fs/read_text_file — ${fsReads.length} read(s)`)
+            this.pass(`FS1 fs/read_text_file——读取 ${fsReads.length} 次`)
         } else {
-            this.fail('FS1 fs/read_text_file', 'never called')
+            this.fail('FS1 fs/read_text_file', '从未调用')
         }
 
         // FS2: fs/write_text_file
         const fsWrites = handled.filter((r) => r.method === 'fs/write_text_file')
         if (fsWrites.length > 0) {
-            this.pass(`FS2 fs/write_text_file — ${fsWrites.length} write(s)`)
+            this.pass(`FS2 fs/write_text_file——写入 ${fsWrites.length} 次`)
         } else {
-            this.fail('FS2 fs/write_text_file', 'never called')
+            this.fail('FS2 fs/write_text_file', '从未调用')
         }
 
         // FS3: fs/read_text_file with line/limit
         const lineReads = fsReads.filter((r) => r.params?.line || r.params?.limit)
         if (lineReads.length > 0) {
-            this.pass(`FS3 fs/read line/limit — line=${lineReads[0].params.line}, limit=${lineReads[0].params.limit}`)
+            this.pass(`FS3 fs/read line/limit——line=${lineReads[0].params.line}，limit=${lineReads[0].params.limit}`)
         } else {
-            this.fail('FS3 fs/read line/limit', 'never called with line/limit')
+            this.fail('FS3 fs/read line/limit', '从未使用 line/limit 调用')
         }
 
         // TM1: terminal/create
         const termCreates = handled.filter((r) => r.method === 'terminal/create')
         if (termCreates.length > 0) {
-            this.pass(`TM1 terminal/create — ${termCreates.length} terminal(s)`)
+            this.pass(`TM1 terminal/create——${termCreates.length} 个终端`)
         } else {
-            this.fail('TM1 terminal/create', 'never called')
+            this.fail('TM1 terminal/create', '从未调用')
         }
 
         // TM2: terminal/output
         if (handled.some((r) => r.method === 'terminal/output')) {
             this.pass('TM2 terminal/output')
         } else {
-            this.fail('TM2 terminal/output', 'never called')
+            this.fail('TM2 terminal/output', '从未调用')
         }
 
         // TM3: terminal/wait_for_exit
         if (handled.some((r) => r.method === 'terminal/wait_for_exit')) {
             this.pass('TM3 terminal/wait_for_exit')
         } else {
-            this.fail('TM3 terminal/wait_for_exit', 'never called')
+            this.fail('TM3 terminal/wait_for_exit', '从未调用')
         }
 
         // TM4: terminal/kill
         if (handled.some((r) => r.method === 'terminal/kill')) {
             this.pass('TM4 terminal/kill')
         } else {
-            this.fail('TM4 terminal/kill', 'never called')
+            this.fail('TM4 terminal/kill', '从未调用')
         }
 
         // TM5: terminal/release
         if (handled.some((r) => r.method === 'terminal/release')) {
             this.pass('TM5 terminal/release')
         } else {
-            this.fail('TM5 terminal/release', 'never called')
+            this.fail('TM5 terminal/release', '从未调用')
         }
 
         // ══════════════════════════════════════════════════════════
@@ -410,9 +410,9 @@ class TestRunner {
 
         const metaCount = turnNotifs.filter((n) => n._meta).length
         if (metaCount > 0) {
-            this.pass(`E1 _meta — present in ${metaCount}/${turnNotifs.length} notifications`)
+            this.pass(`E1 _meta——${turnNotifs.length} 个通知中有 ${metaCount} 个包含该字段`)
         } else {
-            this.fail('E1 _meta', 'no _meta found in any notification')
+            this.fail('E1 _meta', '所有通知中均未找到 _meta')
         }
 
         // ══════════════════════════════════════════════════════════
@@ -429,9 +429,9 @@ class TestRunner {
                         'set_config_option',
                     )
                     if (r?.configOptions) {
-                        this.pass(`S5 set_config_option — ${opt.id}="${altValue.value}"`)
+                        this.pass(`S5 set_config_option——${opt.id}=“${altValue.value}”`)
                     } else {
-                        this.fail('S5 set_config_option', 'response missing configOptions')
+                        this.fail('S5 set_config_option', '响应中缺少 configOptions')
                     }
                     // P6: check notification
                     await this._sleep(100)
@@ -440,9 +440,9 @@ class TestRunner {
                         (n) => n.params?.update?.sessionUpdate === 'config_option_update',
                     )
                     if (configUpdate) {
-                        this.pass('P6 config_option_update — notified')
+                        this.pass('P6 config_option_update——已通知')
                     } else {
-                        this.fail('P6 config_option_update', 'no notification')
+                        this.fail('P6 config_option_update', '没有通知')
                     }
                 } catch (err: any) {
                     this.fail('S5 set_config_option', err.message)
@@ -460,25 +460,25 @@ class TestRunner {
                 try {
                     const r = await this._withTimeout(this._h.sessionSetMode(session.sessionId, alt.id), 'set_mode')
                     if (r?.modes) {
-                        this.pass(`S4 set_mode — switched to "${alt.id}"`)
+                        this.pass(`S4 set_mode——已切换至“${alt.id}”`)
                     } else {
-                        this.fail('S4 set_mode', 'response missing modes')
+                        this.fail('S4 set_mode', '响应中缺少 modes')
                     }
                     // P5: check notification
                     await this._sleep(100)
                     const modeNotifs = this._h.drainNotifications()
                     const modeUpdate = modeNotifs.find((n) => n.params?.update?.sessionUpdate === 'current_mode_update')
                     if (modeUpdate) {
-                        this.pass(`P5 current_mode_update — modeId="${modeUpdate.params.update.modeId}"`)
+                        this.pass(`P5 current_mode_update——modeId=“${modeUpdate.params.update.modeId}”`)
                     } else {
-                        this.fail('P5 current_mode_update', 'no notification')
+                        this.fail('P5 current_mode_update', '没有通知')
                     }
                 } catch (err: any) {
                     this.fail('S4 set_mode', err.message)
                 }
             }
         } else {
-            this.skip('S4 set_mode', 'fewer than 2 modes')
+            this.skip('S4 set_mode', '可用模式少于 2 个')
         }
 
         // ══════════════════════════════════════════════════════════
@@ -488,12 +488,12 @@ class TestRunner {
         if (caps.loadSession) {
             try {
                 await this._withTimeout(this._h.sessionLoad(session.sessionId, this._cwd), 'session/load')
-                this.pass('S2 session/load — loaded existing session')
+                this.pass('S2 session/load——已加载现有会话')
             } catch (err: any) {
                 this.fail('S2 session/load', err.message)
             }
         } else {
-            this.skip('S2 session/load', 'loadSession not advertised')
+            this.skip('S2 session/load', '智能体未声明 loadSession')
         }
 
         // ══════════════════════════════════════════════════════════
@@ -503,12 +503,12 @@ class TestRunner {
         if (sc.list) {
             try {
                 const r = await this._withTimeout(this._h.sessionList(), 'session/list')
-                this.pass(`S3 session/list — ${r?.sessions?.length ?? 0} session(s)`)
+                this.pass(`S3 session/list——${r?.sessions?.length ?? 0} 个会话`)
             } catch (err: any) {
                 this.fail('S3 session/list', err.message)
             }
         } else {
-            this.skip('S3 session/list', 'list not advertised')
+            this.skip('S3 session/list', '智能体未声明 list')
         }
 
         // ══════════════════════════════════════════════════════════
@@ -518,17 +518,17 @@ class TestRunner {
         try {
             this._h.drainNotifications()
             const cancelPromise = this._withTimeout(
-                this._h.sessionPrompt(session.sessionId, 'cancel test'),
-                'session/prompt (cancel)',
+                this._h.sessionPrompt(session.sessionId, '取消测试'),
+                'session/prompt（取消）',
             )
             await this._sleep(100)
             this._h.sessionCancel(session.sessionId)
             const cancelResult = await cancelPromise
             if (cancelResult?.stopReason === 'cancelled') {
-                this.pass('P7 session/cancel — stopReason="cancelled"')
-                this.pass('P8 StopReason variety — end_turn + cancelled verified')
+                this.pass('P7 session/cancel——stopReason=“cancelled”')
+                this.pass('P8 StopReason 多样性——已验证 end_turn 与 cancelled')
             } else {
-                this.fail('P7 session/cancel', `expected "cancelled", got "${cancelResult?.stopReason}"`)
+                this.fail('P7 session/cancel', `预期为“cancelled”，实际为“${cancelResult?.stopReason}”`)
             }
         } catch (err: any) {
             this.fail('P7 session/cancel', err.message)
@@ -542,12 +542,12 @@ class TestRunner {
         try {
             const pong = await this._withTimeout(this._h._send('_ping', { data: 'hello' }), '_ping')
             if (pong?.pong === true) {
-                this.pass('E2 extended method — _ping OK')
+                this.pass('E2 扩展方法——_ping 通过')
             } else {
-                this.fail('E2 extended method', `unexpected response: ${JSON.stringify(pong)}`)
+                this.fail('E2 扩展方法', `响应不符合预期：${JSON.stringify(pong)}`)
             }
         } catch (err: any) {
-            this.fail('E2 extended method', err.message)
+            this.fail('E2 扩展方法', err.message)
         }
 
         // ══════════════════════════════════════════════════════════
@@ -571,13 +571,13 @@ class TestRunner {
                         n.params?.update?.content?.text?.includes('[MCP]'),
                 )
                 if (mcpChunk) {
-                    this.pass('MCP1 stdio MCP — acknowledged')
-                    this.pass('MCP2 HTTP MCP — acknowledged')
+                    this.pass('MCP1 标准输入输出 MCP——已确认')
+                    this.pass('MCP2 HTTP MCP——已确认')
                 } else {
-                    this.fail('MCP1+MCP2', 'agent did not acknowledge MCP servers')
+                    this.fail('MCP1+MCP2', '智能体未确认 MCP 服务')
                 }
             } else {
-                this.fail('MCP1+MCP2', 'session creation failed')
+                this.fail('MCP1+MCP2', '创建会话失败')
             }
         } catch (err: any) {
             this.fail('MCP1+MCP2', err.message)
@@ -589,26 +589,26 @@ class TestRunner {
 
         if (sc.list) {
             try {
-                const page1 = await this._withTimeout(this._h.sessionList({ limit: 1 }), 'session/list page1')
+                const page1 = await this._withTimeout(this._h.sessionList({ limit: 1 }), 'session/list 第一页')
                 if (page1?.sessions?.length === 1 && page1.nextCursor) {
                     const page2 = await this._withTimeout(
                         this._h.sessionList({ limit: 1, cursor: page1.nextCursor }),
-                        'session/list page2',
+                        'session/list 第二页',
                     )
                     if (page2?.sessions?.length >= 1) {
                         this.pass(
-                            `S3 pagination — page1="${page1.sessions[0].sessionId}", page2="${page2.sessions[0].sessionId}"`,
+                            `S3 分页——第一页=“${page1.sessions[0].sessionId}”，第二页=“${page2.sessions[0].sessionId}”`,
                         )
                     } else {
-                        this.fail('S3 pagination', 'page2 empty')
+                        this.fail('S3 分页', '第二页为空')
                     }
                 } else if (page1?.sessions?.length >= 2) {
-                    this.pass(`S3 pagination — ${page1.sessions.length} sessions (no pagination needed)`)
+                    this.pass(`S3 分页——${page1.sessions.length} 个会话（无需分页）`)
                 } else {
-                    this.fail('S3 pagination', `page1 has ${page1?.sessions?.length} session(s), no nextCursor`)
+                    this.fail('S3 分页', `第一页有 ${page1?.sessions?.length} 个会话，但没有 nextCursor`)
                 }
             } catch (err: any) {
-                this.fail('S3 pagination', err.message)
+                this.fail('S3 分页', err.message)
             }
         }
 
@@ -617,7 +617,7 @@ class TestRunner {
 
     private _summary(): boolean {
         console.log('---')
-        console.log(`RESULT: ${this._passed} passed, ${this._failed} failed, ${this._skipped} skipped`)
+        console.log(`结果：${this._passed} 项通过，${this._failed} 项失败，${this._skipped} 项跳过`)
         return this._failed === 0
     }
 }
@@ -640,7 +640,7 @@ function parseArgs(argv: string[]): ParsedArgs {
     const opts: ParsedArgs = {
         agentCmd: null,
         agentArgs: [],
-        prompt: 'Say hello',
+        prompt: '你好',
         cwd: process.cwd(),
         timeout: 30000,
         verbose: false,
@@ -668,20 +668,20 @@ function parseArgs(argv: string[]): ParsedArgs {
     return opts
 }
 
-const help_text = (bin: string): string => `ACP Test Harness — test any Agent's ACP compliance
+const help_text = (bin: string): string => `ACP 测试工具——验证任意智能体的 ACP 合规性
 
-Usage: ${bin} <agent-command> [agent-args...] [options]
+用法：${bin} <agent-command> [agent-args...] [options]
 
-Options:
-  --prompt "text"    Prompt to send (default: "Say hello")
-  --cwd /path        Working directory for session (default: cwd)
-  --timeout 30000    Per-step timeout in ms (default: 30000)
-  --verbose          Print raw JSON-RPC to stderr
-  --help             Show this help
+参数：
+  --prompt "text"    要发送的提示词（默认：“你好”）
+  --cwd /path        会话工作目录（默认：当前目录）
+  --timeout 30000    每一步的超时时间，单位为毫秒（默认：30000）
+  --verbose          将原始 JSON-RPC 输出到标准错误
+  --help             显示此帮助
 
-Examples:
+示例：
   ${bin} node ./index.js
-  ${bin} qwen-code --prompt "Explain this codebase"
+  ${bin} qwen-code --prompt "讲解这个代码库"
   ${bin} codex agent --cwd /home/user/project`
 
 async function main(): Promise<void> {
@@ -702,10 +702,10 @@ async function main(): Promise<void> {
 
     harness.start()
 
-    console.log(`ACP Test Harness`)
-    console.log(`Agent: ${opts.agentCmd} ${opts.agentArgs.join(' ')}`.trim())
-    console.log(`Prompt: "${opts.prompt}"`)
-    console.log(`cwd: ${opts.cwd}`)
+    console.log(`ACP 测试工具`)
+    console.log(`智能体：${opts.agentCmd} ${opts.agentArgs.join(' ')}`.trim())
+    console.log(`提示词：“${opts.prompt}”`)
+    console.log(`工作目录：${opts.cwd}`)
     console.log('---')
 
     const runner = new TestRunner(harness, {
@@ -718,7 +718,7 @@ async function main(): Promise<void> {
         const allPassed = await runner.run()
         process.exitCode = allPassed ? 0 : 1
     } catch (err: any) {
-        console.log(`[FAIL] unexpected error: ${err.message}`)
+        console.log(`[失败] 意外错误：${err.message}`)
         process.exitCode = 1
     } finally {
         harness.close()

@@ -2,8 +2,8 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
   "version": "1.0.0",
-  "title": "ExtensionManifest",
-  "description": "TjuaeUI Extension Manifest schema. Note: Zod .refine() validations (e.g. duplicate ID checks, conditional required fields) cannot be expressed in JSON Schema and are enforced at runtime only.",
+  "title": "TjuaeUI 扩展清单",
+  "description": "TjuaeUI 扩展清单模式。注意：Zod .refine() 验证（例如重复 ID 检查和条件必填字段）无法用 JSON Schema 表达，只能在运行时执行。",
   "type": "object",
   "required": ["name", "displayName", "version", "contributes"],
   "additionalProperties": false,
@@ -14,7 +14,7 @@
       "pattern": "^[a-z0-9-]+$",
       "minLength": 2,
       "maxLength": 64,
-      "description": "Extension name in kebab-case. Cannot start with reserved prefixes: tjuae-, internal-, builtin-, system-"
+      "description": "扩展名称使用 kebab-case，不得以保留前缀 tjuae-、internal-、builtin- 或 system- 开头"
     },
     "displayName": {
       "type": "string",
@@ -23,7 +23,7 @@
     "version": {
       "type": "string",
       "pattern": "^\\d+\\.\\d+\\.\\d+(-[\\w.]+)?$",
-      "description": "Semver format (e.g. 1.0.0)"
+      "description": "语义化版本格式（例如 1.0.0）"
     },
     "description": { "type": "string" },
     "author": { "type": "string" },
@@ -32,7 +32,7 @@
     "apiVersion": {
       "type": "string",
       "pattern": "^\\^?\\d+\\.\\d+\\.\\d+(-[\\w.]+)?$",
-      "description": "Extension API compatibility range (e.g. ^1.0.0)"
+      "description": "扩展 API 兼容版本范围（例如 ^1.0.0）"
     },
     "dependencies": {
       "type": "object",
@@ -40,7 +40,7 @@
         "type": "string",
         "pattern": "^\\^?\\d+\\.\\d+\\.\\d+(-[\\w.]+)?$"
       },
-      "description": "Extension dependencies: { extensionName: versionRange }"
+      "description": "扩展依赖：{ extensionName: versionRange }"
     },
     "engine": {
       "type": "object",
@@ -48,7 +48,7 @@
         "tjuae": {
           "type": "string",
           "pattern": "^\\^?\\d+\\.\\d+\\.\\d+(-[\\w.]+)?$",
-          "description": "Compatible TjuaeUI core version range"
+          "description": "兼容的 TjuaeUI 核心版本范围"
         }
       },
       "additionalProperties": false
@@ -57,7 +57,7 @@
       "type": "object",
       "properties": {
         "localesDir": { "type": "string", "default": "i18n" },
-        "defaultLocale": { "type": "string", "default": "en-US" }
+        "defaultLocale": { "type": "string", "default": "zh-CN" }
       },
       "additionalProperties": false
     },
@@ -112,10 +112,10 @@
     "ContributionFileReference": {
       "type": "string",
       "pattern": "^\\$file:(?!\\s)(?!\\.\\.(?:/|$))(?!.*\\/\\.\\.(?:/|$))[^/\\\\:\\u0000]+(?:/[^/\\\\:\\u0000]+)*\\.json$",
-      "description": "A forward-slash relative JSON path prefixed with $file:. Leading whitespace, absolute paths, Windows drive or UNC paths, backslashes, empty segments, and '..' traversal segments are not allowed."
+      "description": "以 $file: 开头并使用正斜杠的相对 JSON 路径。不得包含前导空白、绝对路径、Windows 盘符或 UNC 路径、反斜杠、空路径段以及 '..' 路径穿越。"
     },
     "LifecycleHook": {
-      "description": "A lifecycle hook — either a script path string, or an object with script/shell. Runtime constraint: either 'script' or 'shell' must be provided.",
+      "description": "生命周期钩子，可以是脚本路径字符串，也可以是包含 script/shell 的对象。运行时要求必须提供 'script' 或 'shell' 之一。",
       "oneOf": [
         { "type": "string" },
         {
@@ -158,7 +158,7 @@
     "AcpAdapter": {
       "type": "object",
       "required": ["id", "name"],
-      "description": "Runtime constraint: CLI/stdio adapters require cliCommand or defaultCliPath; websocket/http adapters require endpoint.",
+      "description": "运行时要求：CLI/stdio 适配器必须提供 cliCommand 或 defaultCliPath；websocket/http 适配器必须提供 endpoint。",
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "name": { "type": "string", "minLength": 1 },
@@ -179,19 +179,19 @@
         "authRequired": {
           "type": "boolean",
           "default": false,
-          "description": "Whether the adapter requires an authentication flow before use"
+          "description": "适配器在使用前是否需要身份验证流程"
         },
         "supportsStreaming": {
           "type": "boolean",
           "default": true,
-          "description": "Whether the adapter can stream response updates"
+          "description": "适配器是否支持流式响应更新"
         },
         "endpoint": { "type": "string" },
         "models": { "type": "array", "items": { "type": "string" } },
         "apiKeyFields": {
           "type": "array",
           "items": { "$ref": "#/$defs/Field" },
-          "description": "API Key fields for Settings UI. Values are injected into adapter env when spawning."
+          "description": "设置界面的 API 密钥字段。启动适配器时会将其值注入环境变量。"
         },
         "healthCheck": {
           "type": "object",
@@ -285,7 +285,7 @@
         "presetAgentType": {
           "type": "string",
           "minLength": 1,
-          "description": "Built-in types: gemini, claude, codex, codebuddy, opencode — or any extension-contributed adapter ID"
+          "description": "内置类型包括 gemini、claude、codex、codebuddy、opencode，也可使用扩展提供的任意适配器 ID"
         },
         "contextFile": { "type": "string", "minLength": 1 },
         "models": { "type": "array", "items": { "type": "string" } },
@@ -411,7 +411,7 @@
         "platform": {
           "type": "string",
           "minLength": 1,
-          "description": "e.g. custom, gemini, anthropic, new-api, bedrock"
+          "description": "例如 custom、gemini、anthropic、new-api、bedrock"
         },
         "name": { "type": "string", "minLength": 1 },
         "baseUrl": { "type": "string" },
@@ -439,19 +439,19 @@
             }
           },
           "additionalProperties": false,
-          "description": "Built-in tab IDs for anchor: gemini, model, agent, tools, display, webui, system, about"
+          "description": "可作为锚点的内置标签页 ID：gemini、model、agent、tools、display、webui、system、about"
         },
         "order": {
           "type": "number",
           "default": 100,
-          "description": "Fallback numeric order when multiple tabs target the same anchor+placement. Lower = first."
+          "description": "多个标签页指向同一 anchor+placement 时使用的后备数字顺序，数值越小越靠前。"
         }
       },
       "additionalProperties": false
     },
     "Contributes": {
       "type": "object",
-      "description": "Each contribution may be declared inline or in a safe relative JSON file referenced with $file:. Runtime constraint: IDs within each array must be unique; agent IDs must not collide with assistant IDs.",
+      "description": "每项贡献既可内联声明，也可通过 $file: 引用安全的相对 JSON 文件。运行时要求每个数组内的 ID 唯一，智能体 ID 不得与助手 ID 冲突。",
       "properties": {
         "acpAdapters": {
           "oneOf": [
@@ -488,7 +488,7 @@
             },
             { "$ref": "#/$defs/ContributionFileReference" }
           ],
-          "description": "Agent presets — structurally identical to assistants but semantically represent autonomous agents"
+          "description": "智能体预设在结构上与助手相同，但语义上表示自主智能体"
         },
         "skills": {
           "oneOf": [

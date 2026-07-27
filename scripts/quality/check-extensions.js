@@ -53,7 +53,7 @@ function readJson(filePath) {
 function createManifestFixture(contributionKey, contribution) {
   return {
     name: 'schema-fixture',
-    displayName: 'Schema Fixture',
+    displayName: '模式样例',
     version: '1.0.0',
     contributes: {
       [contributionKey]: contribution,
@@ -73,7 +73,7 @@ function validateFileReferenceContract(validateSchema) {
   for (const contributionKey of CONTRIBUTION_KEYS) {
     const manifest = createManifestFixture(contributionKey, safeReference);
     if (!validateSchema(manifest)) {
-      throw new Error(`${contributionKey} rejected a safe $file reference: ${JSON.stringify(validateSchema.errors)}`);
+      throw new Error(`${contributionKey} 拒绝了安全的 $file 引用：${JSON.stringify(validateSchema.errors)}`);
     }
   }
 
@@ -81,7 +81,7 @@ function validateFileReferenceContract(validateSchema) {
     for (const contributionKey of CONTRIBUTION_KEYS) {
       const manifest = createManifestFixture(contributionKey, reference);
       if (validateSchema(manifest)) {
-        throw new Error(`${contributionKey} accepted unsafe $file reference ${reference}`);
+        throw new Error(`${contributionKey} 接受了不安全的 $file 引用 ${reference}`);
       }
     }
   }
@@ -107,7 +107,7 @@ function listManifestPaths(group) {
     .sort()
     .map((directoryName) => {
       if (!directoryName.startsWith(EXTENSION_PREFIX)) {
-        throw new Error(`${group}/${directoryName} does not use ${EXTENSION_PREFIX}`);
+        throw new Error(`${group}/${directoryName} 未使用 ${EXTENSION_PREFIX} 前缀`);
       }
       return path.join(groupPath, directoryName, MANIFEST_FILENAME);
     });
@@ -123,24 +123,24 @@ function listManifestPaths(group) {
  */
 function validateManifest(manifest, directoryName, validateSchema) {
   if (!validateSchema(manifest)) {
-    throw new Error(`${directoryName} failed schema validation: ${JSON.stringify(validateSchema.errors)}`);
+    throw new Error(`${directoryName} 未通过模式验证：${JSON.stringify(validateSchema.errors)}`);
   }
   if (manifest.$schema !== SCHEMA_URL) {
-    throw new Error(`${directoryName} has an unexpected schema URL`);
+    throw new Error(`${directoryName} 使用了意外的模式地址`);
   }
   if (manifest.name !== directoryName) {
-    throw new Error(`${directoryName} does not match manifest name ${manifest.name}`);
+    throw new Error(`${directoryName} 与清单名称 ${manifest.name} 不一致`);
   }
   if (manifest.author !== 'Tjuae') {
-    throw new Error(`${directoryName} must use the Tjuae author identity`);
+    throw new Error(`${directoryName} 必须使用 Tjuae 作者身份`);
   }
   if (JSON.stringify(manifest).includes('Official')) {
-    throw new Error(`${directoryName} contains an unsupported endorsement claim`);
+    throw new Error(`${directoryName} 包含不受支持的背书声明`);
   }
 
   const engineKeys = Object.keys(manifest.engine ?? {});
   if (engineKeys.length !== 1 || engineKeys[0] !== 'tjuae') {
-    throw new Error(`${directoryName} must declare only engine.tjuae`);
+    throw new Error(`${directoryName} 只能声明 engine.tjuae`);
   }
 
   for (const contribution of Object.values(manifest.contributes ?? {})) {
@@ -149,7 +149,7 @@ function validateManifest(manifest, directoryName, validateSchema) {
     }
     const ids = contribution.map((item) => item?.id).filter((id) => typeof id === 'string');
     if (new Set(ids).size !== ids.length) {
-      throw new Error(`${directoryName} contains duplicate contribution IDs`);
+      throw new Error(`${directoryName} 包含重复的贡献项 ID`);
     }
   }
 }
@@ -162,10 +162,10 @@ function validateManifest(manifest, directoryName, validateSchema) {
 function validateExtensions() {
   const schema = readJson(SCHEMA_PATH);
   if (schema.$id !== SCHEMA_URL || schema.version !== '1.0.0') {
-    throw new Error('The extension schema identity or version is incorrect');
+    throw new Error('扩展模式的身份或版本不正确');
   }
   if (!schema.properties?.engine?.properties?.tjuae || Object.keys(schema.properties.engine.properties).length !== 1) {
-    throw new Error('The extension schema must expose only engine.tjuae');
+    throw new Error('扩展模式只能公开 engine.tjuae');
   }
 
   const ajv = new Ajv2020({ allErrors: true, strict: false });
@@ -176,14 +176,12 @@ function validateExtensions() {
   const activePaths = listManifestPaths('extensions');
   const pendingPaths = listManifestPaths('pending');
   if (activePaths.length !== 7 || pendingPaths.length !== 7) {
-    throw new Error(
-      `Expected 7 active and 7 pending manifests, found ${activePaths.length} and ${pendingPaths.length}`
-    );
+    throw new Error(`应有 7 个已启用清单和 7 个候选清单，实际分别为 ${activePaths.length} 和 ${pendingPaths.length}`);
   }
 
   for (const manifestPath of [...activePaths, ...pendingPaths]) {
     if (!fs.existsSync(manifestPath)) {
-      throw new Error(`Missing manifest: ${path.relative(REPOSITORY_ROOT, manifestPath)}`);
+      throw new Error(`缺少清单：${path.relative(REPOSITORY_ROOT, manifestPath)}`);
     }
     const directoryName = path.basename(path.dirname(manifestPath));
     validateManifest(readJson(manifestPath), directoryName, validateSchema);
@@ -194,7 +192,7 @@ function validateExtensions() {
 
 function main() {
   const result = validateExtensions();
-  console.log(`Validated ${result.activeCount} active and ${result.pendingCount} pending manifests.`);
+  console.log(`已验证 ${result.activeCount} 个已启用清单和 ${result.pendingCount} 个候选清单。`);
 }
 
 if (require.main === module) {

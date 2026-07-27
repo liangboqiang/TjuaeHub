@@ -6,7 +6,7 @@ if (process.platform === 'win32') {
 
 const dir = process.env.TJUAE_AGENT_INSTALL_DIR;
 if (!dir) {
-  console.error('[install] 未设置 TJUAE_AGENT_INSTALL_DIR');
+  console.error('[安装] 未设置 TJUAE_AGENT_INSTALL_DIR');
   process.exit(1);
 }
 
@@ -16,13 +16,13 @@ const binaryUrl = `https://github.com/block/goose/releases/latest/download/goose
 const binDir = `${dir}/bin`;
 const binaryPath = `${binDir}/goose`;
 
-console.log(`[install] 正在从 ${binaryUrl} 下载 Goose ...`);
+console.log(`[安装] 正在从 ${binaryUrl} 下载 Goose……`);
 try {
   await $`mkdir -p ${binDir}`;
   await $`curl -fsSL ${binaryUrl} -o ${binaryPath}`;
   await $`chmod +x ${binaryPath}`;
-  console.log(`[install] Goose 已安装到 ${binaryPath}`);
+  console.log(`[安装] Goose 已安装到 ${binaryPath}`);
 } catch {
-  console.error('[install] Goose 二进制文件下载失败');
+  console.error('[安装] Goose 二进制文件下载失败');
   process.exit(1);
 }

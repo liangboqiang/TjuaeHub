@@ -19,16 +19,16 @@ const DIST_DIRECTORY = path.join(REPOSITORY_ROOT, 'dist');
  */
 function validateIndexShape(index) {
   if (index.schemaVersion !== 2) {
-    throw new Error('The generated index must use schemaVersion 2');
+    throw new Error('生成的索引必须使用 schemaVersion 2');
   }
-  if (index.metadata?.generatedBy !== 'Tjuae Extension Builder v2.0.0') {
-    throw new Error('The generated index has an unexpected builder identity');
+  if (index.metadata?.generatedBy !== 'Tjuae 扩展构建器 v2.0.0') {
+    throw new Error('生成索引中的构建器身份不正确');
   }
   if (index.metadata?.repository !== 'https://github.com/liangboqiang/TjuaeHub/') {
-    throw new Error('The generated index has an unexpected repository URL');
+    throw new Error('生成索引中的仓库地址不正确');
   }
   if (!Number.isFinite(Date.parse(index.generatedAt))) {
-    throw new Error('The generated index timestamp is invalid');
+    throw new Error('生成索引中的时间戳无效');
   }
 }
 
@@ -40,7 +40,7 @@ function validateIndexShape(index) {
 async function validateBuild() {
   const indexPath = path.join(DIST_DIRECTORY, 'index.json');
   if (!fs.existsSync(indexPath)) {
-    throw new Error('dist/index.json does not exist; run the build first');
+    throw new Error('dist/index.json 不存在，请先运行构建');
   }
 
   const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
@@ -54,16 +54,16 @@ async function validateBuild() {
   const indexNames = Object.keys(index.extensions ?? {}).sort();
 
   if (JSON.stringify(sourceDirectories) !== JSON.stringify(indexNames)) {
-    throw new Error('Generated index keys do not match active extension directories');
+    throw new Error('生成索引中的键与已启用扩展目录不一致');
   }
   if (index.metadata.totalExtensions !== sourceDirectories.length) {
-    throw new Error('Generated extension count is inconsistent');
+    throw new Error('生成的扩展数量不一致');
   }
 
   const expectedDistFiles = ['index.json', ...sourceDirectories.map((name) => `${name}.zip`)].sort();
   const actualDistFiles = fs.readdirSync(DIST_DIRECTORY).sort();
   if (JSON.stringify(actualDistFiles) !== JSON.stringify(expectedDistFiles)) {
-    throw new Error('dist contains missing or unexpected artifacts');
+    throw new Error('dist 中存在缺失或意外的产物');
   }
 
   for (const extensionName of sourceDirectories) {
@@ -80,15 +80,15 @@ async function validateBuild() {
       entry.dist?.tarball !== expectedTarball ||
       Object.keys(entry.engines ?? {}).join(',') !== 'tjuae'
     ) {
-      throw new Error(`${extensionName} has inconsistent index metadata`);
+      throw new Error(`${extensionName} 的索引元数据不一致`);
     }
     if (entry.dist.integrity !== `sha256-${computeContentHash(extensionPath, sourceFiles)}`) {
-      throw new Error(`${extensionName} has an invalid content hash`);
+      throw new Error(`${extensionName} 的内容哈希无效`);
     }
 
     const unpackedSize = sourceFiles.reduce((total, file) => total + fs.statSync(file).size, 0);
     if (entry.dist.unpackedSize !== unpackedSize) {
-      throw new Error(`${extensionName} has an invalid unpacked size`);
+      throw new Error(`${extensionName} 的解压大小无效`);
     }
 
     const archive = await JSZip.loadAsync(fs.readFileSync(path.join(DIST_DIRECTORY, expectedTarball)));
@@ -97,10 +97,10 @@ async function validateBuild() {
       .map((file) => file.name)
       .sort();
     if (JSON.stringify(archiveEntries) !== JSON.stringify(sourceEntries)) {
-      throw new Error(`${extensionName} archive entries do not match source files`);
+      throw new Error(`${extensionName} 的归档条目与源文件不一致`);
     }
     if (!archive.file(MANIFEST_FILENAME)) {
-      throw new Error(`${extensionName} archive is missing ${MANIFEST_FILENAME}`);
+      throw new Error(`${extensionName} 的归档中缺少 ${MANIFEST_FILENAME}`);
     }
   }
 
@@ -109,7 +109,7 @@ async function validateBuild() {
 
 async function main() {
   const result = await validateBuild();
-  console.log(`Validated ${result.extensionCount} generated extension archives.`);
+  console.log(`已验证 ${result.extensionCount} 个生成的扩展归档。`);
 }
 
 if (require.main === module) {

@@ -4,12 +4,12 @@ import { describe, expect, it } from 'vitest';
 const require = createRequire(import.meta.url);
 const { findBrandMatches, scanRepository } = require('../scripts/quality/check-brand');
 
-describe('brand identity', () => {
-  it('keeps active source free of the retired identity', async () => {
+describe('品牌身份', () => {
+  it('确保活跃源码不含已停用身份', async () => {
     await expect(scanRepository()).resolves.toEqual([]);
   });
 
-  it('reports a retired identity with its source line', () => {
+  it('报告已停用身份及其源文件行号', () => {
     const retiredName = ['Ai', 'onHub'].join('');
 
     expect(findBrandMatches(`first\n${retiredName}\nthird`, 'fixture.txt')).toEqual([
@@ -17,13 +17,13 @@ describe('brand identity', () => {
     ]);
   });
 
-  it('reports the retired publisher identity', () => {
+  it('报告已停用的发布者身份', () => {
     const retiredPublisher = ['i', 'Office', 'AI'].join('');
 
     expect(findBrandMatches(retiredPublisher, 'fixture.txt')).toEqual([{ source: 'fixture.txt', line: 1 }]);
   });
 
-  it('reports retired reporting and document integrations', () => {
+  it('报告已停用的上报和文档集成', () => {
     const retiredReporting = ['tele', 'metry'].join('');
     const retiredDocumentTool = ['office', 'cli'].join('');
 

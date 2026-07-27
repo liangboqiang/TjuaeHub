@@ -141,7 +141,7 @@ async function main() {
     extensions: {},
     metadata: {
       totalExtensions: 0,
-      generatedBy: 'Tjuae Extension Builder v2.0.0',
+      generatedBy: 'Tjuae 扩展构建器 v2.0.0',
       repository: 'https://github.com/liangboqiang/TjuaeHub/',
     },
   };
@@ -153,7 +153,7 @@ async function main() {
     .sort();
 
   if (extensionDirectories.length === 0) {
-    throw new Error(`No ${EXTENSION_PREFIX} extension directories were found`);
+    throw new Error(`未找到使用 ${EXTENSION_PREFIX} 前缀的扩展目录`);
   }
 
   for (const extensionDirectoryName of extensionDirectories) {
@@ -163,12 +163,12 @@ async function main() {
     const zipPath = path.join(distDirectory, zipName);
 
     if (!fs.existsSync(manifestPath)) {
-      throw new Error(`${extensionDirectoryName} is missing ${MANIFEST_FILENAME}`);
+      throw new Error(`${extensionDirectoryName} 缺少 ${MANIFEST_FILENAME}`);
     }
 
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     if (manifest.name !== extensionDirectoryName) {
-      throw new Error(`${MANIFEST_FILENAME} name ${manifest.name} does not match ${extensionDirectoryName}`);
+      throw new Error(`${MANIFEST_FILENAME} 中的名称 ${manifest.name} 与目录 ${extensionDirectoryName} 不一致`);
     }
 
     const files = getAllFiles(extensionPath);
@@ -198,7 +198,7 @@ async function main() {
 
   indexData.metadata.totalExtensions = Object.keys(indexData.extensions).length;
   fs.writeFileSync(indexPath, `${JSON.stringify(indexData, null, 2)}\n`);
-  console.log(`Built ${indexData.metadata.totalExtensions} TjuaeHub extensions.`);
+  console.log(`已构建 ${indexData.metadata.totalExtensions} 个 TjuaeHub 扩展。`);
 }
 
 if (require.main === module) {
