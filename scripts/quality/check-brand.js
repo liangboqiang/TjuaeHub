@@ -10,6 +10,7 @@ const RETIRED_INTEGRATION_PATTERN = new RegExp(
   ),
   'i'
 );
+const MUTABLE_DISTRIBUTION_PATTERN = new RegExp(['dist', 'latest'].join('-'), 'i');
 const ALLOWED_ATTRIBUTION_FILES = new Set(['UPSTREAM.md']);
 const EXCLUDED_DIRECTORIES = new Set(['.git', 'coverage', 'node_modules']);
 const TEXT_EXTENSIONS = new Set([
@@ -39,11 +40,16 @@ function findBrandMatches(text, source, { includeRetiredIntegrations = true } = 
   const lines = text.split(/\r?\n/u);
 
   lines.forEach((line, index) => {
-    if (LEGACY_IDENTITY_PATTERN.test(line) || (includeRetiredIntegrations && RETIRED_INTEGRATION_PATTERN.test(line))) {
+    if (
+      LEGACY_IDENTITY_PATTERN.test(line) ||
+      MUTABLE_DISTRIBUTION_PATTERN.test(line) ||
+      (includeRetiredIntegrations && RETIRED_INTEGRATION_PATTERN.test(line))
+    ) {
       violations.push({ source, line: index + 1 });
     }
     LEGACY_IDENTITY_PATTERN.lastIndex = 0;
     RETIRED_INTEGRATION_PATTERN.lastIndex = 0;
+    MUTABLE_DISTRIBUTION_PATTERN.lastIndex = 0;
   });
 
   return violations;
@@ -92,11 +98,16 @@ async function scanZipArchive(zipPath) {
   const relativeZipPath = path.relative(REPOSITORY_ROOT, zipPath).split(path.sep).join('/');
 
   for (const [entryName, entry] of Object.entries(archive.files)) {
-    if (LEGACY_IDENTITY_PATTERN.test(entryName) || RETIRED_INTEGRATION_PATTERN.test(entryName)) {
+    if (
+      LEGACY_IDENTITY_PATTERN.test(entryName) ||
+      RETIRED_INTEGRATION_PATTERN.test(entryName) ||
+      MUTABLE_DISTRIBUTION_PATTERN.test(entryName)
+    ) {
       violations.push({ source: `${relativeZipPath}:${entryName}`, line: 0 });
     }
     LEGACY_IDENTITY_PATTERN.lastIndex = 0;
     RETIRED_INTEGRATION_PATTERN.lastIndex = 0;
+    MUTABLE_DISTRIBUTION_PATTERN.lastIndex = 0;
 
     if (entry.dir || !TEXT_EXTENSIONS.has(path.extname(entryName).toLowerCase())) {
       continue;
@@ -122,11 +133,16 @@ async function scanRepository({ includeDist = false } = {}) {
   for (const file of files) {
     const relativePath = path.relative(REPOSITORY_ROOT, file).split(path.sep).join('/');
 
-    if (LEGACY_IDENTITY_PATTERN.test(relativePath) || RETIRED_INTEGRATION_PATTERN.test(relativePath)) {
+    if (
+      LEGACY_IDENTITY_PATTERN.test(relativePath) ||
+      RETIRED_INTEGRATION_PATTERN.test(relativePath) ||
+      MUTABLE_DISTRIBUTION_PATTERN.test(relativePath)
+    ) {
       violations.push({ source: relativePath, line: 0 });
     }
     LEGACY_IDENTITY_PATTERN.lastIndex = 0;
     RETIRED_INTEGRATION_PATTERN.lastIndex = 0;
+    MUTABLE_DISTRIBUTION_PATTERN.lastIndex = 0;
 
     if (ALLOWED_ATTRIBUTION_FILES.has(relativePath) || !TEXT_EXTENSIONS.has(path.extname(file).toLowerCase())) {
       continue;
