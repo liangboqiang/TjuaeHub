@@ -44,11 +44,12 @@ flowchart LR
 
 ```bash
 bun install --frozen-lockfile
-bun run verify
+just verify
 ```
 
-`bun run verify` 会依次执行格式检查、品牌扫描、14 份扩展清单验证、TypeScript
-类型检查、测试、扩展构建以及生成产物验证。提交前必须全部通过。
+`just verify` 会调用 `bun run verify`，依次执行格式检查、品牌扫描、14 份扩展
+清单验证、TypeScript 类型检查、测试、扩展构建以及生成产物验证。提交前必须全部
+通过；获得推送授权后使用 `just push`。
 
 ## 许可证
 

@@ -49,15 +49,17 @@ TjuaeUI、TjuaeCore 或 TjuaeCLI 的运行时代码。
 完成改动后必须执行：
 
 ```bash
-bun run verify
+just verify
 ```
 
-该命令必须同时通过格式、品牌扫描、14 份扩展清单、TypeScript 类型检查、测试、
-扩展构建和 `dist/` 产物验证。任何一步失败都属于阻断问题。
+`just verify` 委托给 `bun run verify`，必须同时通过格式、品牌扫描、14 份扩展
+清单、TypeScript 类型检查、测试、扩展构建和 `dist/` 产物验证。任何一步失败都
+属于阻断问题。
 
 ## 提交
 
 - 提交信息使用 Conventional Commit：`<type>(<scope>): <subject>`。
 - 不提交密钥、临时目录、依赖缓存或本地构建残留。
 - 不添加 AI 署名或 `Co-Authored-By`。
-- 未经用户明确授权不得推送；获得授权后也必须先通过完整门禁。
+- 未经用户明确授权不得推送；获得授权后必须使用 `just push`，由完整门禁通过后
+  再执行底层 `git push`。
