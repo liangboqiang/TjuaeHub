@@ -3,7 +3,13 @@ const path = require('node:path');
 const JSZip = require('jszip');
 
 const REPOSITORY_ROOT = path.resolve(__dirname, '..', '..');
-const LEGACY_BRAND_PATTERN = new RegExp([['ai', 'on'].join(''), ['i', 'office', 'ai'].join('')].join('|'), 'i');
+const LEGACY_IDENTITY_PATTERN = new RegExp([['ai', 'on'].join(''), ['i', 'office', 'ai'].join('')].join('|'), 'i');
+const RETIRED_INTEGRATION_PATTERN = new RegExp(
+  [['sen', 'try'].join(''), ['tele', 'metry'].join(''), ['office', 'cli'].join(''), ['analytics', 'id'].join('')].join(
+    '|'
+  ),
+  'i'
+);
 const ALLOWED_ATTRIBUTION_FILES = new Set(['UPSTREAM.md']);
 const EXCLUDED_DIRECTORIES = new Set(['.git', 'coverage', 'node_modules']);
 const TEXT_EXTENSIONS = new Set([
@@ -28,15 +34,16 @@ const TEXT_EXTENSIONS = new Set([
  * @param {string} source
  * @returns {{ source: string, line: number }[]}
  */
-function findBrandMatches(text, source) {
+function findBrandMatches(text, source, { includeRetiredIntegrations = true } = {}) {
   const violations = [];
   const lines = text.split(/\r?\n/u);
 
   lines.forEach((line, index) => {
-    if (LEGACY_BRAND_PATTERN.test(line)) {
+    if (LEGACY_IDENTITY_PATTERN.test(line) || (includeRetiredIntegrations && RETIRED_INTEGRATION_PATTERN.test(line))) {
       violations.push({ source, line: index + 1 });
     }
-    LEGACY_BRAND_PATTERN.lastIndex = 0;
+    LEGACY_IDENTITY_PATTERN.lastIndex = 0;
+    RETIRED_INTEGRATION_PATTERN.lastIndex = 0;
   });
 
   return violations;
@@ -85,10 +92,11 @@ async function scanZipArchive(zipPath) {
   const relativeZipPath = path.relative(REPOSITORY_ROOT, zipPath).split(path.sep).join('/');
 
   for (const [entryName, entry] of Object.entries(archive.files)) {
-    if (LEGACY_BRAND_PATTERN.test(entryName)) {
+    if (LEGACY_IDENTITY_PATTERN.test(entryName) || RETIRED_INTEGRATION_PATTERN.test(entryName)) {
       violations.push({ source: `${relativeZipPath}:${entryName}`, line: 0 });
     }
-    LEGACY_BRAND_PATTERN.lastIndex = 0;
+    LEGACY_IDENTITY_PATTERN.lastIndex = 0;
+    RETIRED_INTEGRATION_PATTERN.lastIndex = 0;
 
     if (entry.dir || !TEXT_EXTENSIONS.has(path.extname(entryName).toLowerCase())) {
       continue;
@@ -114,16 +122,23 @@ async function scanRepository({ includeDist = false } = {}) {
   for (const file of files) {
     const relativePath = path.relative(REPOSITORY_ROOT, file).split(path.sep).join('/');
 
-    if (LEGACY_BRAND_PATTERN.test(relativePath)) {
+    if (LEGACY_IDENTITY_PATTERN.test(relativePath) || RETIRED_INTEGRATION_PATTERN.test(relativePath)) {
       violations.push({ source: relativePath, line: 0 });
     }
-    LEGACY_BRAND_PATTERN.lastIndex = 0;
+    LEGACY_IDENTITY_PATTERN.lastIndex = 0;
+    RETIRED_INTEGRATION_PATTERN.lastIndex = 0;
 
     if (ALLOWED_ATTRIBUTION_FILES.has(relativePath) || !TEXT_EXTENSIONS.has(path.extname(file).toLowerCase())) {
       continue;
     }
 
-    violations.push(...findBrandMatches(fs.readFileSync(file, 'utf8'), relativePath));
+    violations.push(
+      ...findBrandMatches(fs.readFileSync(file, 'utf8'), relativePath, {
+        // Lockfiles may name optional third-party peer APIs without shipping
+        // or activating those integrations.
+        includeRetiredIntegrations: relativePath !== 'bun.lock',
+      })
+    );
   }
 
   if (includeDist) {
@@ -149,7 +164,7 @@ async function main() {
     for (const violation of violations) {
       console.error(`${violation.source}:${violation.line}`);
     }
-    throw new Error(`Found ${violations.length} legacy brand occurrence(s)`);
+    throw new Error(`Found ${violations.length} retired identity or integration occurrence(s)`);
   }
 
   console.log(`Brand check passed${includeDist ? ' for source and dist' : ' for source'}.`);

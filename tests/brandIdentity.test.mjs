@@ -22,4 +22,14 @@ describe('brand identity', () => {
 
     expect(findBrandMatches(retiredPublisher, 'fixture.txt')).toEqual([{ source: 'fixture.txt', line: 1 }]);
   });
+
+  it('reports retired reporting and document integrations', () => {
+    const retiredReporting = ['tele', 'metry'].join('');
+    const retiredDocumentTool = ['office', 'cli'].join('');
+
+    expect(findBrandMatches(`${retiredReporting}\n${retiredDocumentTool}`, 'fixture.txt')).toEqual([
+      { source: 'fixture.txt', line: 1 },
+      { source: 'fixture.txt', line: 2 },
+    ]);
+  });
 });

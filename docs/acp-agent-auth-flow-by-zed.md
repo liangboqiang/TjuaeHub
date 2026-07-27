@@ -198,7 +198,7 @@ sequenceDiagram
         Note over CV: 检查退出码 == 0
     end
 
-    CV->>CV: telemetry: "Authenticate Agent Succeeded"
+    CV->>CV: 记录本地认证成功状态
     CV->>CV: reset()
     CV->>Conn: new_session(NewSessionRequest)
     Conn->>Agent: JSON-RPC: new_session
@@ -237,7 +237,7 @@ sequenceDiagram
     Agent-->>Conn: OK
     Conn-->>CV: Ok(())
 
-    CV->>CV: telemetry: "Authenticate Agent Succeeded"
+    CV->>CV: 记录本地认证成功状态
     CV->>CV: reset()
     CV->>Conn: new_session(NewSessionRequest)
     Conn->>Agent: JSON-RPC: new_session
