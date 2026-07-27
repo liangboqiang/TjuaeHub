@@ -1,15 +1,15 @@
 /**
  * Local Hub index server for development and testing.
  *
- * Serves the dist/ directory so AionUi can fetch index.json and extension zips
+ * Serves the dist/ directory so TjuaeUI can fetch index.json and extension zips
  * from localhost instead of GitHub CDN.
  *
  * Usage:
  *   bun run kits/serve.ts                  # default port 3456
  *   bun run kits/serve.ts --port 8080      # custom port
  *
- * Then start AionUi with:
- *   AIONUI_HUB_URL=http://localhost:3456/ bun run start
+ * Then start TjuaeUI with:
+ *   TJUAE_HUB_URL=http://localhost:3456/ bun run start
  */
 
 import path from 'node:path';
@@ -51,4 +51,4 @@ const server = Bun.serve({
 
 console.log(`Hub dev server running at http://localhost:${server.port}/`);
 console.log(`Serving: ${distDir}`);
-console.log(`\nStart AionUi with:\n  AIONUI_HUB_URL=http://localhost:${server.port}/ bun run start`);
+console.log(`\nStart TjuaeUI with:\n  TJUAE_HUB_URL=http://localhost:${server.port}/ bun run start`);

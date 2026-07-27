@@ -1,14 +1,14 @@
 ---
 name: commit
 description: Generate commit messages following project conventions and commit staged changes. Use when the user explicitly asks to commit, create a commit, or run /commit.
-argument-hint: "[message advice]"
+argument-hint: '[message advice]'
 disable-model-invocation: true
 allowed-tools: Bash(rm -f ./.git/index.lock)
 ---
 
 # Commit Skill
 
-Generate well-formatted commit messages and commit staged changes for AionHub.
+Generate well-formatted commit messages and commit staged changes for TjuaeHub.
 
 ## Usage
 
@@ -41,7 +41,7 @@ Generate well-formatted commit messages and commit staged changes for AionHub.
 ```
 feat(extensions): add new ACP agent extension
 
-- Added aion-extension.json manifest and install script
+- Added tjuae-extension.json manifest and install script
 - Registered extension in build pipeline
 ```
 
@@ -83,7 +83,7 @@ refactor!(extensions): redesign manifest schema from v1 to v2
 - Replaced flat fields with nested contributes block
 - Updated all existing manifests to new format
 
-BREAKING CHANGE: aion-extension.json schema v1 is no longer supported.
+BREAKING CHANGE: tjuae-extension.json schema v1 is no longer supported.
 ```
 
 ## Rules

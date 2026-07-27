@@ -1,5 +1,15 @@
 {
-    "compilerOptions": {
-        "types": ["bun-types"]
-    }
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2022",
+    "types": ["bun-types"]
+  },
+  "include": ["extensions/**/*.ts", "kits/**/*.ts", "pending/**/*.ts"]
 }

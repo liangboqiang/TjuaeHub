@@ -1,0 +1,8 @@
+{
+    "json.schemas": [
+        {
+            "fileMatch": ["**/tjuae-extension.json"],
+            "url": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json"
+        }
+    ]
+}

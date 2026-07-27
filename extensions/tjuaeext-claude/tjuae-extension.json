@@ -1,0 +1,34 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
+  "author": "TjuaeUI",
+  "contributes": {
+    "acpAdapters": [
+      {
+        "id": "claude",
+        "name": "Claude Code",
+        "icon": "resources/icon.svg",
+        "description": "Claude Code adapter (via ACP adapter)",
+        "cliCommand": "claude",
+        "defaultCliPath": "bunx @agentclientprotocol/claude-agent-acp",
+        "acpArgs": [],
+        "skillsDirs": [".claude/skills"]
+      }
+    ]
+  },
+  "description": "Integrates Anthropic's Claude Code CLI as an ACP adapter in TjuaeUI.",
+  "displayName": "Claude Code",
+  "engine": {
+    "tjuae": "^1.0.0"
+  },
+  "lifecycle": {
+    "onInstall": {
+      "shell": {
+        "cliCommand": "bun",
+        "args": ["run", "scripts/install.ts"]
+      },
+      "timeout": 120000
+    }
+  },
+  "name": "tjuaeext-claude",
+  "version": "1.0.0"
+}

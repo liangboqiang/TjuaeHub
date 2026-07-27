@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
+  "author": "TjuaeUI",
+  "contributes": {
+    "acpAdapters": [
+      {
+        "id": "auggie",
+        "name": "Augment Code",
+        "icon": "resources/icon.svg",
+        "description": "Augment Code adapter",
+        "cliCommand": "auggie",
+        "defaultCliPath": "bunx @augmentcode/auggie",
+        "acpArgs": ["--acp"]
+      }
+    ]
+  },
+  "description": "Integrates Augment Code as an ACP adapter in TjuaeUI.",
+  "displayName": "Augment Code",
+  "engine": {
+    "tjuae": "^1.0.0"
+  },
+  "lifecycle": {
+    "onInstall": {
+      "shell": {
+        "cliCommand": "bun",
+        "args": ["run", "scripts/install.ts"]
+      },
+      "timeout": 30000
+    }
+  },
+  "name": "tjuaeext-auggie",
+  "version": "1.0.0"
+}

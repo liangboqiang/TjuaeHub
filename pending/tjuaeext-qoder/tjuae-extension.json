@@ -1,0 +1,36 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
+  "author": "TjuaeUI",
+  "contributes": {
+    "acpAdapters": [
+      {
+        "id": "qoder",
+        "name": "Qoder CLI",
+        "icon": "resources/icon.png",
+        "description": "Qoder CLI adapter",
+        "connectionType": "stdio",
+        "cliCommand": "qodercli",
+        "defaultCliPath": "bunx @qoder-ai/qodercli",
+        "authRequired": true,
+        "supportsStreaming": false,
+        "acpArgs": ["--acp"]
+      }
+    ]
+  },
+  "description": "Integrates Qoder CLI as an ACP adapter in TjuaeUI.",
+  "displayName": "Qoder CLI",
+  "engine": {
+    "tjuae": "^1.0.0"
+  },
+  "lifecycle": {
+    "onInstall": {
+      "shell": {
+        "cliCommand": "bun",
+        "args": ["add", "-g", "--trust", "@qoder-ai/qodercli"]
+      },
+      "timeout": 60000
+    }
+  },
+  "name": "tjuaeext-qoder",
+  "version": "1.0.0"
+}

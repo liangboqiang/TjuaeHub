@@ -1,13 +1,29 @@
 {
+  "name": "@tjuae/hub",
+  "private": true,
   "author": {
-    "name": "AionUi",
-    "email": "service@aionui.com"
+    "name": "TjuaeUI"
   },
   "scripts": {
-    "server": "rm -rf dist/ && node .github/scripts/build-extensions.js && bun run kits/server"
+    "build": "node .github/scripts/build-extensions.js",
+    "check:brand": "node scripts/quality/check-brand.js",
+    "check:build": "node scripts/quality/check-build.js",
+    "check:extensions": "node scripts/quality/check-extensions.js",
+    "format": "prettier --write \".claude/skills/commit/SKILL.md\" \".github/**/*.{js,yml}\" \".vscode/settings.json\" \"README.md\" \"UPSTREAM.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"tests/**/*.mjs\" \"kits/server/index.ts\" \"extensions/**/tjuae-extension.json\" \"extensions/**/scripts/*.ts\" \"pending/**/tjuae-extension.json\" \"pending/**/scripts/*.ts\" \"tsconfig.json\"",
+    "format:check": "prettier --check \".claude/skills/commit/SKILL.md\" \".github/**/*.{js,yml}\" \".vscode/settings.json\" \"README.md\" \"UPSTREAM.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"tests/**/*.mjs\" \"kits/server/index.ts\" \"extensions/**/tjuae-extension.json\" \"extensions/**/scripts/*.ts\" \"pending/**/tjuae-extension.json\" \"pending/**/scripts/*.ts\" \"tsconfig.json\"",
+    "server": "bun run build && bun run kits/server",
+    "test": "bun run build && vitest run",
+    "typecheck": "tsc --noEmit",
+    "verify": "bun run format:check && bun run check:brand && bun run check:extensions && bun run typecheck && bun run test && bun run build && bun run check:build && node scripts/quality/check-brand.js --include-dist"
   },
   "dependencies": {},
   "devDependencies": {
-    "bun-types": "^1.3.11"
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "bun-types": "^1.3.11",
+    "jszip": "^3.10.1",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
   }
 }

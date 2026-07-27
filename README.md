@@ -1,2 +1,3 @@
-# AionHub
-An AionUi Extention Hub for Agents/ Skills/ Assistants/ MCPs and more
+# TjuaeHub
+
+A TjuaeUI Extension Hub for agents, skills, assistants, MCP servers, and more.

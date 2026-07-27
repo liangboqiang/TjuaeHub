@@ -1,156 +1,219 @@
 /**
  * @license
- * Copyright 2025 AionUi (aionui.com)
+ * Copyright 2026 Tjuae
  * SPDX-License-Identifier: Apache-2.0
  */
-const fs = require('fs');
-const path = require('path');
-const crypto = require('crypto');
-const { execSync } = require('child_process');
+const crypto = require('node:crypto');
+const fs = require('node:fs');
+const path = require('node:path');
+const JSZip = require('jszip');
+
+const EXTENSION_PREFIX = 'tjuaeext-';
+const MANIFEST_FILENAME = 'tjuae-extension.json';
+const FIXED_ZIP_DATE = new Date('2024-01-01T00:00:00.000Z');
+const SKIPPED_NAMES = new Set(['node_modules', '.git', '.DS_Store', '__MACOSX']);
 
 /**
- * Recursively collect all file paths under `dir`, sorted for deterministic ordering.
- * Skips: node_modules, .git, .DS_Store, __MACOSX
+ * Return all regular files below a directory in stable relative-path order.
+ *
+ * @param {string} directory
+ * @returns {string[]}
  */
-function getAllFiles(dir) {
-  const results = [];
-  const SKIP = new Set(['node_modules', '.git', '.DS_Store', '__MACOSX']);
+function getAllFiles(directory) {
+  const files = [];
 
   function walk(current) {
-    const entries = fs.readdirSync(current, { withFileTypes: true });
+    const entries = fs
+      .readdirSync(current, { withFileTypes: true })
+      .sort((left, right) => left.name.localeCompare(right.name));
+
     for (const entry of entries) {
-      if (SKIP.has(entry.name)) continue;
+      if (SKIPPED_NAMES.has(entry.name)) {
+        continue;
+      }
+
       const fullPath = path.join(current, entry.name);
       if (entry.isDirectory()) {
         walk(fullPath);
       } else if (entry.isFile()) {
-        results.push(fullPath);
+        files.push(fullPath);
       }
     }
   }
 
-  walk(dir);
-  return results.sort();
+  walk(directory);
+  return files;
 }
 
 /**
- * Compute a deterministic SHA-256 hash of all file contents in an extension directory.
- * Hash input: sorted sequence of (relative_path, file_content) pairs.
+ * Compute the source-content hash used by the Hub index.
+ *
+ * @param {string} extensionPath
+ * @param {string[]} files
+ * @returns {string}
  */
-function computeContentHash(extPath) {
+function computeContentHash(extensionPath, files = getAllFiles(extensionPath)) {
   const hash = crypto.createHash('sha256');
-  const files = getAllFiles(extPath);
+
   for (const file of files) {
-    // Normalize to forward slashes for cross-platform determinism.
-    const rel = path.relative(extPath, file).split(path.sep).join('/');
-    hash.update(rel);
+    const relativePath = path.relative(extensionPath, file).split(path.sep).join('/');
+    hash.update(relativePath);
     hash.update(fs.readFileSync(file));
   }
+
   return hash.digest('hex');
 }
 
-async function main() {
-  const extensionsDir = path.join(__dirname, '../../extensions');
-  const distDir = path.join(__dirname, '../../dist');
-  const indexJsonPath = path.join(distDir, 'index.json');
+/**
+ * Build a deterministic ZIP archive without modifying source mtimes.
+ *
+ * @param {string} extensionPath
+ * @param {string[]} files
+ * @returns {Promise<Buffer>}
+ */
+async function createExtensionArchive(extensionPath, files) {
+  const archive = new JSZip();
 
-  if (!fs.existsSync(distDir)) {
-    fs.mkdirSync(distDir, { recursive: true });
+  for (const file of files) {
+    const relativePath = path.relative(extensionPath, file).split(path.sep).join('/');
+    archive.file(relativePath, fs.readFileSync(file), {
+      binary: true,
+      createFolders: true,
+      date: FIXED_ZIP_DATE,
+      unixPermissions: 0o100644,
+    });
   }
 
+  return archive.generateAsync({
+    type: 'nodebuffer',
+    compression: 'DEFLATE',
+    compressionOptions: { level: 9 },
+    platform: 'UNIX',
+    streamFiles: false,
+  });
+}
+
+/**
+ * Summarize extension contributions for the generated index.
+ *
+ * @param {Record<string, unknown>} contributes
+ * @returns {{ hubs: string[], summary: Record<string, string[]> }}
+ */
+function summarizeContributions(contributes) {
+  const hubs = [];
+  const summary = {};
+
+  for (const [key, value] of Object.entries(contributes ?? {})) {
+    if (!Array.isArray(value) || value.length === 0) {
+      continue;
+    }
+
+    hubs.push(key);
+    summary[key] = value
+      .map((item) => (item && typeof item === 'object' ? item.id : undefined))
+      .filter((id) => typeof id === 'string');
+  }
+
+  return { hubs, summary };
+}
+
+/**
+ * Build all active extension archives and the Hub index.
+ *
+ * @returns {Promise<void>}
+ */
+async function main() {
+  const repositoryRoot = path.resolve(__dirname, '..', '..');
+  const extensionsDirectory = path.join(repositoryRoot, 'extensions');
+  const distDirectory = path.join(repositoryRoot, 'dist');
+  const indexPath = path.join(distDirectory, 'index.json');
+
+  fs.rmSync(distDirectory, { recursive: true, force: true });
+  fs.mkdirSync(distDirectory, { recursive: true });
+
+  const generatedAt = process.env.SOURCE_DATE_EPOCH
+    ? new Date(Number(process.env.SOURCE_DATE_EPOCH) * 1000).toISOString()
+    : new Date().toISOString();
+
   const indexData = {
-    schemaVersion: 1,
-    generatedAt: new Date().toISOString(),
+    schemaVersion: 2,
+    generatedAt,
     extensions: {},
     metadata: {
       totalExtensions: 0,
-      generatedBy: "Aion Extension Builder v1.0.0",
-      repository: "https://github.com/iOfficeAI/AionHub/"
-    }
+      generatedBy: 'Tjuae Extension Builder v2.0.0',
+      repository: 'https://github.com/liangboqiang/TjuaeHub/',
+    },
   };
 
-  const dirs = fs.readdirSync(extensionsDir).filter(f => f.startsWith('aionext-') && fs.statSync(path.join(extensionsDir, f)).isDirectory());
+  const extensionDirectories = fs
+    .readdirSync(extensionsDirectory, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && entry.name.startsWith(EXTENSION_PREFIX))
+    .map((entry) => entry.name)
+    .sort();
 
-  for (const extDirName of dirs) {
-    const extPath = path.join(extensionsDir, extDirName);
-    const zipName = `${extDirName}.zip`;
-    const zipPath = path.join(distDir, zipName);
-    const extJsonPath = path.join(extPath, 'aion-extension.json');
+  if (extensionDirectories.length === 0) {
+    throw new Error(`No ${EXTENSION_PREFIX} extension directories were found`);
+  }
 
-    console.log(`Packaging extension: ${extDirName}...`);
+  for (const extensionDirectoryName of extensionDirectories) {
+    const extensionPath = path.join(extensionsDirectory, extensionDirectoryName);
+    const manifestPath = path.join(extensionPath, MANIFEST_FILENAME);
+    const zipName = `${extensionDirectoryName}.zip`;
+    const zipPath = path.join(distDirectory, zipName);
 
-    if (!fs.existsSync(extJsonPath)) {
-      console.warn(`Skipping ${extDirName}: No aion-extension.json found.`);
-      continue;
+    if (!fs.existsSync(manifestPath)) {
+      throw new Error(`${extensionDirectoryName} is missing ${MANIFEST_FILENAME}`);
     }
 
-    let extJson;
-    try {
-      extJson = JSON.parse(fs.readFileSync(extJsonPath, 'utf8'));
-    } catch (e) {
-      console.error(`Failed to parse ${extJsonPath}`, e.message);
-      continue;
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    if (manifest.name !== extensionDirectoryName) {
+      throw new Error(`${MANIFEST_FILENAME} name ${manifest.name} does not match ${extensionDirectoryName}`);
     }
 
-    if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
-    
-    // SOLUTION: Use zip with the -X (no extra attributes) option and 
-    // run touch to standardize the modification time before zipping,
-    // ensuring byte-for-byte consistent zip files across environments.
-    try {
-      execSync(`cd "${extPath}" && find . -exec touch -t 202401010000 {} + && zip -r -X "${zipPath}" . -x "*.DS_Store" -x "*.git*" -x "__MACOSX/*" -x "node_modules/*"`, { stdio: 'inherit' });
-    } catch (e) {
-      console.error(`Failed to zip ${extDirName}`, e.message);
-      continue;
-    }
+    const files = getAllFiles(extensionPath);
+    const archive = await createExtensionArchive(extensionPath, files);
+    fs.writeFileSync(zipPath, archive);
 
-    const contentHash = computeContentHash(extPath);
-    const integrity = `sha256-${contentHash}`;
-    const size = fs.statSync(zipPath).size;
+    const { hubs, summary } = summarizeContributions(manifest.contributes);
+    const unpackedSize = files.reduce((total, file) => total + fs.statSync(file).size, 0);
 
-    const hubs = [];
-    const contributesSummary = {};
-    
-    if (extJson.contributes) {
-      Object.keys(extJson.contributes).forEach(key => {
-        const items = extJson.contributes[key];
-        if (Array.isArray(items) && items.length > 0) {
-          hubs.push(key);
-          // Extract the 'id' field from each contribution item
-          contributesSummary[key] = items.map(item => item.id).filter(id => id !== undefined);
-        }
-      });
-    }
-
-    indexData.extensions[extDirName] = {
-      name: extJson.name,
-      displayName: extJson.displayName || extDirName,
-      version: extJson.version || '1.0.0',
-      description: extJson.description || '',
-      author: extJson.author || 'Aionui Official',
-      icon: extJson.icon || undefined,
-      engines: extJson.engine || {},
-      hubs: hubs,
-      contributes: contributesSummary,
+    indexData.extensions[extensionDirectoryName] = {
+      name: manifest.name,
+      displayName: manifest.displayName,
+      version: manifest.version,
+      description: manifest.description ?? '',
+      author: manifest.author ?? 'TjuaeUI',
+      icon: manifest.icon,
+      engines: manifest.engine ?? {},
+      hubs,
+      contributes: summary,
       dist: {
         tarball: zipName,
-        integrity: integrity,
-        unpackedSize: size
-      }
+        integrity: `sha256-${computeContentHash(extensionPath, files)}`,
+        unpackedSize,
+      },
     };
   }
 
   indexData.metadata.totalExtensions = Object.keys(indexData.extensions).length;
-
-  if (indexData.metadata.totalExtensions > 0) {
-    fs.writeFileSync(indexJsonPath, JSON.stringify(indexData, null, 4) + '\n');
-    console.log(`Successfully built dist/index.json with ${indexData.metadata.totalExtensions} extensions.`);
-  } else {
-    console.log('No extensions found to package.');
-  }
+  fs.writeFileSync(indexPath, `${JSON.stringify(indexData, null, 2)}\n`);
+  console.log(`Built ${indexData.metadata.totalExtensions} TjuaeHub extensions.`);
 }
 
-main().catch(e => {
-  console.error(e);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  EXTENSION_PREFIX,
+  MANIFEST_FILENAME,
+  computeContentHash,
+  createExtensionArchive,
+  getAllFiles,
+  main,
+  summarizeContributions,
+};

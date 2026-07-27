@@ -1,0 +1,34 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
+  "author": "TjuaeUI",
+  "contributes": {
+    "acpAdapters": [
+      {
+        "id": "kiro",
+        "name": "Kiro CLI",
+        "description": "Kiro CLI adapter (AWS)",
+        "connectionType": "stdio",
+        "cliCommand": "kiro-cli",
+        "authRequired": true,
+        "supportsStreaming": false,
+        "acpArgs": ["acp"]
+      }
+    ]
+  },
+  "description": "Integrates Kiro CLI as an ACP adapter in TjuaeUI.",
+  "displayName": "Kiro CLI",
+  "engine": {
+    "tjuae": "^1.0.0"
+  },
+  "lifecycle": {
+    "onInstall": {
+      "shell": {
+        "cliCommand": "bun",
+        "args": ["run", "scripts/install.ts"]
+      },
+      "timeout": 120000
+    }
+  },
+  "name": "tjuaeext-kiro",
+  "version": "1.0.0"
+}

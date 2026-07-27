@@ -1,0 +1,36 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
+  "author": "TjuaeUI",
+  "contributes": {
+    "acpAdapters": [
+      {
+        "id": "copilot",
+        "name": "GitHub Copilot",
+        "icon": "resources/icon.svg",
+        "description": "GitHub Copilot adapter",
+        "connectionType": "stdio",
+        "cliCommand": "copilot",
+        "defaultCliPath": "bunx @github/copilot",
+        "acpArgs": ["--acp"],
+        "authRequired": true,
+        "supportsStreaming": false
+      }
+    ]
+  },
+  "description": "Integrates GitHub Copilot as an ACP adapter in TjuaeUI.",
+  "displayName": "GitHub Copilot",
+  "engine": {
+    "tjuae": "^1.0.0"
+  },
+  "lifecycle": {
+    "onInstall": {
+      "shell": {
+        "cliCommand": "bun",
+        "args": ["install", "-g", "@github/copilot"]
+      },
+      "timeout": 60000
+    }
+  },
+  "name": "tjuaeext-copilot",
+  "version": "1.0.0"
+}

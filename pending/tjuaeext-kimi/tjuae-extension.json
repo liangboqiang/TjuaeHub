@@ -1,0 +1,35 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/extension-manifest.v1.schema.json",
+  "author": "TjuaeUI",
+  "contributes": {
+    "acpAdapters": [
+      {
+        "id": "kimi",
+        "name": "Kimi Code",
+        "icon": "resources/icon.svg",
+        "description": "Kimi Code adapter",
+        "connectionType": "stdio",
+        "cliCommand": "kimi",
+        "authRequired": true,
+        "supportsStreaming": false,
+        "acpArgs": ["acp"]
+      }
+    ]
+  },
+  "description": "Integrates Kimi Code CLI as an ACP adapter in TjuaeUI.",
+  "displayName": "Kimi Code",
+  "engine": {
+    "tjuae": "^1.0.0"
+  },
+  "lifecycle": {
+    "onInstall": {
+      "shell": {
+        "cliCommand": "bun",
+        "args": ["run", "scripts/install.ts"]
+      },
+      "timeout": 120000
+    }
+  },
+  "name": "tjuaeext-kimi",
+  "version": "1.0.0"
+}
