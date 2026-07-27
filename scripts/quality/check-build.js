@@ -1,5 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
+const crypto = require('node:crypto');
 const JSZip = require('jszip');
 const {
   EXTENSION_PREFIX,
@@ -91,7 +92,13 @@ async function validateBuild() {
       throw new Error(`${extensionName} 的解压大小无效`);
     }
 
-    const archive = await JSZip.loadAsync(fs.readFileSync(path.join(DIST_DIRECTORY, expectedTarball)));
+    const archiveBuffer = fs.readFileSync(path.join(DIST_DIRECTORY, expectedTarball));
+    const expectedArchiveIntegrity = `sha256-${crypto.createHash('sha256').update(archiveBuffer).digest('hex')}`;
+    if (entry.dist.archiveIntegrity !== expectedArchiveIntegrity) {
+      throw new Error(`${extensionName} 的归档哈希无效`);
+    }
+
+    const archive = await JSZip.loadAsync(archiveBuffer);
     const archiveEntries = Object.values(archive.files)
       .filter((file) => !file.dir)
       .map((file) => file.name)

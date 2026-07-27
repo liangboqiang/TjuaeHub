@@ -26,8 +26,9 @@ flowchart LR
 ```
 
 推送到 `main` 后，GitHub Actions 会重新验证源码和产物，再发布 `dist` 分支、
-不可变的 `dist-<commit>` 标签以及指向最新产物的 `dist-latest` 标签。生成的 ZIP
-由源码内容哈希校验，不依赖本地时间戳。
+不可变的 `dist-<commit>` 标签以及指向最新产物的 `dist-latest` 标签。索引同时记录
+解压后规范内容的 `integrity` 与实际 ZIP 字节的 `archiveIntegrity`；客户端先验证归档
+哈希，再解压或安装。确定性构建不依赖本地时间戳。
 
 ## 扩展契约
 

@@ -10,6 +10,15 @@ describe('扩展构建产物', () => {
     await expect(validateBuild()).resolves.toEqual({ extensionCount: 7 });
   });
 
+  it('为每个分发包记录独立的源内容哈希和归档字节哈希', async () => {
+    const index = JSON.parse(await readFile('dist/index.json', 'utf8'));
+    for (const extension of Object.values(index.extensions)) {
+      expect(extension.dist.integrity).toMatch(/^sha256-[0-9a-f]{64}$/);
+      expect(extension.dist.archiveIntegrity).toMatch(/^sha256-[0-9a-f]{64}$/);
+      expect(extension.dist.archiveIntegrity).not.toBe(extension.dist.integrity);
+    }
+  });
+
   it('拒绝已过时的索引契约', () => {
     expect(() =>
       validateIndexShape({

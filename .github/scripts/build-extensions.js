@@ -191,6 +191,7 @@ async function main() {
       dist: {
         tarball: zipName,
         integrity: `sha256-${computeContentHash(extensionPath, files)}`,
+        archiveIntegrity: `sha256-${crypto.createHash('sha256').update(archive).digest('hex')}`,
         unpackedSize,
       },
     };
