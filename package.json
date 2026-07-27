@@ -1,8 +1,19 @@
 {
   "name": "@tjuae/hub",
+  "version": "0.1.0",
   "private": true,
+  "description": "Tjuae 扩展清单、验证与分发中心",
+  "license": "Apache-2.0",
   "author": {
     "name": "Tjuae"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liangboqiang/TjuaeHub.git"
+  },
+  "homepage": "https://github.com/liangboqiang/TjuaeHub#readme",
+  "bugs": {
+    "url": "https://github.com/liangboqiang/TjuaeHub/issues"
   },
   "scripts": {
     "build": "node .github/scripts/build-extensions.js",
