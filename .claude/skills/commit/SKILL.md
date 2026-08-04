@@ -19,7 +19,7 @@ allowed-tools: Bash(rm -f ./.git/index.lock)
 
 - **只提交已暂存文件**：绝不自行执行 `git add`，暂存范围由用户控制。
 - **检查全部改动**：同时查看已暂存与未暂存改动，防止提交信息遗漏或混入无关内容。
-- **遵守提交格式**：使用下方规定的 Conventional Commit 风格。
+- **遵守提交格式**：使用下方规定的约定式提交风格。
 - **匹配项目习惯**：先查看近期 `git log`，与仓库现有风格保持一致。
 
 ## 格式
@@ -40,10 +40,10 @@ allowed-tools: Bash(rm -f ./.git/index.lock)
 ### 常规提交
 
 ```text
-feat(extensions): 新增 ACP 智能体扩展
+feat(assets): 新增 ACP 引擎资产
 
-- 新增 tjuae-extension.json 清单和安装脚本
-- 将扩展注册到构建流水线
+- 新增 asset-package.json 与引擎 Definition
+- 将原子资产注册到构建流水线
 ```
 
 ```text
@@ -61,10 +61,10 @@ refactor(build): 使用确定性内容哈希
 ```
 
 ```text
-chore(extensions): 启用已验证的智能体扩展
+chore(assets): 发布已验证的智能体资产
 
-- 将已验证条目从 pending 移至 extensions
-- 在构建中包含已启用扩展
+- 将已验证条目从 submissions 移至 assets
+- 在构建中包含已审核资产
 ```
 
 ### 跨模块提交
@@ -81,12 +81,12 @@ chore: 停止跟踪生成的分发文件
 ### 破坏性变更
 
 ```text
-refactor!(extensions): 重新设计清单模式
+refactor!(assets): 收紧原子资产模式
 
-- 使用 contributes 结构替代扁平字段
-- 更新仓库中的全部清单
+- 强制一包一项 typed asset
+- 更新仓库中的全部资产清单
 
-BREAKING CHANGE: 不再支持 tjuae-extension.json 模式 v1。
+BREAKING CHANGE: 已删除历史清单协议，只接受原子资产包 v1。
 ```
 
 ## 规则
@@ -116,13 +116,13 @@ BREAKING CHANGE: 不再支持 tjuae-extension.json 模式 v1。
 
 ## 常用作用域
 
-| 作用域       | 使用场景                               |
-| ------------ | -------------------------------------- |
-| `extensions` | `extensions/` 下的清单与安装逻辑       |
-| `kits`       | `kits/` 下的服务器、模拟智能体或工具包 |
-| `build`      | `.github/scripts/` 下的构建脚本        |
-| `ci`         | `.github/workflows/` 下的工作流        |
-| `docs`       | `docs/` 下的文档                       |
+| 作用域   | 使用场景                                 |
+| -------- | ---------------------------------------- |
+| `assets` | `assets/` 与 `submissions/` 下的原子资产 |
+| `kits`   | `kits/` 下的服务器或验证工具             |
+| `build`  | `.github/scripts/` 下的构建脚本          |
+| `ci`     | `.github/workflows/` 下的工作流          |
+| `docs`   | `docs/` 下的文档                         |
 
 跨越多个区域且无法归入单一模块时省略作用域。
 
@@ -149,7 +149,7 @@ BREAKING CHANGE: 不再支持 tjuae-extension.json 模式 v1。
 
    ```bash
    git commit -m "$(cat <<'EOF'
-   feat(extensions): descriptive title
+   feat(assets): descriptive title
 
    - Bullet point summary
    - Another change detail

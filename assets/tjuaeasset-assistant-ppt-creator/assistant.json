@@ -1,0 +1,57 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/assistant-definition.v1.schema.json",
+  "schemaVersion": 1,
+  "kind": "assistant",
+  "runtimeId": "ppt-creator",
+  "name": "PPT 演示助手",
+  "nameI18n": {
+    "en-US": "PPT Creator",
+    "zh-CN": "PPT 演示助手",
+    "ru-RU": "Помощник PPT",
+    "uk-UA": "Помічник PPT"
+  },
+  "description": "使用 内置文档工具 创建、编辑和分析专业 PPT 演示文稿。大胆设计、丰富版式、视觉冲击。",
+  "descriptionI18n": {
+    "en-US": "Create, edit, and analyze professional PowerPoint presentations with 内置文档工具. Bold designs, varied layouts, and visual impact.",
+    "zh-CN": "使用 内置文档工具 创建、编辑和分析专业 PPT 演示文稿。大胆设计、丰富版式、视觉冲击。",
+    "ru-RU": "Создаёт, редактирует и анализирует профессиональные презентации PowerPoint с помощью 内置文档工具: выразительный дизайн, разнообразные макеты и сильная визуальная подача.",
+    "uk-UA": "Створюйте, редагуйте та аналізуйте професійні презентації PowerPoint за допомогою 内置文档工具: виразний дизайн, різноманітні макети та візуальний вплив."
+  },
+  "rules": {
+    "en-US": "rules/en-US.md",
+    "ru-RU": "rules/ru-RU.md",
+    "zh-CN": "rules/zh-CN.md"
+  },
+  "recommendedPrompts": [
+    "做一份 10 页的 Kubernetes 迁移方案 PPT，包含架构对比、成本分析和迁移时间线",
+    "做一份 10 页的 SaaS 产品数据看板 PPT，包含用户增长图表、转化漏斗和竞品分析",
+    "做一份 10 页的金融科技产品路线图 PPT，包含用户增长趋势和投资分析"
+  ],
+  "recommendedPromptsI18n": {
+    "en-US": [
+      "Create a 10-slide Kubernetes migration proposal with architecture comparison, cost analysis, and migration timeline",
+      "Create a 10-slide SaaS analytics dashboard for a project management tool with user growth charts, conversion funnel, and competitive landscape",
+      "Create a 10-slide fintech product roadmap for a digital payment platform with user growth trajectory and investment analysis"
+    ],
+    "zh-CN": [
+      "做一份 10 页的 Kubernetes 迁移方案 PPT，包含架构对比、成本分析和迁移时间线",
+      "做一份 10 页的 SaaS 产品数据看板 PPT，包含用户增长图表、转化漏斗和竞品分析",
+      "做一份 10 页的金融科技产品路线图 PPT，包含用户增长趋势和投资分析"
+    ],
+    "ru-RU": [
+      "Создай презентацию на 10 слайдов о миграции в Kubernetes со сравнением архитектур, анализом затрат и графиком миграции",
+      "Создай презентацию на 10 слайдов с аналитическим дашбордом для SaaS-инструмента управления проектами: графики роста пользователей, воронка конверсий и конкурентный ландшафт",
+      "Создай презентацию на 10 слайдов с дорожной картой финтех-продукта для платформы цифровых платежей: траектория роста пользователей и инвестиционный анализ"
+    ],
+    "uk-UA": [
+      "Створити презентацію на 10 слайдів щодо міграції на Kubernetes з порівнянням архітектур, аналізом витрат та графіком міграції",
+      "Створити 10 слайдів дашборду аналітики SaaS для інструменту управління проектами з графіками росту користувачів та аналізом конкурентів",
+      "Створити дорожню карту фінтех-продукту на 10 слайдів для платформи цифрових платежів з аналізом інвестицій"
+    ]
+  },
+  "skillDependencies": [],
+  "avatar": {
+    "type": "emoji",
+    "value": "🖥️"
+  }
+}

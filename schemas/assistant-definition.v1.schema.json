@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/assistant-definition.v1.schema.json",
+  "version": "1.0.0",
+  "title": "Tjuae 助手 Definition v1",
+  "description": "可同步、可审阅的助手定义。运行时启用状态、排序、引擎/供应商/模型绑定和本机路径属于 Core Overlay，不得进入该文件。",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "kind",
+    "runtimeId",
+    "name",
+    "nameI18n",
+    "description",
+    "descriptionI18n",
+    "rules",
+    "recommendedPrompts",
+    "recommendedPromptsI18n",
+    "skillDependencies",
+    "avatar"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/assistant-definition.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "assistant" },
+    "runtimeId": { "$ref": "#/$defs/RuntimeId" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "nameI18n": { "$ref": "#/$defs/LocalizedString" },
+    "description": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "descriptionI18n": { "$ref": "#/$defs/LocalizedString" },
+    "rules": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/Locale" },
+      "additionalProperties": { "$ref": "#/$defs/SafeRelativePath" }
+    },
+    "recommendedPrompts": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1, "maxLength": 8192 }
+    },
+    "recommendedPromptsI18n": {
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/Locale" },
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string", "minLength": 1, "maxLength": 8192 }
+      }
+    },
+    "skillDependencies": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/RemoteSkillAssetId" }
+    },
+    "avatar": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["type", "path"],
+          "additionalProperties": false,
+          "properties": {
+            "type": { "const": "file" },
+            "path": { "$ref": "#/$defs/SafeRelativePath" }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["type", "value"],
+          "additionalProperties": false,
+          "properties": {
+            "type": { "const": "emoji" },
+            "value": { "type": "string", "minLength": 1, "maxLength": 32 }
+          }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "RuntimeId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._:-][a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "Locale": {
+      "type": "string",
+      "pattern": "^[a-z]{2,3}(?:-[A-Z]{2})?$",
+      "minLength": 2,
+      "maxLength": 16
+    },
+    "LocalizedString": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/Locale" },
+      "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 4096 }
+    },
+    "RemoteSkillAssetId": {
+      "type": "string",
+      "pattern": "^tjuaeasset-skill-[a-z0-9]+(?:-[a-z0-9]+)*/skill/[a-z0-9]+(?:[._:-][a-z0-9]+)*$",
+      "maxLength": 256
+    },
+    "SafeRelativePath": {
+      "type": "string",
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$"
+    }
+  }
+}

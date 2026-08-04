@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/asset-package.v1.schema.json",
+  "schemaVersion": 1,
+  "name": "tjuaeasset-assistant-academic-paper",
+  "version": "1.0.0",
+  "displayName": "学术论文助手",
+  "description": "创建正式结构的学术论文、研究论文和白皮书，支持原生 Word 目录、LaTeX 转 OMML 公式、学术参考文献（APA/物理/芝加哥格式）、脚注、多栏排版和论文类型专属样式。",
+  "author": "Tjuae",
+  "license": "Apache-2.0",
+  "compatibility": {
+    "tjuae": "^1.0.0"
+  },
+  "publisher": {
+    "name": "Tjuae",
+    "url": "https://github.com/liangboqiang"
+  },
+  "source": {
+    "repository": "https://github.com/liangboqiang/TjuaeCore/",
+    "license": "Apache-2.0"
+  },
+  "tags": ["assistant", "official"],
+  "assets": [
+    {
+      "kind": "assistant",
+      "id": "academic-paper",
+      "runtimeId": "academic-paper",
+      "definitionFile": "assistant.json",
+      "dependencies": []
+    }
+  ]
+}

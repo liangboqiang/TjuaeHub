@@ -1,0 +1,47 @@
+{
+  "forbiddenPaths": [
+    ".env",
+    "config/.env.local",
+    "certificates/client.pem",
+    "certificates/client.key",
+    "config/runtime.toml",
+    "credentials.json",
+    "nested/.ssh"
+  ],
+  "unsafeContents": [
+    {
+      "path": "docs/private-key.txt",
+      "content": "-----BEGIN RSA PRIVATE KEY-----\nnot-a-real-key"
+    },
+    {
+      "path": "config/provider.json",
+      "content": "{\"apiKey\":\"literal-test-credential\"}"
+    },
+    {
+      "path": "config/remote.json",
+      "content": "{\"url\":\"https://demo:literal-password@example.com/api\"}"
+    },
+    {
+      "path": "docs/local-path.md",
+      "content": "Do not publish C:\\Users\\alice\\AppData\\Local\\secret.txt"
+    },
+    {
+      "path": "config/placeholder-bypass.json",
+      "content": "{\"refreshToken\":\"YOUR_REAL_PASSWORD_hunter2\",\"secretValue\":\"abcREDACTEDactual-secret\"}"
+    }
+  ],
+  "safeContents": [
+    {
+      "path": "scripts/example.py",
+      "content": "api_key=${OPENAI_API_KEY}\n"
+    },
+    {
+      "path": "config/provider.json",
+      "content": "{\"apiKey\":\"${OPENAI_API_KEY}\",\"url\":\"https://example.com/api\"}"
+    },
+    {
+      "path": "assets/icon.svg",
+      "content": "<svg xmlns=\"http://www.w3.org/2000/svg\"></svg>"
+    }
+  ]
+}

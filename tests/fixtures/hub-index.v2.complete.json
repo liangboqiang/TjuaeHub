@@ -1,0 +1,212 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/hub-index.v2.schema.json",
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-31T00:00:00.000Z",
+  "assets": {
+    "tjuaeasset-community-assistant/assistant/community-assistant": {
+      "id": "tjuaeasset-community-assistant/assistant/community-assistant",
+      "kind": "assistant",
+      "runtimeId": "community-assistant",
+      "dependencies": ["tjuaeasset-community-skill/skill/community-skill"],
+      "displayName": "社区助手",
+      "description": "社区助手预设",
+      "version": "1.2.3",
+      "definitionDigest": "sha256-1111111111111111111111111111111111111111111111111111111111111111",
+      "entryFile": "assistant.json",
+      "packageName": "tjuaeasset-community-assistant",
+      "author": "社区作者",
+      "license": "Apache-2.0",
+      "trust": "community",
+      "status": "active",
+      "compatibility": { "tjuae": "^1.0.0" },
+      "sourceRevision": "0123456789abcdef0123456789abcdef01234567",
+      "files": [
+        {
+          "path": "asset-package.json",
+          "digest": "sha256-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "size": 768,
+          "mediaType": "application/json"
+        },
+        {
+          "path": "assistant.json",
+          "digest": "sha256-1111111111111111111111111111111111111111111111111111111111111111",
+          "size": 512,
+          "mediaType": "application/json"
+        }
+      ],
+      "tags": ["assistant", "community"]
+    },
+    "tjuaeasset-community-engine/engineAdapter/community-acp": {
+      "id": "tjuaeasset-community-engine/engineAdapter/community-acp",
+      "kind": "engineAdapter",
+      "runtimeId": "community-acp",
+      "dependencies": [],
+      "displayName": "社区 ACP",
+      "description": "社区 ACP 适配器",
+      "version": "1.2.3",
+      "definitionDigest": "sha256-2222222222222222222222222222222222222222222222222222222222222222",
+      "entryFile": "engine-adapter.json",
+      "packageName": "tjuaeasset-community-engine",
+      "author": "社区作者",
+      "license": "Apache-2.0",
+      "trust": "community",
+      "status": "active",
+      "compatibility": { "tjuae": "^1.0.0" },
+      "sourceRevision": "0123456789abcdef0123456789abcdef01234567",
+      "files": [
+        {
+          "path": "asset-package.json",
+          "digest": "sha256-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "size": 768,
+          "mediaType": "application/json"
+        },
+        {
+          "path": "engine-adapter.json",
+          "digest": "sha256-2222222222222222222222222222222222222222222222222222222222222222",
+          "size": 640,
+          "mediaType": "application/json"
+        }
+      ],
+      "tags": ["community", "engine"]
+    },
+    "tjuaeasset-community-mcp/mcp/community-mcp": {
+      "id": "tjuaeasset-community-mcp/mcp/community-mcp",
+      "kind": "mcp",
+      "runtimeId": "community-mcp",
+      "dependencies": [],
+      "displayName": "社区 MCP",
+      "description": "社区 MCP 服务",
+      "version": "1.2.3",
+      "definitionDigest": "sha256-3333333333333333333333333333333333333333333333333333333333333333",
+      "entryFile": "mcp.json",
+      "packageName": "tjuaeasset-community-mcp",
+      "author": "社区作者",
+      "license": "Apache-2.0",
+      "trust": "community",
+      "status": "active",
+      "compatibility": { "tjuae": "^1.0.0" },
+      "sourceRevision": "0123456789abcdef0123456789abcdef01234567",
+      "files": [
+        {
+          "path": "asset-package.json",
+          "digest": "sha256-cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "size": 768,
+          "mediaType": "application/json"
+        },
+        {
+          "path": "mcp.json",
+          "digest": "sha256-3333333333333333333333333333333333333333333333333333333333333333",
+          "size": 640,
+          "mediaType": "application/json"
+        }
+      ],
+      "tags": ["community", "mcp"]
+    },
+    "tjuaeasset-community-skill/skill/community-skill": {
+      "id": "tjuaeasset-community-skill/skill/community-skill",
+      "kind": "skill",
+      "runtimeId": "community-skill",
+      "dependencies": [],
+      "displayName": "社区技能",
+      "description": "社区技能",
+      "version": "1.2.3",
+      "definitionDigest": "sha256-4444444444444444444444444444444444444444444444444444444444444444",
+      "entryFile": "SKILL.md",
+      "packageName": "tjuaeasset-community-skill",
+      "author": "社区作者",
+      "license": "Apache-2.0",
+      "trust": "community",
+      "status": "active",
+      "compatibility": { "tjuae": "^1.0.0" },
+      "sourceRevision": "0123456789abcdef0123456789abcdef01234567",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "digest": "sha256-4444444444444444444444444444444444444444444444444444444444444444",
+          "size": 512,
+          "mediaType": "text/markdown"
+        },
+        {
+          "path": "asset-package.json",
+          "digest": "sha256-dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "size": 768,
+          "mediaType": "application/json"
+        }
+      ],
+      "tags": ["community", "skill"]
+    }
+  },
+  "packages": {
+    "tjuaeasset-community-assistant": {
+      "name": "tjuaeasset-community-assistant",
+      "version": "1.2.3",
+      "reviewStatus": "approved",
+      "atomic": true,
+      "assetIds": ["tjuaeasset-community-assistant/assistant/community-assistant"],
+      "dependencies": { "tjuaeasset-community-skill": "^1.2.3" },
+      "tarball": "tjuaeasset-community-assistant.zip",
+      "integrity": "sha256-5555555555555555555555555555555555555555555555555555555555555555",
+      "archiveIntegrity": "sha256-6666666666666666666666666666666666666666666666666666666666666666",
+      "unpackedSize": 1280,
+      "repository": "https://github.com/liangboqiang/TjuaeHub/",
+      "sourcePath": "assets/tjuaeasset-community-assistant",
+      "manifestPath": "assets/tjuaeasset-community-assistant/asset-package.json",
+      "sourceRevision": "0123456789abcdef0123456789abcdef01234567"
+    },
+    "tjuaeasset-community-engine": {
+      "name": "tjuaeasset-community-engine",
+      "version": "1.2.3",
+      "reviewStatus": "approved",
+      "atomic": true,
+      "assetIds": ["tjuaeasset-community-engine/engineAdapter/community-acp"],
+      "dependencies": {},
+      "tarball": "tjuaeasset-community-engine.zip",
+      "integrity": "sha256-7777777777777777777777777777777777777777777777777777777777777777",
+      "archiveIntegrity": "sha256-8888888888888888888888888888888888888888888888888888888888888888",
+      "unpackedSize": 1408,
+      "repository": "https://github.com/liangboqiang/TjuaeHub/",
+      "sourcePath": "assets/tjuaeasset-community-engine",
+      "manifestPath": "assets/tjuaeasset-community-engine/asset-package.json",
+      "sourceRevision": "0123456789abcdef0123456789abcdef01234567"
+    },
+    "tjuaeasset-community-mcp": {
+      "name": "tjuaeasset-community-mcp",
+      "version": "1.2.3",
+      "reviewStatus": "approved",
+      "atomic": true,
+      "assetIds": ["tjuaeasset-community-mcp/mcp/community-mcp"],
+      "dependencies": {},
+      "tarball": "tjuaeasset-community-mcp.zip",
+      "integrity": "sha256-9999999999999999999999999999999999999999999999999999999999999999",
+      "archiveIntegrity": "sha256-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "unpackedSize": 1408,
+      "repository": "https://github.com/liangboqiang/TjuaeHub/",
+      "sourcePath": "assets/tjuaeasset-community-mcp",
+      "manifestPath": "assets/tjuaeasset-community-mcp/asset-package.json",
+      "sourceRevision": "0123456789abcdef0123456789abcdef01234567"
+    },
+    "tjuaeasset-community-skill": {
+      "name": "tjuaeasset-community-skill",
+      "version": "1.2.3",
+      "reviewStatus": "approved",
+      "atomic": true,
+      "assetIds": ["tjuaeasset-community-skill/skill/community-skill"],
+      "dependencies": {},
+      "tarball": "tjuaeasset-community-skill.zip",
+      "integrity": "sha256-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "archiveIntegrity": "sha256-cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "unpackedSize": 1280,
+      "repository": "https://github.com/liangboqiang/TjuaeHub/",
+      "sourcePath": "assets/tjuaeasset-community-skill",
+      "manifestPath": "assets/tjuaeasset-community-skill/asset-package.json",
+      "sourceRevision": "0123456789abcdef0123456789abcdef01234567"
+    }
+  },
+  "metadata": {
+    "totalPackages": 4,
+    "totalAssets": 4,
+    "generatedBy": "Tjuae 资产构建器 v3.0.0",
+    "repository": "https://github.com/liangboqiang/TjuaeHub/",
+    "sourceRevision": "0123456789abcdef0123456789abcdef01234567"
+  }
+}

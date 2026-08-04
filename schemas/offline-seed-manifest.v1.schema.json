@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/offline-seed-manifest.v1.schema.json",
+  "version": "1.0.0",
+  "title": "TjuaeHub 离线种子清单 v1",
+  "description": "Core 可按内容摘要校验并导入的官方资产离线种子。种子只包含 Hub 构建器在固定源码修订下生成的 official 资产。",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "generatedAt",
+    "sourceRevision",
+    "seedIndexDigest",
+    "bundle",
+    "assetKinds",
+    "packageNames",
+    "assetIds"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/offline-seed-manifest.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "sourceRevision": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}(?:[0-9a-f]{24})?$"
+    },
+    "seedIndexDigest": { "$ref": "#/$defs/Integrity" },
+    "bundle": {
+      "type": "object",
+      "required": ["fileName", "digest", "size"],
+      "additionalProperties": false,
+      "properties": {
+        "fileName": {
+          "type": "string",
+          "pattern": "^tjuae-seed-[0-9a-f]{64}\\.zip$"
+        },
+        "digest": { "$ref": "#/$defs/Integrity" },
+        "size": { "type": "integer", "minimum": 1, "maximum": 1073741824 }
+      }
+    },
+    "assetKinds": {
+      "type": "array",
+      "const": ["assistant", "engineAdapter", "mcp", "skill"],
+      "description": "官方离线种子必须确定性覆盖全部四类原子资产。"
+    },
+    "packageNames": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^tjuaeasset-[a-z0-9]+(?:-[a-z0-9]+)*$"
+      }
+    },
+    "assetIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^tjuaeasset-[a-z0-9]+(?:-[a-z0-9]+)*/(?:assistant|engineAdapter|skill|mcp)/[a-z0-9]+(?:[._:-][a-z0-9]+)*$"
+      }
+    }
+  },
+  "$defs": {
+    "Integrity": {
+      "type": "string",
+      "pattern": "^sha256-[0-9a-f]{64}$"
+    }
+  }
+}

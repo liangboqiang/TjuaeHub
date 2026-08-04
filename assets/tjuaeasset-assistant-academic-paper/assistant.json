@@ -1,0 +1,57 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/assistant-definition.v1.schema.json",
+  "schemaVersion": 1,
+  "kind": "assistant",
+  "runtimeId": "academic-paper",
+  "name": "学术论文助手",
+  "nameI18n": {
+    "en-US": "Academic Paper",
+    "zh-CN": "学术论文助手",
+    "ru-RU": "Помощник по академическим работам",
+    "uk-UA": "Академічний помічник"
+  },
+  "description": "创建正式结构的学术论文、研究论文和白皮书，支持原生 Word 目录、LaTeX 转 OMML 公式、学术参考文献（APA/物理/芝加哥格式）、脚注、多栏排版和论文类型专属样式。",
+  "descriptionI18n": {
+    "en-US": "Create formally structured academic papers, research papers, and white papers with native Word TOC, LaTeX-to-OMML equations, scholarly bibliography (APA/Physics/Chicago), footnotes, multi-column layouts, and paper-type-specific styling.",
+    "zh-CN": "创建正式结构的学术论文、研究论文和白皮书，支持原生 Word 目录、LaTeX 转 OMML 公式、学术参考文献（APA/物理/芝加哥格式）、脚注、多栏排版和论文类型专属样式。",
+    "ru-RU": "Создаёт академические статьи, научные работы и white paper со строгой структурой: нативное оглавление Word, формулы LaTeX в OMML, библиография в форматах APA/Physics/Chicago, сноски, многоколоночная вёрстка и стили под тип работы.",
+    "uk-UA": "Створюйте структуровані академічні статті, наукові роботи та White Papers: зміст Word, формули LaTeX в OMML, бібліографія (APA/Physics/Chicago), виноски та багатоколонкова верстка."
+  },
+  "rules": {
+    "en-US": "rules/en-US.md",
+    "ru-RU": "rules/ru-RU.md",
+    "zh-CN": "rules/zh-CN.md"
+  },
+  "recommendedPrompts": [
+    "创建一份农村电动汽车充电基础设施白皮书，包含执行摘要、数据表格、脚注、CONFIDENTIAL 水印和专业页头",
+    "写一篇拓扑绝缘体物理论文，包含展示式公式、多栏摘要、定理/定义模块和横向图表",
+    "创建一份 APA 格式的组织文化研究论文，包含 3 个数据表格、尾注、15 条挂缩进参考文献和双倍行距"
+  ],
+  "recommendedPromptsI18n": {
+    "en-US": [
+      "Create a white paper on rural EV charging infrastructure with executive summary, data tables, footnotes, CONFIDENTIAL watermark, and professional headers",
+      "Write a physics paper on topological insulators with display equations, multi-column abstract, theorem/definition blocks, and landscape figures",
+      "Create an APA-style research paper on organizational culture with 3 data tables, endnotes, 15 references with hanging indent, and double spacing"
+    ],
+    "zh-CN": [
+      "创建一份农村电动汽车充电基础设施白皮书，包含执行摘要、数据表格、脚注、CONFIDENTIAL 水印和专业页头",
+      "写一篇拓扑绝缘体物理论文，包含展示式公式、多栏摘要、定理/定义模块和横向图表",
+      "创建一份 APA 格式的组织文化研究论文，包含 3 个数据表格、尾注、15 条挂缩进参考文献和双倍行距"
+    ],
+    "ru-RU": [
+      "Создай white paper о зарядной инфраструктуре для электромобилей в сельской местности с резюме, таблицами данных, сносками, водяным знаком CONFIDENTIAL и профессиональными колонтитулами",
+      "Напиши статью по физике о топологических изоляторах с выключенными формулами, многоколоночным аннотацией, блоками теорем/определений и альбомными иллюстрациями",
+      "Создай исследовательскую работу об организационной культуре в формате APA с 3 таблицами данных, концевыми сносками, 15 источниками с выступающим отступом и двойным интервалом"
+    ],
+    "uk-UA": [
+      "Створити White Paper про інфраструктуру зарядки електромобілів у сільській місцевості з таблицями даних та виносками",
+      "Написати статтю з фізики про топологічні ізолятори з формулами, анотацією та блоками теорем",
+      "Створити наукову роботу в стилі APA про організаційну культуру з 3 таблицями даних та 15 джерелами"
+    ]
+  },
+  "skillDependencies": [],
+  "avatar": {
+    "type": "emoji",
+    "value": "🎓"
+  }
+}

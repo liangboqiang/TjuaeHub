@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/engine-adapter-definition.v1.schema.json",
+  "schemaVersion": 1,
+  "kind": "engineAdapter",
+  "id": "auggie",
+  "runtimeId": "auggie",
+  "displayName": "Augment Code",
+  "description": "通过 ACP 接入 Augment Code 的引擎适配器。",
+  "icon": "resources/icon.svg",
+  "protocol": {
+    "type": "acp",
+    "transport": "stdio",
+    "arguments": ["--acp"]
+  },
+  "runtime": {
+    "commandName": "auggie"
+  },
+  "capabilities": {
+    "streaming": true
+  }
+}

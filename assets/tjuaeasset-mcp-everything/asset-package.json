@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/asset-package.v1.schema.json",
+  "schemaVersion": 1,
+  "name": "tjuaeasset-mcp-everything",
+  "version": "2026.7.4",
+  "displayName": "MCP Everything 协议测试服务器",
+  "description": "用于验证 MCP 客户端对工具、资源、提示词和采样等协议能力的支持；这是面向开发与兼容性测试的参考服务器，不是生产业务工具。",
+  "author": "Model Context Protocol Contributors",
+  "license": "MIT",
+  "compatibility": {
+    "tjuae": "^1.0.0"
+  },
+  "publisher": {
+    "name": "Model Context Protocol",
+    "url": "https://github.com/modelcontextprotocol"
+  },
+  "source": {
+    "repository": "https://github.com/modelcontextprotocol/servers/",
+    "license": "MIT"
+  },
+  "tags": ["community", "mcp", "protocol-test"],
+  "assets": [
+    {
+      "kind": "mcp",
+      "id": "mcp-everything",
+      "runtimeId": "mcp-everything",
+      "definitionFile": "mcp.json",
+      "dependencies": []
+    }
+  ]
+}

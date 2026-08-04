@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/asset-package.v1.schema.json",
+  "schemaVersion": 1,
+  "name": "tjuaeasset-assistant-ppt-creator",
+  "version": "1.0.0",
+  "displayName": "PPT 演示助手",
+  "description": "使用 内置文档工具 创建、编辑和分析专业 PPT 演示文稿。大胆设计、丰富版式、视觉冲击。",
+  "author": "Tjuae",
+  "license": "Apache-2.0",
+  "compatibility": {
+    "tjuae": "^1.0.0"
+  },
+  "publisher": {
+    "name": "Tjuae",
+    "url": "https://github.com/liangboqiang"
+  },
+  "source": {
+    "repository": "https://github.com/liangboqiang/TjuaeCore/",
+    "license": "Apache-2.0"
+  },
+  "tags": ["assistant", "official"],
+  "assets": [
+    {
+      "kind": "assistant",
+      "id": "ppt-creator",
+      "runtimeId": "ppt-creator",
+      "definitionFile": "assistant.json",
+      "dependencies": []
+    }
+  ]
+}

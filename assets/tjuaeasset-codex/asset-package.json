@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/asset-package.v1.schema.json",
+  "schemaVersion": 1,
+  "name": "tjuaeasset-codex",
+  "version": "1.0.0",
+  "displayName": "Codex",
+  "description": "将 OpenAI Codex CLI 作为 ACP 适配器集成到 TjuaeUI。",
+  "author": "Tjuae",
+  "license": "Apache-2.0",
+  "compatibility": {
+    "tjuae": "^1.0.0"
+  },
+  "source": {
+    "repository": "https://github.com/liangboqiang/TjuaeHub/",
+    "license": "Apache-2.0"
+  },
+  "tags": ["engineAdapter"],
+  "assets": [
+    {
+      "kind": "engineAdapter",
+      "id": "codex",
+      "runtimeId": "codex",
+      "definitionFile": "engine-adapter.json",
+      "dependencies": []
+    }
+  ]
+}

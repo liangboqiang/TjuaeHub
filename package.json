@@ -1,8 +1,8 @@
 {
   "name": "@tjuae/hub",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Tjuae 扩展清单、验证与分发中心",
+  "description": "Tjuae 四类原子资产清单、验证与分发中心",
   "license": "Apache-2.0",
   "author": {
     "name": "Tjuae"
@@ -16,16 +16,19 @@
     "url": "https://github.com/liangboqiang/TjuaeHub/issues"
   },
   "scripts": {
-    "build": "node .github/scripts/build-extensions.js",
+    "build": "node .github/scripts/build-assets.js",
     "check:brand": "node scripts/quality/check-brand.js",
     "check:build": "node scripts/quality/check-build.js",
-    "check:extensions": "node scripts/quality/check-extensions.js",
-    "format": "prettier --write \".claude/skills/commit/SKILL.md\" \".github/**/*.{js,yml}\" \".vscode/settings.json\" \"AGENTS.md\" \"README.md\" \"UPSTREAM.md\" \"docs/**/*.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"tests/**/*.mjs\" \"kits/server/index.ts\" \"extensions/**/tjuae-extension.json\" \"extensions/**/scripts/*.ts\" \"pending/**/tjuae-extension.json\" \"pending/**/scripts/*.ts\" \"tsconfig.json\"",
-    "format:check": "prettier --check \".claude/skills/commit/SKILL.md\" \".github/**/*.{js,yml}\" \".vscode/settings.json\" \"AGENTS.md\" \"README.md\" \"UPSTREAM.md\" \"docs/**/*.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"tests/**/*.mjs\" \"kits/server/index.ts\" \"extensions/**/tjuae-extension.json\" \"extensions/**/scripts/*.ts\" \"pending/**/tjuae-extension.json\" \"pending/**/scripts/*.ts\" \"tsconfig.json\"",
+    "check:assets": "node scripts/quality/check-assets.js",
+    "check:index": "node scripts/quality/check-index.js",
+    "check:official-assets": "node scripts/quality/check-official-assets.js",
+    "check:security": "node scripts/quality/check-security.js",
+    "format": "prettier --write \".claude/skills/commit/SKILL.md\" \".github/**/*.{js,yml}\" \".vscode/settings.json\" \"AGENTS.md\" \"README.md\" \"UPSTREAM.md\" \"docs/**/*.md\" \"package.json\" \"policies/**/*.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.{js,mjs}\" \"tests/**/*.{json,mjs}\" \"kits/server/index.ts\" \"assets/**/*.json\" \"submissions/**/*.json\" \"tsconfig.json\"",
+    "format:check": "prettier --check \".claude/skills/commit/SKILL.md\" \".github/**/*.{js,yml}\" \".vscode/settings.json\" \"AGENTS.md\" \"README.md\" \"UPSTREAM.md\" \"docs/**/*.md\" \"package.json\" \"policies/**/*.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.{js,mjs}\" \"tests/**/*.{json,mjs}\" \"kits/server/index.ts\" \"assets/**/*.json\" \"submissions/**/*.json\" \"tsconfig.json\"",
     "server": "bun run build && bun run kits/server",
     "test": "bun run build && vitest run",
     "typecheck": "tsc --noEmit",
-    "verify": "bun run format:check && bun run check:brand && bun run check:extensions && bun run typecheck && bun run test && bun run build && bun run check:build && node scripts/quality/check-brand.js --include-dist"
+    "verify": "bun run format:check && bun run check:brand && bun run check:assets && bun run check:official-assets && bun run check:index && bun run check:security && bun run typecheck && bun run test && bun run build && bun run check:build && node scripts/quality/check-security.js --include-dist && node scripts/quality/check-brand.js --include-dist"
   },
   "dependencies": {},
   "devDependencies": {

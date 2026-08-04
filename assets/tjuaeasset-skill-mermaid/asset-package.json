@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/asset-package.v1.schema.json",
+  "schemaVersion": 1,
+  "name": "tjuaeasset-skill-mermaid",
+  "version": "1.0.0",
+  "displayName": "mermaid",
+  "description": "使用 beautiful-mermaid 将 Mermaid 图渲染为 SVG 或 ASCII/Unicode 文本。",
+  "author": "Tjuae",
+  "license": "Apache-2.0",
+  "compatibility": {
+    "tjuae": "^1.0.0"
+  },
+  "publisher": {
+    "name": "Tjuae",
+    "url": "https://github.com/liangboqiang"
+  },
+  "source": {
+    "repository": "https://github.com/liangboqiang/TjuaeCore/",
+    "license": "Apache-2.0"
+  },
+  "tags": ["official", "skill"],
+  "assets": [
+    {
+      "kind": "skill",
+      "id": "mermaid",
+      "runtimeId": "mermaid",
+      "definitionFile": "SKILL.md",
+      "dependencies": []
+    }
+  ]
+}

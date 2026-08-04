@@ -1,0 +1,57 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/assistant-definition.v1.schema.json",
+  "schemaVersion": 1,
+  "kind": "assistant",
+  "runtimeId": "word-creator",
+  "name": "Word 文档助手",
+  "nameI18n": {
+    "en-US": "Word Creator",
+    "zh-CN": "Word 文档助手",
+    "ru-RU": "Помощник Word",
+    "uk-UA": "Помічник Word"
+  },
+  "description": "使用 内置文档工具 创建、编辑和分析专业 Word 文档。报告、方案、信函、备忘录等。",
+  "descriptionI18n": {
+    "en-US": "Create, edit, and analyze professional Word documents with 内置文档工具. Reports, proposals, letters, memos, and more.",
+    "zh-CN": "使用 内置文档工具 创建、编辑和分析专业 Word 文档。报告、方案、信函、备忘录等。",
+    "ru-RU": "Создаёт, редактирует и анализирует профессиональные документы Word с помощью 内置文档工具: отчёты, предложения, письма, служебные записки и другое.",
+    "uk-UA": "Створюйте, редагуйте та аналізуйте професійні документи Word за допомогою 内置文档工具: звіти, пропозиції, листи, нотатки тощо."
+  },
+  "rules": {
+    "en-US": "rules/en-US.md",
+    "ru-RU": "rules/ru-RU.md",
+    "zh-CN": "rules/zh-CN.md"
+  },
+  "recommendedPrompts": [
+    "创建一份 2026 年 Q1 季度报告，包含目录、财务亮点表格、营收趋势图和 KPI 指标",
+    "写一篇关于机器学习的学术论文，包含 LaTeX 公式、引用、数据表格和参考文献",
+    "创建一份项目状态报告，带 DRAFT 水印、彩色状态表格和横向甘特图时间线"
+  ],
+  "recommendedPromptsI18n": {
+    "en-US": [
+      "Create a Q1 2026 quarterly report with TOC, financial highlights table, revenue trend chart, and KPI metrics section",
+      "Write an academic research paper on machine learning with LaTeX equations, citations, data tables, and bibliography",
+      "Create a project status report with DRAFT watermark, color-coded status table, and a Gantt timeline in landscape section"
+    ],
+    "zh-CN": [
+      "创建一份 2026 年 Q1 季度报告，包含目录、财务亮点表格、营收趋势图和 KPI 指标",
+      "写一篇关于机器学习的学术论文，包含 LaTeX 公式、引用、数据表格和参考文献",
+      "创建一份项目状态报告，带 DRAFT 水印、彩色状态表格和横向甘特图时间线"
+    ],
+    "ru-RU": [
+      "Создай отчёт за Q1 2026 с оглавлением, таблицей финансовых показателей, графиком трендов выручки и разделом KPI",
+      "Напиши академическую статью по машинному обучению с формулами LaTeX, цитатами, таблицами данных и библиографией",
+      "Создай отчёт о статусе проекта с водяным знаком DRAFT, цветовой таблицей статусов и диаграммой Ганта в альбомной секции"
+    ],
+    "uk-UA": [
+      "Створити квартальний звіт за 1 квартал 2026 року зі змістом, таблицею фінансових показників, графіком трендів доходів та розділом KPI",
+      "Написати наукову статтю про машинне навчання з формулами LaTeX, цитатами, таблицями даних та бібліографією",
+      "Створити звіт про статус проекту з водяним знаком DRAFT, кольоровою таблицею статусів та діаграмою Ганта"
+    ]
+  },
+  "skillDependencies": [],
+  "avatar": {
+    "type": "emoji",
+    "value": "📝"
+  }
+}

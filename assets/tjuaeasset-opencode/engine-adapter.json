@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/engine-adapter-definition.v1.schema.json",
+  "schemaVersion": 1,
+  "kind": "engineAdapter",
+  "id": "opencode",
+  "runtimeId": "opencode",
+  "displayName": "OpenCode",
+  "description": "通过 ACP 接入 OpenCode 的引擎适配器。",
+  "icon": "resources/icon.svg",
+  "protocol": {
+    "type": "acp",
+    "transport": "stdio",
+    "arguments": ["acp"]
+  },
+  "runtime": {
+    "commandName": "opencode"
+  },
+  "capabilities": {
+    "streaming": true
+  }
+}

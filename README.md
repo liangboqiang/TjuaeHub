@@ -1,45 +1,64 @@
 # TjuaeHub
 
-TjuaeHub 是 TjuaeUI 的扩展清单、验证与分发仓库，用于管理智能体适配器、技能、
-助手、MCP 服务器等扩展资源。
+TjuaeHub 是 Tjuae 的远程原子资产库，管理助手、引擎适配器、技能和 MCP 的审核、版本、
+确定性构建与分发。TjuaeCore 维护用户自己的本地副本；两者通过稳定资产 ID、版本、提交
+和摘要建立同步关系，不共享可变状态。
 
 ## 仓库结构
 
 ```text
-extensions/       已启用并参与正式分发的扩展
-pending/          等待验证和启用的候选扩展
-schemas/          唯一受支持的扩展清单 JSON Schema
-kits/             扩展开发与本地验证工具
-scripts/quality/  品牌、清单和构建产物门禁
-tests/            模式与构建行为测试
+assets/           审核通过并参与正式分发的原子资产包
+submissions/      等待审核的候选原子资产包
+schemas/          资产包、四类 Definition、索引与离线种子模式
+policies/         官方来源、信任与撤销策略
+kits/             本地浏览和验证工具
+scripts/quality/  契约、品牌、安全与构建产物门禁
+tests/            模式和构建行为测试
+dist/             可由源码重新生成的索引、ZIP 和离线种子
 ```
 
-## 分发流程
+## 数据流
 
 ```mermaid
 flowchart LR
-  Source["main 分支中的扩展源码"] --> Verify["bun run verify"]
-  Verify --> Archive["生成确定性 ZIP 与 index.json"]
-  Archive --> Dist["更新 dist 分支"]
-  Dist --> Tag["创建不可变的 dist-<commit> 标签"]
-  Tag --> UI["TjuaeUI 构建时获取扩展资源"]
+  Source["main 中的 assets"] --> Verify["bun run verify"]
+  Verify --> Build["确定性 ZIP、Index v2、四类官方种子"]
+  Build --> Dist["dist 分支与不可变标签"]
+  Dist --> Core["TjuaeCore 校验并创建本地副本"]
+  Core --> UI["TjuaeUI 展示本地/远程关系"]
+  Core --> PR["规范化、校验、分支与 PR"]
+  PR --> Source
 ```
 
-推送到 `main` 后，GitHub Actions 会重新验证源码和产物，再发布 `dist` 分支和
-不可变的 `dist-<commit>` 标签。TjuaeUI 必须引用明确的分发提交，禁止使用可变标签。
-索引同时记录解压后规范内容的 `integrity` 与实际 ZIP 字节的 `archiveIntegrity`；
-客户端先验证归档哈希，再解压或安装。确定性构建不依赖本地时间戳。
+Hub 的远程版本不会直接参与运行。TjuaeUI 的会话始终使用 Core 已安装并校验的本地资产；
+市场更新必须由用户明确同步后才会改变本地副本。
 
-## 扩展契约
+## 原子资产包
 
-- 清单文件名固定为 `tjuae-extension.json`。
-- 扩展包名使用 `tjuaeext-` 前缀。
-- 引擎要求只通过 `engine.tjuae` 声明。
-- `contributes.*` 支持内联数据或安全的 `$file:relative.json` 引用。
-- 不支持旧文件名、旧引擎键、旧包名前缀或旧环境变量别名。
+- 包目录使用 `tjuaeasset-<name>`，清单固定为 `asset-package.json`。
+- 每个包只包含一项 `assistant | engineAdapter | skill | mcp` 资产。
+- Definition 入口分别固定为 `assistant.json`、`engine-adapter.json`、`SKILL.md`、`mcp.json`。
+- 远程资产 ID 为 `<package>/<kind>/<localId>`；依赖只引用这种稳定 ID。
+- 清单是纯声明数据，不支持贡献扩展、安装命令或生命周期钩子。
+- `author` 和许可证保留真实来源；官方身份只由仓库策略与 provenance 产生。
 
-完整约束见 [模式说明](schemas/README.md) 和
-[`extension-manifest.v1.schema.json`](schemas/extension-manifest.v1.schema.json)。
+引擎与 MCP 的配置字段必须显式声明运行时绑定。引擎和 stdio MCP 只绑定环境变量；
+SSE/HTTP MCP 只绑定请求头。公开配置值和加密密钥都保存在 Core，并仅在会话启动时即时
+注入；实际值、本机路径和实例 URL 不进入 Hub、索引或离线种子。
+
+完整约束见 [模式说明](schemas/README.md)，官方迁移边界见
+[官方资产迁移说明](docs/official-assets-migration.md)。
+
+## 分发与离线种子
+
+构建器输出：
+
+- `dist/index.json`：唯一远程市场索引，符合 Index v2。
+- `dist/tjuaeasset-*.zip`：逐包确定性归档。
+- `dist/seed-manifest.json` 与内容寻址种子 ZIP：精确包含四类官方资产。
+
+索引同时记录规范内容摘要和实际 ZIP 字节摘要。客户端先验证归档摘要，再解压、校验并
+写入 Core 本地库。相同源码修订和 `SOURCE_DATE_EPOCH` 必须生成逐字节一致的产物。
 
 ## 本地开发
 
@@ -47,10 +66,6 @@ flowchart LR
 bun install --frozen-lockfile
 just verify
 ```
-
-`just verify` 会调用 `bun run verify`，依次执行格式检查、品牌扫描、14 份扩展
-清单验证、TypeScript 类型检查、测试、扩展构建以及生成产物验证。提交前必须全部
-通过；获得推送授权后使用 `just push`。
 
 ## 许可证
 

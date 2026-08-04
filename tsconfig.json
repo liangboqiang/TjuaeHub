@@ -11,5 +11,5 @@
     "target": "ES2022",
     "types": ["bun-types"]
   },
-  "include": ["extensions/**/*.ts", "kits/**/*.ts", "pending/**/*.ts"]
+  "include": ["assets/**/*.ts", "kits/**/*.ts", "submissions/**/*.ts"]
 }

@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/official-asset-provenance.v1.schema.json",
+  "version": "1.0.0",
+  "title": "TjuaeHub 官方资产来源策略 v1",
+  "description": "由仓库维护者控制的四类官方原子资产来源记录。只有同时出现在信任策略与本策略、且与 Hub 源路径和资产身份一致的包才能生成 official。",
+  "type": "object",
+  "required": ["$schema", "schemaVersion", "sourceRepository", "sourceRevision", "packages"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/official-asset-provenance.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "sourceRepository": { "type": "string", "format": "uri" },
+    "sourceRevision": { "$ref": "#/$defs/Revision" },
+    "packages": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/PackageProvenance" }
+    }
+  },
+  "$defs": {
+    "Revision": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}(?:[0-9a-f]{24})?$"
+    },
+    "SafeRelativePath": {
+      "type": "string",
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000]+$"
+    },
+    "PackageName": {
+      "type": "string",
+      "pattern": "^tjuaeasset-[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "maxLength": 96
+    },
+    "RuntimeId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._:-][a-z0-9]+)*$",
+      "maxLength": 128
+    },
+    "PackageProvenance": {
+      "type": "object",
+      "required": [
+        "packageName",
+        "assetKind",
+        "originKind",
+        "runtimeId",
+        "hubSourcePath",
+        "sourcePath",
+        "sourceObject",
+        "excludedOverlayFields",
+        "transformations"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "packageName": { "$ref": "#/$defs/PackageName" },
+        "assetKind": { "type": "string", "enum": ["assistant", "engineAdapter", "skill", "mcp"] },
+        "originKind": {
+          "type": "string",
+          "enum": ["repositorySnapshot", "derived"],
+          "description": "repositorySnapshot 表示内容由声明源码仓库及其许可证直接覆盖；derived 必须另行声明真正上游。"
+        },
+        "runtimeId": { "$ref": "#/$defs/RuntimeId" },
+        "hubSourcePath": {
+          "type": "string",
+          "pattern": "^assets/tjuaeasset-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "sourcePath": { "$ref": "#/$defs/SafeRelativePath" },
+        "sourceObject": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$",
+          "description": "固定 sourceRevision 下 sourcePath 的 Git blob/tree OID。"
+        },
+        "upstream": {
+          "type": "object",
+          "required": ["repository", "revision", "sourcePath", "licenseSpdx", "noticePaths"],
+          "additionalProperties": false,
+          "properties": {
+            "repository": { "type": "string", "format": "uri" },
+            "revision": { "$ref": "#/$defs/Revision" },
+            "sourcePath": { "$ref": "#/$defs/SafeRelativePath" },
+            "licenseSpdx": { "type": "string", "minLength": 1, "maxLength": 128 },
+            "noticePaths": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/SafeRelativePath" }
+            }
+          }
+        },
+        "excludedOverlayFields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "agent_ref",
+              "custom_skill_names",
+              "default_enabled",
+              "disabled_builtin_skills",
+              "models",
+              "sort_order"
+            ]
+          }
+        },
+        "transformations": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 512 }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "originKind": { "const": "derived" } },
+            "required": ["originKind"]
+          },
+          "then": { "required": ["upstream"] }
+        },
+        {
+          "if": {
+            "properties": { "originKind": { "const": "repositorySnapshot" } },
+            "required": ["originKind"]
+          },
+          "then": { "not": { "required": ["upstream"] } }
+        }
+      ]
+    }
+  }
+}

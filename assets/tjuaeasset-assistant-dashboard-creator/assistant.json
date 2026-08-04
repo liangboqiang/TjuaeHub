@@ -1,0 +1,57 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/assistant-definition.v1.schema.json",
+  "schemaVersion": 1,
+  "kind": "assistant",
+  "runtimeId": "dashboard-creator",
+  "name": "数据仪表盘",
+  "nameI18n": {
+    "en-US": "Dashboard Creator",
+    "zh-CN": "数据仪表盘",
+    "ru-RU": "Создатель дашбордов",
+    "uk-UA": "Створювач дашбордів"
+  },
+  "description": "将 CSV 或表格数据转化为精美的 Excel 仪表盘，包含 KPI 卡片、关联实时数据的图表、迷你图和条件格式。根据数据量自动缩放复杂度——从简洁汇总到完整分析面板。",
+  "descriptionI18n": {
+    "en-US": "Turn CSV or tabular data into polished Excel dashboards with KPI cards, charts linked to live data, sparklines, and conditional formatting. Automatically scales complexity to dataset size — from quick summaries to full analytics panels.",
+    "zh-CN": "将 CSV 或表格数据转化为精美的 Excel 仪表盘，包含 KPI 卡片、关联实时数据的图表、迷你图和条件格式。根据数据量自动缩放复杂度——从简洁汇总到完整分析面板。",
+    "ru-RU": "Преобразует CSV и табличные данные в аккуратные Excel-дашборды: KPI-карточки, графики с привязкой к данным, спарклайны и условное форматирование. Масштабирует сложность под объём данных - от краткой сводки до полноценной аналитической панели.",
+    "uk-UA": "Перетворюйте CSV або табличні дані на професійні дашборди Excel: KPI-картки, графіки з прив'язкою до даних, спарклайни та умовне форматування. Автоматично масштабує складність під обсяг даних."
+  },
+  "rules": {
+    "en-US": "rules/en-US.md",
+    "ru-RU": "rules/ru-RU.md",
+    "zh-CN": "rules/zh-CN.md"
+  },
+  "recommendedPrompts": [
+    "做一个 SaaS MRR 仪表盘，用 12 个月的示例数据，展示 MRR 趋势、环比增长和流失分析，适合董事会汇报",
+    "做一个电商区域销售仪表盘，生成 5 个区域的示例数据，展示按区域收入、周趋势和品类占比",
+    "做一个 8 个部门的预算 vs 实际仪表盘，展示偏差指标和超支/节余状态"
+  ],
+  "recommendedPromptsI18n": {
+    "en-US": [
+      "Create a SaaS MRR dashboard with 12 months of sample data — show MRR trend, month-over-month growth, and churn breakdown for a board meeting",
+      "Build an e-commerce regional sales dashboard with sample data across 5 regions: revenue by region, weekly trends, and category split",
+      "Make a budget-vs-actuals dashboard for 8 departments showing variance indicators and over/under-budget status"
+    ],
+    "zh-CN": [
+      "做一个 SaaS MRR 仪表盘，用 12 个月的示例数据，展示 MRR 趋势、环比增长和流失分析，适合董事会汇报",
+      "做一个电商区域销售仪表盘，生成 5 个区域的示例数据，展示按区域收入、周趋势和品类占比",
+      "做一个 8 个部门的预算 vs 实际仪表盘，展示偏差指标和超支/节余状态"
+    ],
+    "ru-RU": [
+      "Создай дашборд MRR для SaaS с примерными данными за 12 месяцев — покажи тренд MRR, помесячный рост и разбивку оттока для совета директоров",
+      "Собери дашборд региональных продаж электронной коммерции с данными по 5 регионам: выручка по регионам, недельные тренды и разбивка по категориям",
+      "Сделай дашборд «план/факт» для 8 отделов с индикаторами отклонений и статусом превышения/недоиспользования бюджета"
+    ],
+    "uk-UA": [
+      "Створити дашборд SaaS MRR на основі даних за 12 місяців — показати тренд MRR, щомісячне зростання та аналіз відтоку",
+      "Побудувати регіональний дашборд продажів для e-commerce з даними по 5 регіонах: дохід за регіоном, тижневі тренди",
+      "Зробити дашборд \"бюджет проти факту\" для 8 відділів з індикаторами розбіжностей"
+    ]
+  },
+  "skillDependencies": [],
+  "avatar": {
+    "type": "emoji",
+    "value": "📈"
+  }
+}
