@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/asset-package.v1.schema.json",
+  "schemaVersion": 1,
+  "name": "tjuaeasset-skill-cron",
+  "version": "1.0.0",
+  "displayName": "cron",
+  "description": "管理定时任务：查询、创建和更新当前会话的任务，并在指定时间自动执行。",
+  "author": "Tjuae",
+  "compatibility": {
+    "tjuae": "^1.0.0"
+  },
+  "publisher": {
+    "name": "Tjuae",
+    "url": "https://github.com/liangboqiang"
+  },
+  "source": {
+    "repository": "https://github.com/liangboqiang/TjuaeCore/"
+  },
+  "tags": ["official", "skill"],
+  "assets": [
+    {
+      "kind": "skill",
+      "id": "cron",
+      "runtimeId": "cron",
+      "definitionFile": "SKILL.md",
+      "dependencies": []
+    }
+  ]
+}

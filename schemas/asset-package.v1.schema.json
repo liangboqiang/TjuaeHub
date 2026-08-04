@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/asset-package.v1.schema.json",
+  "version": "1.0.0",
+  "title": "TjuaeHub 原子资产包 v1",
+  "description": "纯声明的原子市场资产包。只描述包元数据、来源和一个助手/引擎适配器/技能/MCP Definition；不支持贡献扩展、命令或生命周期钩子。",
+  "type": "object",
+  "required": [
+    "$schema",
+    "schemaVersion",
+    "name",
+    "version",
+    "displayName",
+    "description",
+    "author",
+    "compatibility",
+    "source",
+    "tags",
+    "assets"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/asset-package.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "name": { "$ref": "#/$defs/PackageName" },
+    "version": { "$ref": "#/$defs/Semver" },
+    "displayName": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "description": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "author": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "compatibility": {
+      "type": "object",
+      "required": ["tjuae"],
+      "additionalProperties": false,
+      "properties": {
+        "tjuae": { "$ref": "#/$defs/TjuaeVersionRange" }
+      }
+    },
+    "publisher": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["repository"],
+      "additionalProperties": false,
+      "properties": {
+        "repository": { "type": "string", "format": "uri" }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "deprecated"],
+      "default": "active"
+    },
+    "review": {
+      "type": "object",
+      "required": ["status", "reason", "unsupportedKinds"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "const": "underReview" },
+        "reason": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "unsupportedKinds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+    },
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": { "$ref": "#/$defs/AssetDeclaration" }
+    }
+  },
+  "$defs": {
+    "PackageName": {
+      "type": "string",
+      "pattern": "^tjuaeasset-[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "minLength": 12,
+      "maxLength": 96
+    },
+    "AssetLocalId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._:-][a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "AssetId": {
+      "type": "string",
+      "pattern": "^tjuaeasset-[a-z0-9]+(?:-[a-z0-9]+)*/(?:assistant|engineAdapter|skill|mcp)/[a-z0-9]+(?:[._:-][a-z0-9]+)*$",
+      "maxLength": 256
+    },
+    "Semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "TjuaeVersionRange": {
+      "type": "string",
+      "pattern": "^\\^?(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "SafeRelativePath": {
+      "type": "string",
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*//)(?!\\s)[^\\u0000]+$"
+    },
+    "AssetDeclaration": {
+      "type": "object",
+      "required": ["kind", "id", "runtimeId", "definitionFile", "dependencies"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["assistant", "engineAdapter", "skill", "mcp"]
+        },
+        "id": { "$ref": "#/$defs/AssetLocalId" },
+        "runtimeId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "definitionFile": { "$ref": "#/$defs/SafeRelativePath" },
+        "dependencies": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 128,
+          "items": { "$ref": "#/$defs/AssetId" }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "assistant" } }, "required": ["kind"] },
+          "then": { "properties": { "definitionFile": { "const": "assistant.json" } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "engineAdapter" } }, "required": ["kind"] },
+          "then": { "properties": { "definitionFile": { "const": "engine-adapter.json" } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "skill" } }, "required": ["kind"] },
+          "then": { "properties": { "definitionFile": { "const": "SKILL.md" } } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "mcp" } }, "required": ["kind"] },
+          "then": { "properties": { "definitionFile": { "const": "mcp.json" } } }
+        }
+      ]
+    }
+  }
+}

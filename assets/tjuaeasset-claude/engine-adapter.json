@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/engine-adapter-definition.v1.schema.json",
+  "schemaVersion": 1,
+  "kind": "engineAdapter",
+  "id": "claude",
+  "runtimeId": "claude",
+  "displayName": "Claude Code",
+  "description": "通过 ACP 接入 Claude Code 的引擎适配器。",
+  "icon": "resources/icon.svg",
+  "protocol": {
+    "type": "acp",
+    "transport": "stdio",
+    "arguments": []
+  },
+  "runtime": {
+    "commandName": "claude"
+  },
+  "capabilities": {
+    "streaming": true,
+    "skillsDirectories": [".claude/skills"]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/engine-adapter-definition.v1.schema.json",
+  "schemaVersion": 1,
+  "kind": "engineAdapter",
+  "id": "qoder",
+  "runtimeId": "qoder",
+  "displayName": "Qoder CLI",
+  "description": "通过 ACP 接入 Qoder CLI 的候选引擎适配器。",
+  "icon": "resources/icon.png",
+  "protocol": {
+    "type": "acp",
+    "transport": "stdio",
+    "arguments": ["--acp"]
+  },
+  "runtime": {
+    "commandName": "qodercli"
+  },
+  "capabilities": {
+    "streaming": false,
+    "authenticationRequired": true
+  }
+}

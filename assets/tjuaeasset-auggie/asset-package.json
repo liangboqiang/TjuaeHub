@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/asset-package.v1.schema.json",
+  "schemaVersion": 1,
+  "name": "tjuaeasset-auggie",
+  "version": "1.0.0",
+  "displayName": "Augment Code",
+  "description": "将 Augment Code 作为 ACP 适配器集成到 TjuaeUI。",
+  "author": "Tjuae",
+  "compatibility": {
+    "tjuae": "^1.0.0"
+  },
+  "source": {
+    "repository": "https://github.com/liangboqiang/TjuaeHub/"
+  },
+  "tags": ["engineAdapter"],
+  "assets": [
+    {
+      "kind": "engineAdapter",
+      "id": "auggie",
+      "runtimeId": "auggie",
+      "definitionFile": "engine-adapter.json",
+      "dependencies": []
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/asset-package.v1.schema.json",
+  "schemaVersion": 1,
+  "name": "tjuaeasset-assistant-word-creator",
+  "version": "1.0.0",
+  "displayName": "Word 文档助手",
+  "description": "使用 内置文档工具 创建、编辑和分析专业 Word 文档。报告、方案、信函、备忘录等。",
+  "author": "Tjuae",
+  "compatibility": {
+    "tjuae": "^1.0.0"
+  },
+  "publisher": {
+    "name": "Tjuae",
+    "url": "https://github.com/liangboqiang"
+  },
+  "source": {
+    "repository": "https://github.com/liangboqiang/TjuaeCore/"
+  },
+  "tags": ["assistant", "official"],
+  "assets": [
+    {
+      "kind": "assistant",
+      "id": "word-creator",
+      "runtimeId": "word-creator",
+      "definitionFile": "assistant.json",
+      "dependencies": []
+    }
+  ]
+}

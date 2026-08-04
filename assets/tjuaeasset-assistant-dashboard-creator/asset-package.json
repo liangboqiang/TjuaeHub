@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/asset-package.v1.schema.json",
+  "schemaVersion": 1,
+  "name": "tjuaeasset-assistant-dashboard-creator",
+  "version": "1.0.0",
+  "displayName": "数据仪表盘",
+  "description": "将 CSV 或表格数据转化为精美的 Excel 仪表盘，包含 KPI 卡片、关联实时数据的图表、迷你图和条件格式。根据数据量自动缩放复杂度——从简洁汇总到完整分析面板。",
+  "author": "Tjuae",
+  "compatibility": {
+    "tjuae": "^1.0.0"
+  },
+  "publisher": {
+    "name": "Tjuae",
+    "url": "https://github.com/liangboqiang"
+  },
+  "source": {
+    "repository": "https://github.com/liangboqiang/TjuaeCore/"
+  },
+  "tags": ["assistant", "official"],
+  "assets": [
+    {
+      "kind": "assistant",
+      "id": "dashboard-creator",
+      "runtimeId": "dashboard-creator",
+      "definitionFile": "assistant.json",
+      "dependencies": []
+    }
+  ]
+}

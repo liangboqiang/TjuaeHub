@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/mcp-definition.v1.schema.json",
+  "schemaVersion": 1,
+  "kind": "mcp",
+  "id": "mcp-everything",
+  "runtimeId": "mcp-everything",
+  "displayName": "MCP Everything 协议测试服务器",
+  "description": "MCP 官方参考测试服务器，用于验证客户端协议兼容性；默认不启用。",
+  "transport": {
+    "type": "stdio",
+    "package": {
+      "ecosystem": "npm",
+      "name": "@modelcontextprotocol/server-everything",
+      "version": "2026.7.4",
+      "runner": "npx"
+    },
+    "arguments": ["-y"]
+  },
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": true,
+    "sampling": true
+  }
+}

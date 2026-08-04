@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/asset-package.v1.schema.json",
+  "schemaVersion": 1,
+  "name": "tjuaeasset-assistant-beautiful-mermaid",
+  "version": "1.0.0",
+  "displayName": "Beautiful Mermaid",
+  "description": "创建流程图、时序图、状态图、类图和 ER 图，支持多种精美主题。",
+  "author": "Tjuae",
+  "compatibility": {
+    "tjuae": "^1.0.0"
+  },
+  "publisher": {
+    "name": "Tjuae",
+    "url": "https://github.com/liangboqiang"
+  },
+  "source": {
+    "repository": "https://github.com/liangboqiang/TjuaeCore/"
+  },
+  "tags": ["assistant", "official"],
+  "assets": [
+    {
+      "kind": "assistant",
+      "id": "beautiful-mermaid",
+      "runtimeId": "beautiful-mermaid",
+      "definitionFile": "assistant.json",
+      "dependencies": ["tjuaeasset-skill-mermaid/skill/mermaid"]
+    }
+  ]
+}

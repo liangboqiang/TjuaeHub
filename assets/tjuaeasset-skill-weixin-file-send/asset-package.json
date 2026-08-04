@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/asset-package.v1.schema.json",
+  "schemaVersion": 1,
+  "name": "tjuaeasset-skill-weixin-file-send",
+  "version": "1.0.0",
+  "displayName": "weixin-file-send",
+  "description": "在用户要求时把本地文件或图片发送回当前聊天。",
+  "author": "Tjuae",
+  "compatibility": {
+    "tjuae": "^1.0.0"
+  },
+  "publisher": {
+    "name": "Tjuae",
+    "url": "https://github.com/liangboqiang"
+  },
+  "source": {
+    "repository": "https://github.com/liangboqiang/TjuaeCore/"
+  },
+  "tags": ["official", "skill"],
+  "assets": [
+    {
+      "kind": "skill",
+      "id": "weixin-file-send",
+      "runtimeId": "weixin-file-send",
+      "definitionFile": "SKILL.md",
+      "dependencies": []
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/engine-adapter-definition.v1.schema.json",
+  "version": "1.0.0",
+  "title": "Tjuae 引擎适配器 Definition v1",
+  "description": "可共享、可移植的 ACP 引擎适配器定义。配置字段只声明环境变量绑定；实际账号、凭据、值、本机路径和连接端点属于 Core Overlay，不得写入此文件。",
+  "type": "object",
+  "required": ["$schema", "schemaVersion", "kind", "id", "runtimeId", "displayName", "protocol", "runtime"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/engine-adapter-definition.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "kind": { "const": "engineAdapter" },
+    "id": { "$ref": "#/$defs/AssetLocalId" },
+    "runtimeId": { "$ref": "#/$defs/AssetLocalId" },
+    "displayName": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "description": { "type": "string", "maxLength": 2048 },
+    "icon": { "$ref": "#/$defs/SafeRelativePath" },
+    "protocol": { "$ref": "#/$defs/AcpProtocol" },
+    "runtime": { "$ref": "#/$defs/PortableRuntime" },
+    "capabilities": { "$ref": "#/$defs/EngineCapabilities" },
+    "configurationSchema": { "$ref": "#/$defs/ConfigurationSchema" }
+  },
+  "$defs": {
+    "AssetLocalId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[._:-][a-z0-9]+)*$",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "SafeRelativePath": {
+      "type": "string",
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*/$)[^\\u0000:]+$",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "PortableArgument": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!.*(?:^|[=/\\\\])(?:Users|home|Documents and Settings)[/\\\\])(?![A-Za-z]:[/\\\\])(?!/)(?!\\\\\\\\)[^\\u0000-\\u001f]+$"
+    },
+    "AcpProtocol": {
+      "type": "object",
+      "required": ["type", "transport"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "const": "acp" },
+        "transport": { "const": "stdio" },
+        "arguments": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/PortableArgument" }
+        }
+      }
+    },
+    "PortableRuntime": {
+      "type": "object",
+      "required": ["commandName"],
+      "additionalProperties": false,
+      "properties": {
+        "commandName": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "maxLength": 128
+        }
+      }
+    },
+    "EngineCapabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "streaming": { "type": "boolean" },
+        "authenticationRequired": { "type": "boolean" },
+        "skillsDirectories": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 32,
+          "items": { "$ref": "#/$defs/SafeRelativePath" }
+        }
+      }
+    },
+    "ConfigurationField": {
+      "type": "object",
+      "required": ["key", "label", "valueType", "required", "secret", "binding"],
+      "additionalProperties": false,
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9._-]*$",
+          "maxLength": 128
+        },
+        "label": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 1024 },
+        "valueType": { "type": "string", "enum": ["string", "number", "boolean"] },
+        "required": { "type": "boolean" },
+        "secret": { "type": "boolean" },
+        "binding": {
+          "type": "object",
+          "required": ["target", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "target": { "const": "environment" },
+            "name": {
+              "type": "string",
+              "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+              "maxLength": 256
+            }
+          }
+        }
+      }
+    },
+    "ConfigurationSchema": {
+      "type": "object",
+      "required": ["fields"],
+      "additionalProperties": false,
+      "properties": {
+        "fields": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "$ref": "#/$defs/ConfigurationField" }
+        }
+      }
+    }
+  }
+}
