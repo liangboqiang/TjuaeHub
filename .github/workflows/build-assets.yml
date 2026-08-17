@@ -1,4 +1,4 @@
-name: 构建原子资产
+name: 构建技能市场
 
 on:
   pull_request:
@@ -10,15 +10,11 @@ on:
     paths:
       - '.github/scripts/**'
       - '.github/workflows/build-assets.yml'
-      - 'assets/**'
-      - 'submissions/**'
-      - 'policies/**'
+      - 'skills/**'
       - 'schemas/**'
       - 'scripts/**'
-      - 'tests/**'
       - 'bun.lock'
       - 'package.json'
-      - 'tsconfig.json'
   workflow_dispatch:
 
 jobs:
@@ -87,7 +83,7 @@ jobs:
 
           MAIN_SHA=$(git rev-parse --short HEAD)
           DIST_TMP=$(mktemp -d)
-          cp dist/*.zip dist/index.json dist/seed-manifest.json "${DIST_TMP}/"
+          cp dist/skills.json "${DIST_TMP}/"
 
           if git ls-remote --exit-code origin dist >/dev/null 2>&1; then
             git fetch origin dist
@@ -98,7 +94,7 @@ jobs:
 
           git rm -rf --ignore-unmatch .
           git clean -ffdx
-          cp "${DIST_TMP}/"*.zip "${DIST_TMP}/index.json" "${DIST_TMP}/seed-manifest.json" .
+          cp "${DIST_TMP}/skills.json" .
           git add -A
 
           if git diff --staged --quiet; then

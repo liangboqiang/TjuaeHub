@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-skill.v1.schema.json",
+  "schemaVersion": 1,
+  "id": "skill-creator",
+  "version": "1.0.0",
+  "categories": ["开发", "技能"],
+  "enabled": true,
+  "autoInject": true,
+  "source": {
+    "kind": "market",
+    "marketId": "tjuae-hub",
+    "repository": "https://github.com/liangboqiang/TjuaeHub.git",
+    "path": "skills/skill-creator"
+  }
+}

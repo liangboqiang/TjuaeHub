@@ -2,7 +2,7 @@
   "name": "@tjuae/hub",
   "version": "0.2.0",
   "private": true,
-  "description": "Tjuae 四类原子资产清单、验证与分发中心",
+  "description": "Tjuae 官方技能的静态 Git 市场索引",
   "author": {
     "name": "Tjuae"
   },
@@ -16,27 +16,17 @@
   },
   "scripts": {
     "build": "node .github/scripts/build-assets.js",
-    "check:brand": "node scripts/quality/check-brand.js",
     "check:build": "node scripts/quality/check-build.js",
-    "check:assets": "node scripts/quality/check-assets.js",
-    "check:index": "node scripts/quality/check-index.js",
-    "check:official-assets": "node scripts/quality/check-official-assets.js",
-    "check:security": "node scripts/quality/check-security.js",
-    "format": "prettier --write \".claude/skills/commit/SKILL.md\" \".github/**/*.{js,yml}\" \".vscode/settings.json\" \"AGENTS.md\" \"README.md\" \"docs/**/*.md\" \"package.json\" \"policies/**/*.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.{js,mjs}\" \"tests/**/*.{json,mjs}\" \"kits/server/index.ts\" \"assets/**/*.json\" \"submissions/**/*.json\" \"tsconfig.json\"",
-    "format:check": "prettier --check \".claude/skills/commit/SKILL.md\" \".github/**/*.{js,yml}\" \".vscode/settings.json\" \"AGENTS.md\" \"README.md\" \"docs/**/*.md\" \"package.json\" \"policies/**/*.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.{js,mjs}\" \"tests/**/*.{json,mjs}\" \"kits/server/index.ts\" \"assets/**/*.json\" \"submissions/**/*.json\" \"tsconfig.json\"",
-    "server": "bun run build && bun run kits/server",
-    "test": "bun run build && vitest run",
-    "typecheck": "tsc --noEmit",
-    "verify": "bun run format:check && bun run check:brand && bun run check:assets && bun run check:official-assets && bun run check:index && bun run check:security && bun run typecheck && bun run test && bun run build && bun run check:build && node scripts/quality/check-security.js --include-dist && node scripts/quality/check-brand.js --include-dist"
+    "check:skills": "node scripts/quality/check-skills.js",
+    "format": "prettier --write \".github/**/*.{js,yml}\" \"AGENTS.md\" \"README.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"skills/**/*.json\"",
+    "format:check": "prettier --check \".github/**/*.{js,yml}\" \"AGENTS.md\" \"README.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"skills/**/*.json\"",
+    "test": "bun run check:skills && bun run build && bun run check:build",
+    "verify": "bun run format:check && bun run test"
   },
   "dependencies": {},
   "devDependencies": {
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
-    "bun-types": "^1.3.11",
-    "jszip": "^3.10.1",
-    "prettier": "^3.6.2",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.17"
+    "prettier": "^3.6.2"
   }
 }

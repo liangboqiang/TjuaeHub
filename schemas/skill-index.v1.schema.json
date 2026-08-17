@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/skill-index.v1.schema.json",
+  "version": "1.0.0",
+  "title": "Tjuae 轻量技能市场索引 v1",
+  "type": "object",
+  "required": ["$schema", "schemaVersion", "market", "repository", "revision", "skills"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/skill-index.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "market": {
+      "type": "object",
+      "required": ["id", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/Slug" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 }
+      }
+    },
+    "repository": { "type": "string", "format": "uri", "pattern": "^https://github\\.com/" },
+    "revision": { "$ref": "#/$defs/Revision" },
+    "skills": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/SkillEntry" }
+    }
+  },
+  "$defs": {
+    "Slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 96 },
+    "Revision": { "type": "string", "pattern": "^[0-9a-f]{40}(?:[0-9a-f]{24})?$" },
+    "Digest": { "type": "string", "pattern": "^sha256-[0-9a-f]{64}$" },
+    "SkillEntry": {
+      "type": "object",
+      "required": ["id", "path", "name", "description", "version", "categories", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/Slug" },
+        "path": { "type": "string", "pattern": "^skills/[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "version": { "type": "string", "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$" },
+        "categories": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 16,
+          "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+        },
+        "digest": { "$ref": "#/$defs/Digest" }
+      }
+    }
+  }
+}
