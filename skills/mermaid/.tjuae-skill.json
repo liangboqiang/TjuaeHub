@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-skill.v1.schema.json",
+  "schemaVersion": 1,
+  "id": "mermaid",
+  "version": "1.0.0",
+  "categories": ["图表", "开发"],
+  "enabled": true,
+  "autoInject": false,
+  "source": {
+    "kind": "market",
+    "marketId": "tjuae-hub",
+    "repository": "https://github.com/liangboqiang/TjuaeHub.git",
+    "path": "skills/mermaid"
+  }
+}
