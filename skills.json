@@ -1,0 +1,156 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/skill-index.v1.schema.json",
+  "schemaVersion": 1,
+  "market": {
+    "id": "tjuae-hub",
+    "name": "TjuaeHub"
+  },
+  "repository": "https://github.com/liangboqiang/TjuaeHub.git",
+  "revision": "d51b24b1bf1e16fbac9f46e445bc79fdf97c1843",
+  "skills": [
+    {
+      "id": "cron",
+      "path": "skills/cron",
+      "name": "cron",
+      "description": "管理定时任务：查询、创建和更新当前会话的任务，并在指定时间自动执行。",
+      "version": "1.0.0",
+      "categories": [
+        "自动化",
+        "效率"
+      ],
+      "digest": "sha256-bfd10145b3026435ed0588417f02759efff27bf5806844772d1a96ee14610805"
+    },
+    {
+      "id": "mermaid",
+      "path": "skills/mermaid",
+      "name": "mermaid",
+      "description": "使用 beautiful-mermaid 将 Mermaid 图渲染为 SVG 或 ASCII/Unicode 文本。适用于流程图、时序图、状态图、类图和 ER 图。",
+      "version": "1.0.0",
+      "categories": [
+        "图表",
+        "开发"
+      ],
+      "digest": "sha256-3b10212f91e481a8e46e47a52832fd9391746fc363565121dee050c2ee2907e2"
+    },
+    {
+      "id": "pdf",
+      "path": "skills/pdf",
+      "name": "pdf",
+      "description": "PDF 综合处理工具：提取文本与表格、创建、合并、拆分、OCR、加水印、加密和填写表单。需要批量处理、生成或分析 PDF 时使用。",
+      "version": "1.0.0",
+      "categories": [
+        "文档",
+        "PDF"
+      ],
+      "digest": "sha256-0fa551da23225933bc78118080753b625f0e257699589bc9ca4efe6afa6eafb8"
+    },
+    {
+      "id": "skill-creator",
+      "path": "skills/skill-creator",
+      "name": "skill-creator",
+      "description": "创建或更新高质量技能的指南，用专门知识、可复用流程、脚本、参考资料和素材扩展智能体能力。用户要求新建、设计、重构或打包技能时使用。",
+      "version": "1.0.0",
+      "categories": [
+        "开发",
+        "技能"
+      ],
+      "digest": "sha256-5f7f24ae36b0bd3c9a92b1c4df958d0449d28dd85cc76bedde2eced505b89f0b"
+    },
+    {
+      "id": "story-roleplay",
+      "path": "skills/story-roleplay",
+      "name": "story-roleplay",
+      "description": "解析并应用 PNG、WebP、JSON 格式的角色卡和世界信息，兼容 SillyTavern；支持关键词触发、Character Book 和动态上下文注入。",
+      "version": "1.0.0",
+      "categories": [
+        "创作",
+        "角色扮演"
+      ],
+      "digest": "sha256-bacc59beda129031b2baf4f53122235ef027f34976d434d733016f6579815dee"
+    },
+    {
+      "id": "tjuaeui-config",
+      "path": "skills/tjuaeui-config",
+      "name": "tjuaeui-config",
+      "description": "通过内置 tjuaecore config CLI 配置 TjuaeUI：创建和编辑助手、规则与技能，管理 MCP Server、模型 Provider、设置、Agent 和定时任务。用户要求修改 TjuaeUI 配置，或询问配置何时影响当前/新会话时使用。",
+      "version": "1.0.0",
+      "categories": [
+        "配置",
+        "管理"
+      ],
+      "digest": "sha256-f4f08234a2471c1b036fc8e98fb6ae468867c3a5bea70f4915657d7eb49f2184"
+    },
+    {
+      "id": "tjuaeui-troubleshooting",
+      "path": "skills/tjuaeui-troubleshooting",
+      "name": "tjuaeui-troubleshooting",
+      "description": "诊断正在运行的 TjuaeUI：检查卡住或报错的会话、Provider 健康、定时任务、MCP Server、团队成员、后端状态和 tjuaecore 日志。用户报告会话卡住、模型调用失败、任务未执行、MCP 无工具或团队成员无响应时使用。",
+      "version": "1.0.0",
+      "categories": [
+        "诊断",
+        "运维"
+      ],
+      "digest": "sha256-c22c56a9dd4f5bc3aac43ad424ed544376a4f9c5183f440058f2cbf6a0bac59e"
+    },
+    {
+      "id": "tjuaeui-webui-public",
+      "path": "skills/tjuaeui-webui-public",
+      "name": "tjuaeui-webui-public",
+      "description": "通过 Cloudflare Quick Tunnel 将本机 TjuaeUI WebUI 临时暴露到公网。负责检测服务、安装 cloudflared、创建并验证公网地址，并明确说明临时地址、进程存活、密码保护和流量经 Cloudflare 中转等限制。适用于用户希望从外网访问或临时分享 TjuaeUI 的场景。",
+      "version": "1.0.0",
+      "categories": [
+        "WebUI",
+        "远程访问"
+      ],
+      "digest": "sha256-110f6f5fe7aa72b6a39f9afce01d3b81c45d0ab837e893f2e8b08a00243e2b41"
+    },
+    {
+      "id": "tjuaeui-webui-setup",
+      "path": "skills/tjuaeui-webui-setup",
+      "name": "tjuaeui-webui-setup",
+      "description": "TjuaeUI WebUI 配置专家：通过设置界面指导局域网访问、Tailscale VPN 和服务器部署。用户需要配置 WebUI、远程访问、排查连接问题或部署服务器时使用。",
+      "version": "1.0.0",
+      "categories": [
+        "WebUI",
+        "部署"
+      ],
+      "digest": "sha256-eb82ef3482614e268a7fef937e0c06acd000721ed3afc3518cb3c57d529f6990"
+    },
+    {
+      "id": "weixin-file-send",
+      "path": "skills/weixin-file-send",
+      "name": "weixin-file-send",
+      "description": "当用户要求把本地文件或图片发回当前聊天时使用，例如“把文件发给我”。",
+      "version": "1.0.0",
+      "categories": [
+        "文件",
+        "消息"
+      ],
+      "digest": "sha256-d4377f0b27460237e9b9669446d04af7e7a79fef7c22da91858b496a7dc367aa"
+    },
+    {
+      "id": "x-recruiter",
+      "path": "skills/x-recruiter",
+      "name": "x-recruiter",
+      "description": "用于在 X (x.com) 发布招聘帖子。包含文案规范、图片生成提示和自动化发布脚本。发布 AI 相关岗位或设计类岗位时优先使用。",
+      "version": "1.0.0",
+      "categories": [
+        "招聘",
+        "社交媒体"
+      ],
+      "digest": "sha256-d102221c729563e59ca626fc6478d89b0aa422563b075469dfc8307162e28646"
+    },
+    {
+      "id": "xiaohongshu-recruiter",
+      "path": "skills/xiaohongshu-recruiter",
+      "name": "xiaohongshu-recruiter",
+      "description": "用于在小红书上发布高质量的 AI 相关岗位招聘帖子。包含自动生成极客风格的招聘封面图和详情图，并提供自动化发布脚本。当用户需要发布招聘信息、寻找 Agent 设计师或其他 AI 领域人才时使用。",
+      "version": "1.0.0",
+      "categories": [
+        "招聘",
+        "社交媒体"
+      ],
+      "digest": "sha256-151340d1ae80dd89c53d375424350bcb811ae63f0a77c4ae9d6097d58a9a369c"
+    }
+  ]
+}
