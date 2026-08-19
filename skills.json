@@ -6,151 +6,556 @@
     "name": "TjuaeHub"
   },
   "repository": "https://github.com/liangboqiang/TjuaeHub.git",
-  "revision": "d51b24b1bf1e16fbac9f46e445bc79fdf97c1843",
+  "revision": "06dccd795b2d9e3f7cdd43e2af06c7b3f8168a6f",
   "skills": [
     {
       "id": "cron",
       "path": "skills/cron",
       "name": "cron",
       "description": "管理定时任务：查询、创建和更新当前会话的任务，并在指定时间自动执行。",
-      "version": "1.0.0",
       "categories": [
         "自动化",
         "效率"
       ],
-      "digest": "sha256-bfd10145b3026435ed0588417f02759efff27bf5806844772d1a96ee14610805"
+      "tags": [],
+      "latestVersion": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "revision": "06dccd795b2d9e3f7cdd43e2af06c7b3f8168a6f",
+          "digest": "sha256-9b1ce53721c514d997d7027fce184cf6dc690d568e4d9ba5128ffc6f6806957b",
+          "readme": "# 定时任务\n\n通过内置的 Agent 配置 CLI 管理当前会话的定时任务。\n\n## 规则\n\n1. 每个会话最多有一个定时任务。\n2. 创建或更新前必须先查询现有任务。\n3. 用户已明确要求变更时，不要再次确认。\n4. 禁止传递、内联、导出、回显或设置任何 `TJUAE_...` 环境变量。\n5. 命令必须直接调用 `\"$TJUAE_HELPER_BIN\" config cron current ...`。\n6. 创建和更新 JSON 通过命令的标准输入 heredoc 传入，不写入磁盘。\n7. `job_id` 放在更新 JSON 中，不放在命令参数里。\n8. 成功后只给普通用户能理解的简短确认，包含任务名和时间描述，不显示\n   `cron_...` 等内部 ID。\n9. CLI 失败时，用正常语言转述 stderr/stdout，不得声称任务已创建。\n\n## 流程\n\n1. 执行 `\"$TJUAE_HELPER_BIN\" config cron current list`。\n2. 返回的 `data` 为空时，用 `... current create <<'JSON'` 创建。\n3. 已有任务且用户要修改时，用 `... current update <<'JSON'` 更新。\n4. 已有任务而用户要求新增另一任务时，询问如何处理原任务。\n5. 根据 CLI 输出报告结果，并遵守上述确认规则。\n\n## 请求体\n\n创建字段：\n\n- `name`：简短任务名。\n- `schedule`：标准五字段 Cron 表达式。\n- `schedule_description`：用户可读的时间描述。\n- `message`：任务触发时发送给 AI 的完整、自包含指令。\n\n更新使用相同字段，并额外要求：\n\n- `job_id`：查询命令返回的现有任务 ID。\n\n`message` 必须准确说明触发时要做什么，不能只复述“设置一个定时任务”。\n\n| 用户要求 | 错误 message | 正确 message |\n| --------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------- |\n| 每天 10 点发一句你好 | 发一句你好 | 只回复：你好！ |\n| 每天提醒喝水 | 提醒喝水 | 用友好的语气提醒用户喝水。 |\n| 每周一总结 AI 新闻 | 总结 AI 新闻 | 搜索本周最新 AI 新闻并生成简洁要点。 |\n\n## 示例\n\n真实任务中的名称、时间描述和消息应使用用户语言。\n\n查询：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config cron current list\n```\n\n创建：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config cron current create <<'JSON'\n{\n  \"name\": \"每周会议提醒\",\n  \"schedule\": \"0 9 * * MON\",\n  \"schedule_description\": \"每周一上午 9:00\",\n  \"message\": \"回复一条简短的每周会议提醒，并包含当前日期和时间。\"\n}\nJSON\n```\n\n更新：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config cron current update <<'JSON'\n{\n  \"job_id\": \"cron_123\",\n  \"name\": \"每日总结\",\n  \"schedule\": \"0 18 * * MON-FRI\",\n  \"schedule_description\": \"工作日下午 6:00\",\n  \"message\": \"回顾今天的会话上下文并生成简洁的日终总结。\"\n}\nJSON\n```\n\n多行消息示例：\n\n```json\n{\n  \"name\": \"每日总结\",\n  \"schedule\": \"0 9 * * *\",\n  \"schedule_description\": \"每天上午 9:00\",\n  \"message\": \"第一段。\\n第二段。\\n第三段。\"\n}\n```\n\n## Cron 表达式\n\n格式：`minute hour day-of-month month day-of-week`。\n\n例如 `0 9 * * MON-FRI` 表示工作日上午 9:00。\n\n只能使用后端解析器支持的标准字段和范围；禁止 Quartz 扩展，如 `L`、`L-N`、\n`W`、`LW`、`#`、`?`。",
+          "files": [
+            {
+              "path": "SKILL.md",
+              "size": 3426,
+              "sha256": "b73444ebf5b11161d59aabd4ed594f80412dcdd0b9999de3b51d30b1dcc32780"
+            },
+            {
+              "path": "_meta.json",
+              "size": 414,
+              "sha256": "412aabcbe6ff768767b8420bb8f9531b1ec2b5e488ddb4c527a381905ed739cc"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "mermaid",
       "path": "skills/mermaid",
       "name": "mermaid",
       "description": "使用 beautiful-mermaid 将 Mermaid 图渲染为 SVG 或 ASCII/Unicode 文本。适用于流程图、时序图、状态图、类图和 ER 图。",
-      "version": "1.0.0",
       "categories": [
         "图表",
         "开发"
       ],
-      "digest": "sha256-3b10212f91e481a8e46e47a52832fd9391746fc363565121dee050c2ee2907e2"
+      "tags": [],
+      "latestVersion": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "revision": "06dccd795b2d9e3f7cdd43e2af06c7b3f8168a6f",
+          "digest": "sha256-e37110396d5de27320fdbef417a07d3204968f38b5f9e4d9a3517a8c443faa41",
+          "readme": "> **平台提示：**以下命令按 macOS / Linux 的 bash/zsh 编写。执行前先确认\n> 操作系统；Windows 上不得原样运行，应转换为 PowerShell：\n>\n> | bash（macOS/Linux） | PowerShell（Windows） |\n> | --- | --- |\n> | `a && b` | 分两步执行，或使用 `a; if ($?) { b }` |\n> | `cat <<'EOF' \\| tool …`（heredoc） | 先写入临时文件，再把文件传给工具 |\n> | `VAR=$(cmd)` … `$VAR` | `$VAR = cmd` … `$VAR` |\n> | `cmd > /dev/null` | `cmd > $null` |\n> | `… \\| grep PAT` | `… \\| Select-String PAT` |\n> | `… \\| jq …` | `… \\| ConvertFrom-Json`，再读取字段 |\n> | `python3 x.py` | `python x.py` 或 `py x.py` |\n> | `~/dir`, `/tmp` | `$env:USERPROFILE\\dir`, `$env:TEMP` |\n> | `cp`、`mkdir -p`、`rm -rf` | `Copy-Item`、`New-Item -ItemType Directory -Force`、`Remove-Item -Recurse -Force` |\n>\n> 若命令没有直接的 Windows 等价写法，优先使用内置文件或 HTTP 工具。\n\n# Mermaid 图表渲染器\n\n使用 `beautiful-mermaid` 渲染 Mermaid 图，支持五类图表和两种输出模式。\n\n## 快速开始\n\n> 首次运行前，在技能目录执行 `npm ci --ignore-scripts`；依赖版本和完整性由 `package-lock.json` 固定。\n\n### SVG 输出（默认）\n\n```bash\n# 从文件读取\nnpx --no-install tsx scripts/render.ts diagram.mmd --output diagram.svg\n\n# 从标准输入读取\necho \"graph LR; A-->B-->C\" | npx --no-install tsx scripts/render.ts --stdin --output flow.svg\n```\n\n### ASCII 输出（终端）\n\n```bash\n# 输出适合终端显示的文本图\nnpx --no-install tsx scripts/render.ts diagram.mmd --ascii\n\n# 直接通过管道传入\necho \"graph TD; Start-->End\" | npx --no-install tsx scripts/render.ts --stdin --ascii\n```\n\n输出示例：\n\n```\n┌───────┐     ┌─────┐\n│ Start │────▶│ End │\n└───────┘     └─────┘\n```\n\n## 支持的图表\n\n| 类型 | 语法 | 适用场景 |\n| --------- | ----------------- | ----------------------- |\n| 流程图 | `graph TD/LR` | 流程与决策 |\n| 时序图 | `sequenceDiagram` | API 调用与交互 |\n| 状态图 | `stateDiagram-v2` | 状态机 |\n| 类图 | `classDiagram` | 面向对象设计 |\n| ER 图 | `erDiagram` | 数据库 Schema |\n\n## 主题（仅 SVG）\n\n```bash\nnpx --no-install tsx scripts/render.ts diagram.mmd --theme github-dark --output out.svg\n```\n\n传入无效主题名可查看可用主题列表，例如 `--theme ?`。\n\n## 资源\n\n- `scripts/render.ts`：主渲染脚本。\n- `references/syntax.md`：Mermaid 语法速查。",
+          "files": [
+            {
+              "path": "SKILL.md",
+              "size": 2734,
+              "sha256": "e9dd0ea7c37bc574f359621294bb9dba96b345d6925cf651a7b13bd5348ec9d0"
+            },
+            {
+              "path": "_meta.json",
+              "size": 414,
+              "sha256": "2d01601b2bc0f44ffc55a9ea54d1a992074f373259d9f3b8a45ef5f9527b5132"
+            },
+            {
+              "path": "package-lock.json",
+              "size": 16229,
+              "sha256": "4c1f4cca8ec50ac77197b361d4c552f0ac433529db0b2c6aa2e8171926b91be4"
+            },
+            {
+              "path": "package.json",
+              "size": 166,
+              "sha256": "71381f6c97979b6ddde794a1f9ec30048ba7ca6ac984dbdcbcb3b8a176de4723"
+            },
+            {
+              "path": "references/syntax.md",
+              "size": 1419,
+              "sha256": "86ee630fc008dac684b77842c45092001a935a243077505ca78e1ae04c78b8a5"
+            },
+            {
+              "path": "scripts/render.ts",
+              "size": 4130,
+              "sha256": "db31fc9f21f2705170a5a698af21f12f0e7cb1a24071d8bd4c4196f8786344f4"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "pdf",
       "path": "skills/pdf",
       "name": "pdf",
       "description": "PDF 综合处理工具：提取文本与表格、创建、合并、拆分、OCR、加水印、加密和填写表单。需要批量处理、生成或分析 PDF 时使用。",
-      "version": "1.0.0",
       "categories": [
         "文档",
         "PDF"
       ],
-      "digest": "sha256-0fa551da23225933bc78118080753b625f0e257699589bc9ca4efe6afa6eafb8"
+      "tags": [],
+      "latestVersion": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "revision": "06dccd795b2d9e3f7cdd43e2af06c7b3f8168a6f",
+          "digest": "sha256-3eada8f84bc98e3fd6b0d73db45537aa66f975b4bdaf3ab30ceea2ef1ebd4623",
+          "readme": "> **平台提示：**以下命令按 macOS / Linux 编写。Windows 上使用 `python`\n> （或 `py`）代替 `python3`，将 `~/…` 改为 `$env:USERPROFILE\\…`，并把管道、\n> 重定向和 `&&` 转换为 PowerShell 语法。脚本本身跨平台。\n\n# PDF 处理指南\n\n## 概览\n\n本指南介绍使用 Python 库和命令行工具完成常见 PDF 操作。高级功能、\nJavaScript 库和完整示例见 `reference.md`；填写 PDF 表单前必须阅读\n`forms.md`。\n\n## 快速开始\n\n```python\nfrom pypdf import PdfReader, PdfWriter\n\n# 读取 PDF\nreader = PdfReader(\"document.pdf\")\nprint(f\"Pages: {len(reader.pages)}\")\n\n# 提取文本\ntext = \"\"\nfor page in reader.pages:\n    text += page.extract_text()\n```\n\n## Python 库\n\n### pypdf：基础操作\n\n#### 合并 PDF\n\n```python\nfrom pypdf import PdfWriter, PdfReader\n\nwriter = PdfWriter()\nfor pdf_file in [\"doc1.pdf\", \"doc2.pdf\", \"doc3.pdf\"]:\n    reader = PdfReader(pdf_file)\n    for page in reader.pages:\n        writer.add_page(page)\n\nwith open(\"merged.pdf\", \"wb\") as output:\n    writer.write(output)\n```\n\n#### 拆分 PDF\n\n```python\nreader = PdfReader(\"input.pdf\")\nfor i, page in enumerate(reader.pages):\n    writer = PdfWriter()\n    writer.add_page(page)\n    with open(f\"page_{i+1}.pdf\", \"wb\") as output:\n        writer.write(output)\n```\n\n#### 提取元数据\n\n```python\nreader = PdfReader(\"document.pdf\")\nmeta = reader.metadata\nprint(f\"Title: {meta.title}\")\nprint(f\"Author: {meta.author}\")\nprint(f\"Subject: {meta.subject}\")\nprint(f\"Creator: {meta.creator}\")\n```\n\n#### 旋转页面\n\n```python\nreader = PdfReader(\"input.pdf\")\nwriter = PdfWriter()\n\npage = reader.pages[0]\npage.rotate(90)  # Rotate 90 degrees clockwise\nwriter.add_page(page)\n\nwith open(\"rotated.pdf\", \"wb\") as output:\n    writer.write(output)\n```\n\n### pdfplumber：提取文本和表格\n\n#### 按版式提取文本\n\n```python\nimport pdfplumber\n\nwith pdfplumber.open(\"document.pdf\") as pdf:\n    for page in pdf.pages:\n        text = page.extract_text()\n        print(text)\n```\n\n#### 提取表格\n\n```python\nwith pdfplumber.open(\"document.pdf\") as pdf:\n    for i, page in enumerate(pdf.pages):\n        tables = page.extract_tables()\n        for j, table in enumerate(tables):\n            print(f\"Table {j+1} on page {i+1}:\")\n            for row in table:\n                print(row)\n```\n\n#### 高级表格提取\n\n```python\nimport pandas as pd\n\nwith pdfplumber.open(\"document.pdf\") as pdf:\n    all_tables = []\n    for page in pdf.pages:\n        tables = page.extract_tables()\n        for table in tables:\n            if table:  # Check if table is not empty\n                df = pd.DataFrame(table[1:], columns=table[0])\n                all_tables.append(df)\n\n# 合并全部表格\nif all_tables:\n    combined_df = pd.concat(all_tables, ignore_index=True)\n    combined_df.to_excel(\"extracted_tables.xlsx\", index=False)\n```\n\n### reportlab：创建 PDF\n\n#### 创建基础 PDF\n\n```python\nfrom reportlab.lib.pagesizes import letter\nfrom reportlab.pdfgen import canvas\n\nc = canvas.Canvas(\"hello.pdf\", pagesize=letter)\nwidth, height = letter\n\n# 添加文本\nc.drawString(100, height - 100, \"Hello World!\")\nc.drawString(100, height - 120, \"这是使用 reportlab 创建的 PDF\")\n\n# 添加直线\nc.line(100, height - 140, 400, height - 140)\n\n# 保存\nc.save()\n```\n\n#### 创建多页 PDF\n\n```python\nfrom reportlab.lib.pagesizes import letter\nfrom reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, PageBreak\nfrom reportlab.lib.styles import getSampleStyleSheet\n\ndoc = SimpleDocTemplate(\"report.pdf\", pagesize=letter)\nstyles = getSampleStyleSheet()\nstory = []\n\n# 添加内容\ntitle = Paragraph(\"Report Title\", styles['Title'])\nstory.append(title)\nstory.append(Spacer(1, 12))\n\nbody = Paragraph(\"这是报告正文。\" * 20, styles['Normal'])\nstory.append(body)\nstory.append(PageBreak())\n\n# 第 2 页\nstory.append(Paragraph(\"Page 2\", styles['Heading1']))\nstory.append(Paragraph(\"Content for page 2\", styles['Normal']))\n\n# 构建 PDF\ndoc.build(story)\n```\n\n## 命令行工具\n\n### pdftotext (poppler-utils)\n\n```bash\n# 提取文本\npdftotext input.pdf output.txt\n\n# 提取文本并保留布局\npdftotext -layout input.pdf output.txt\n\n# 提取指定页面\npdftotext -f 1 -l 5 input.pdf output.txt  # Pages 1-5\n```\n\n### qpdf\n\n```bash\n# 合并 PDF\nqpdf --empty --pages file1.pdf file2.pdf -- merged.pdf\n\n# 拆分页面\nqpdf input.pdf --pages . 1-5 -- pages1-5.pdf\nqpdf input.pdf --pages . 6-10 -- pages6-10.pdf\n\n# 旋转页面\nqpdf input.pdf output.pdf --rotate=+90:1  # Rotate page 1 by 90 degrees\n\n# 移除密码\nqpdf --password=${PDF_PASSWORD} --decrypt encrypted.pdf decrypted.pdf\n```\n\n### pdftk（若可用）\n\n```bash\n# 合并\npdftk file1.pdf file2.pdf cat output merged.pdf\n\n# 拆分\npdftk input.pdf burst\n\n# 旋转\npdftk input.pdf rotate 1east output rotated.pdf\n```\n\n## 常见任务\n\n### 从扫描件提取文本\n\n```python\n# 依赖：pip install pytesseract pdf2image\nimport pytesseract\nfrom pdf2image import convert_from_path\n\n# 将 PDF 转换为图片\nimages = convert_from_path('scanned.pdf')\n\n# 对每一页执行 OCR\ntext = \"\"\nfor i, image in enumerate(images):\n    text += f\"Page {i+1}:\\n\"\n    text += pytesseract.image_to_string(image)\n    text += \"\\n\\n\"\n\nprint(text)\n```\n\n### 添加水印\n\n```python\nfrom pypdf import PdfReader, PdfWriter\n\n# 创建水印（或加载已有水印）\nwatermark = PdfReader(\"watermark.pdf\").pages[0]\n\n# 应用到所有页面\nreader = PdfReader(\"document.pdf\")\nwriter = PdfWriter()\n\nfor page in reader.pages:\n    page.merge_page(watermark)\n    writer.add_page(page)\n\nwith open(\"watermarked.pdf\", \"wb\") as output:\n    writer.write(output)\n```\n\n### 提取图片\n\n```bash\n# 使用 pdfimages（poppler-utils）\npdfimages -j input.pdf output_prefix\n\n# 图片将导出为 output_prefix-000.jpg、output_prefix-001.jpg 等\n```\n\n### 密码保护\n\n```python\nfrom pypdf import PdfReader, PdfWriter\n\nreader = PdfReader(\"input.pdf\")\nwriter = PdfWriter()\n\nfor page in reader.pages:\n    writer.add_page(page)\n\n# 添加密码\nwriter.encrypt(\"${PDF_USER_PASSWORD}\", \"${PDF_OWNER_PASSWORD}\")\n\nwith open(\"encrypted.pdf\", \"wb\") as output:\n    writer.write(output)\n```\n\n## 速查表\n\n| 任务 | 推荐工具 | 命令或代码 |\n| ------------------ | ------------------------------- | -------------------------- |\n| 合并 PDF | pypdf | `writer.add_page(page)` |\n| 拆分 PDF | pypdf | 每页写入一个文件 |\n| 提取文本 | pdfplumber | `page.extract_text()` |\n| 提取表格 | pdfplumber | `page.extract_tables()` |\n| 创建 PDF | reportlab | Canvas 或 Platypus |\n| 命令行合并 | qpdf | `qpdf --empty --pages ...` |\n| 扫描件 OCR | pytesseract | 先转换为图片 |\n| 填写表单 | pdf-lib 或 pypdf | 见 `forms.md` |\n\n## 后续资料\n\n- pypdfium2 高级用法见 `reference.md`。\n- JavaScript 的 pdf-lib 用法见 `reference.md`。\n- PDF 表单填写遵循 `forms.md`。\n- 故障排查见 `reference.md`。",
+          "files": [
+            {
+              "path": "SKILL.md",
+              "size": 7075,
+              "sha256": "8ce7c826e40331a3aeb8fceb15dc1ad1c23ae4ea8fb4eb6b54b16739b58fb4b7"
+            },
+            {
+              "path": "_meta.json",
+              "size": 407,
+              "sha256": "006ebb91337dd7d9062a8a7884c5409be70b3bf82ad0759724282593a4b515fe"
+            },
+            {
+              "path": "forms.md",
+              "size": 5197,
+              "sha256": "b1ba22e276a22ed8ca96b120a132bbaaf836df059904928072fc255a6c2d50d9"
+            },
+            {
+              "path": "reference.md",
+              "size": 9499,
+              "sha256": "3c9bf9911dc691293795f5f758b18315a9923dd177dc8ed9e2a1f039f8ee7469"
+            },
+            {
+              "path": "scripts/check_bounding_boxes.py",
+              "size": 2226,
+              "sha256": "7a0a9a66d3edb216cbe6b240dd5b0ebac7502f4f5ce5b59949eccaf051632333"
+            },
+            {
+              "path": "scripts/check_bounding_boxes_test.py",
+              "size": 8682,
+              "sha256": "850afad5baf232d5d0712c98cc57e09969e7e5a05cd72e339b1923a22a05d682"
+            },
+            {
+              "path": "scripts/check_fillable_fields.py",
+              "size": 1185,
+              "sha256": "56c4f47a57cf6e4772204ad6c5f480088b987e56f2feec32da2729884560c305"
+            },
+            {
+              "path": "scripts/convert_pdf_to_images.py",
+              "size": 1569,
+              "sha256": "6a40b32a66d9fd0acb490464316c3d0c36e48f0d890d4c719378708109b15698"
+            },
+            {
+              "path": "scripts/create_validation_image.py",
+              "size": 2250,
+              "sha256": "b4e14c9c71c8e2bc333a57f30f65fd403ccf54a85c50a2e7f6911978b3620109"
+            },
+            {
+              "path": "scripts/extract_form_field_info.py",
+              "size": 4017,
+              "sha256": "7f4ca473573890aafbc70ef9dadc27084c5951eb0fe526f7c6e38819a898cd90"
+            },
+            {
+              "path": "scripts/fill_fillable_fields.py",
+              "size": 2082,
+              "sha256": "67d492bffd2c45521a3c3f9f69822057acffca3a5bfdcae50d0e2753a09c3434"
+            },
+            {
+              "path": "scripts/fill_pdf_form_with_annotations.py",
+              "size": 4256,
+              "sha256": "e9bbe4832befd54052d08908d6b00bf1e18b191f8ec6f2f6d8a69ddf84f5b90f"
+            },
+            {
+              "path": "scripts/merge_pdfs.py",
+              "size": 1155,
+              "sha256": "a688309219c0be8d731b07acf3292784966b5c863b6a5e99136275072a2ee5b5"
+            },
+            {
+              "path": "scripts/split_pdf.py",
+              "size": 2671,
+              "sha256": "db4c3ac1508a24d38765a2dade223d6c8e2ecd234be89aaaabd1ea2f9f8c7267"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "skill-creator",
       "path": "skills/skill-creator",
       "name": "skill-creator",
       "description": "创建或更新高质量技能的指南，用专门知识、可复用流程、脚本、参考资料和素材扩展智能体能力。用户要求新建、设计、重构或打包技能时使用。",
-      "version": "1.0.0",
       "categories": [
         "开发",
         "技能"
       ],
-      "digest": "sha256-5f7f24ae36b0bd3c9a92b1c4df958d0449d28dd85cc76bedde2eced505b89f0b"
+      "tags": [],
+      "latestVersion": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "revision": "06dccd795b2d9e3f7cdd43e2af06c7b3f8168a6f",
+          "digest": "sha256-ce69f1f520f82bbfcec0b80d654acfb9d41026069bbe60e1a479f53461490066",
+          "readme": "> **平台提示：**以下命令按 macOS / Linux 编写。Windows 上使用 `python`\n> （或 `py`）代替 `python3`，将 `~/…` 改为 `$env:USERPROFILE\\…`，并把管道、\n> 重定向和 `&&` 转换为 PowerShell 语法。\n\n# 技能创建指南\n\n技能是自包含的模块化目录，通过领域知识、操作流程和工具让通用智能体可靠完成\n特定任务。\n\n## 技能能提供什么\n\n1. 多步骤领域流程；\n2. 文件格式、API 或外部工具的集成说明；\n3. 企业 Schema、业务规则和专门知识；\n4. 可复用的脚本、参考资料和输出素材。\n\n## 设计原则\n\n### 保持精炼\n\n技能与系统提示、对话历史、其他技能和用户请求共享上下文。默认假设智能体已具备\n通用知识，只写任务所必需且不明显的内容。每段都应能回答：\n\n- 这段信息是否真的影响执行？\n- 它的 Token 成本是否值得？\n\n优先给短而准确的示例，不写长篇背景介绍。\n\n### 选择合适的自由度\n\n- 高自由度：多种方法都有效，判断依赖上下文时，用文字原则。\n- 中自由度：存在推荐模式但允许变化时，用伪代码或参数化脚本。\n- 低自由度：操作脆弱、易错且顺序关键时，提供固定脚本和少量参数。\n\n## 目录结构\n\n```text\nskill-name/\n├── SKILL.md\n│   ├── YAML frontmatter\n│   │   ├── name\n│   │   └── description\n│   └── Markdown 指令\n├── scripts/       # 可选：可执行脚本\n├── references/    # 可选：按需读取的资料\n└── assets/        # 可选：模板、图标、字体等输出素材\n```\n\n### `SKILL.md`\n\n- `name`：技能名。\n- `description`：主要触发入口，必须同时说明“做什么”和“何时使用”。\n- 正文：技能触发后才加载，只放执行流程和资源导航。\n\n### `scripts/`\n\n重复编写相同代码或需要确定性时加入脚本，例如 PDF 旋转。脚本应可直接执行，\n并用真实输入测试。不要为了展示结构保留无用示例。\n\n### `references/`\n\n存放 Schema、API 文档、业务政策和详细工作流。资料只在需要时加载，可降低\n`SKILL.md` 体积。大于约一万词的文件，应在主技能中给出搜索关键字。\n\n同一信息只保留一份：核心步骤放 `SKILL.md`，细节放 Reference。\n\n### `assets/`\n\n存放最终输出会复用但不需要读入上下文的模板、图片、字体、样板项目等。\n\n### 不应包含的文件\n\n技能目录只保留执行所需内容，不创建额外的 `README.md`、\n`INSTALLATION_GUIDE.md`、`QUICK_REFERENCE.md` 或 `CHANGELOG.md`。这些文件会\n增加噪声并造成规则分叉。\n\n## 渐进式披露\n\n技能采用三级加载：\n\n1. 始终可见的 `name` 和 `description`；\n2. 触发后加载的 `SKILL.md`；\n3. 按需读取或直接执行的 Bundled Resource。\n\n`SKILL.md` 建议少于 500 行。接近上限时将变体、详细示例和大段资料拆到\nReference，并在主文件中说明何时读取。\n\n多领域技能可按领域拆分：\n\n```text\nbigquery-skill/\n├── SKILL.md\n└── references/\n    ├── finance.md\n    ├── sales.md\n    ├── product.md\n    └── marketing.md\n```\n\n多 Provider 技能可按实现拆分：\n\n```text\ncloud-deploy/\n├── SKILL.md\n└── references/\n    ├── aws.md\n    ├── gcp.md\n    └── azure.md\n```\n\nReference 只保持一层，不要形成深层引用链。超过 100 行的 Reference 应提供目录。\n\n## 创建流程\n\n### 1. 用具体示例明确需求\n\n先确认用户会怎样触发技能、期望哪些输入输出、有哪些失败场景。问题不要一次过多，\n先问最影响设计的内容。已有技能也应通过真实用例重新核对边界。\n\n完成标志：已经能清楚描述技能要支持和不支持的场景。\n\n### 2. 规划可复用资源\n\n对每个示例回答：\n\n1. 从零执行需要哪些步骤？\n2. 哪些代码会重复，适合放进 `scripts/`？\n3. 哪些 Schema 或知识应放进 `references/`？\n4. 哪些模板或素材应放进 `assets/`？\n\n例如：\n\n- PDF 旋转经常重复，可提供 `scripts/rotate_pdf.py`。\n- Web 应用反复需要脚手架，可提供 `assets/frontend-template/`。\n- BigQuery 每次都要发现表关系，可提供 `references/schema.md`。\n\n### 3. 初始化\n\n新技能必须先运行：\n\n```bash\nscripts/init_skill.py <skill-name> --path <output-directory>\n```\n\n已有技能可跳过。脚本会生成目录、Frontmatter 模板和示例资源目录。随后删除不需要\n的示例，只保留真实资源。\n\n### 4. 实现与编辑\n\n先实现规划好的脚本、Reference 和 Asset，再编写 `SKILL.md`。新增脚本必须实际\n运行验证；大量相似脚本至少验证有代表性的样本。\n\n设计模式参考：\n\n- 多步骤和条件流程：`references/workflows.md`；\n- 固定输出格式和质量门槛：`references/output-patterns.md`。\n\n正文使用祈使句或不定式，直接告诉后续智能体做什么。\n\nFrontmatter 的 `description` 必须包含完整触发场景，因为正文只在触发后加载。\n不要在正文另写一个无法参与触发的“何时使用”章节。\n\n### 5. 打包\n\n```bash\nscripts/package_skill.py <path/to/skill-folder>\n```\n\n指定输出目录：\n\n```bash\nscripts/package_skill.py <path/to/skill-folder> ./dist\n```\n\n打包脚本会先验证 YAML、命名、目录结构、描述质量和资源引用。验证通过后生成\n`<skill-name>.skill`；该文件本质为保持目录结构的 Zip。验证失败时先修复错误，\n不得绕过。\n\n### 6. 迭代\n\n1. 用技能完成真实任务；\n2. 记录卡点、歧义和低效步骤；\n3. 判断应修改 `SKILL.md` 还是 Bundled Resource；\n4. 实现修改并再次测试。\n\n迭代依据应来自真实使用证据，不为假设场景无限增加规则。",
+          "files": [
+            {
+              "path": "SKILL.md",
+              "size": 6125,
+              "sha256": "ddbb24f8e1630c183be1412b4e2f8f62683d50b65b269a2c5826b9b84e5bda93"
+            },
+            {
+              "path": "_meta.json",
+              "size": 420,
+              "sha256": "b0b357f204680b212443e8b9645f9a3d96571e063b7df8a80acff8275763786f"
+            },
+            {
+              "path": "references/output-patterns.md",
+              "size": 1585,
+              "sha256": "fc88c134326ce0404bbb923de50284c873ffc06220fbf660431f1e47c8670c8b"
+            },
+            {
+              "path": "references/workflows.md",
+              "size": 778,
+              "sha256": "58b85683ef8d769b5ed15d755efe1929dfdce815220edd31e437482b9646bb51"
+            },
+            {
+              "path": "scripts/init_skill.py",
+              "size": 10863,
+              "sha256": "0bba250b94caa4cb2b28b15dad26fdcf371aeda4c9797b8120e55c2e33e0c73c"
+            },
+            {
+              "path": "scripts/package_skill.py",
+              "size": 3288,
+              "sha256": "b31fbcb3e362d5c5308e99255ff8e83cde3a513e0636953964a648494ca10931"
+            },
+            {
+              "path": "scripts/quick_validate.py",
+              "size": 3509,
+              "sha256": "ea906a05cfc6fe0e18e31e7b3271cd14bedc7f1277f35a6ffb234e5e7ce9a750"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "story-roleplay",
       "path": "skills/story-roleplay",
       "name": "story-roleplay",
       "description": "解析并应用 PNG、WebP、JSON 格式的角色卡和世界信息，兼容 SillyTavern；支持关键词触发、Character Book 和动态上下文注入。",
-      "version": "1.0.0",
       "categories": [
         "创作",
         "角色扮演"
       ],
-      "digest": "sha256-bacc59beda129031b2baf4f53122235ef027f34976d434d733016f6579815dee"
+      "tags": [],
+      "latestVersion": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "revision": "06dccd795b2d9e3f7cdd43e2af06c7b3f8168a6f",
+          "digest": "sha256-f015451ec19d36c892ed87b84e9a3f81329a4d120c2caa01175fcae0101accc0",
+          "readme": "> **平台提示：**以下命令按 macOS / Linux 的 bash/zsh 编写。Windows 上应转换\n> 为 PowerShell；`python3` 改为 `python` 或 `py`，`~/` 改为\n> `$env:USERPROFILE\\`。若没有直接等价语法，优先使用内置文件工具。\n\n# 故事角色扮演\n\n解析角色卡和世界信息，并将其自然应用到故事对话中。\n\n## 强制约束\n\n1. 禁止凭图片外观猜测 PNG/WebP 中的数据，必须用解析器提取元数据。\n2. 优先复制 `skills/story-roleplay/scripts/` 中的预置工具；找不到时才创建。\n3. 自行创建 `package.json` 时，依赖版本固定为 `1.0.0`，不得使用 `^`。\n4. 解析失败时如实报告错误，禁止编造角色或世界设定。\n\n## 解析器工作流\n\n### 1. 复制预置工具\n\n按顺序尝试，成功后停止：\n\n```bash\ncp skills/story-roleplay/scripts/parse-character-card.js .\ncp skills/story-roleplay/scripts/package.json .\n```\n\n若 workspace 不在项目根目录，从上级目录查找：\n\n```bash\nfor dir in . .. ../.. ../../.. ../../../.. ../../../../..; do\n  if [ -f \"$dir/skills/story-roleplay/scripts/parse-character-card.js\" ]; then\n    cp \"$dir/skills/story-roleplay/scripts/parse-character-card.js\" .\n    cp \"$dir/skills/story-roleplay/scripts/package.json\" .\n    break\n  fi\ndone\n```\n\n仍找不到时，再在用户目录中搜索，并排除临时目录：\n\n```bash\nSCRIPT_PATH=$(find ~ -name \"parse-character-card.js\" \\\n  -path \"*/skills/story-roleplay/scripts/*\" \\\n  ! -path \"*/temp*\" ! -path \"*/*-temp*\" ! -path \"*/.webpack/*\" \\\n  2>/dev/null | head -1)\n```\n\n确认 `parse-character-card.js` 和 `package.json` 已存在。\n\n### 2. 安装依赖\n\n```bash\nnpm install\n```\n\n确认生成 `node_modules`。失败时检查网络、权限和 Node.js 环境。\n\n### 3. 执行\n\n```bash\n# 角色卡\nnode parse-character-card.js <image-path> <output-json-path>\n\n# 世界信息\nnode parse-character-card.js <image-path> <output-json-path> --world-info\n```\n\n第二个参数必须是输出路径，不得使用 `>` 重定向。文件名含空格或中文时加引号：\n\n```bash\nnode parse-character-card.js \"薇娜丽丝.png\" character.json\nnode parse-character-card.js world-info.png world-info.json --world-info\n```\n\n### 4. 验证\n\n- 输出应包含 `Successfully extracted data to: <path>`。\n- 检查目标 JSON 存在且可解析。\n- `PNG metadata does not contain any text chunks` 表示图片可能不是有效角色卡。\n- `Required dependencies not found` 表示应先执行 `npm install`。\n- `Image file not found` 表示路径错误。\n\n## 角色卡\n\n触发词包括“角色卡”“加载角色”“解析角色卡”等。\n\n### 支持格式\n\n- PNG：从 tEXt chunk 读取 `chara`（V2）或 `ccv3`（V3），内容为 Base64 JSON。\n- WebP：可能在 EXIF/XMP 或文本元数据中。优先转为 PNG 后解析；失败时要求用户\n  提供 JSON 或从 SillyTavern 重新导出。\n- JSON：直接读取 Tavern Card V2/V3，优先使用。\n\n主要字段：\n\n- `name`：角色名；\n- `description`：角色描述；\n- `personality`：性格；\n- `scenario`：场景；\n- `first_mes`：开场白；\n- `system_prompt`：行为规则；\n- `character_book`：角色专属知识库。\n\n应用时将 `system_prompt` 作为角色规则，以 `first_mes` 开场，并让\n`character_book` 条目参与关键词触发。图片解析成功后保存为 `character.json`，\n完整保留原始数据。\n\n## 世界信息\n\n触发词包括“世界信息”“世界树”“加载世界设定”等。\n\nJSON 结构示例：\n\n```json\n{\n  \"name\": \"世界名称\",\n  \"entries\": [\n    {\n      \"keys\": [\"关键词一\", \"关键词二\"],\n      \"content\": \"触发后注入的内容\",\n      \"priority\": 100,\n      \"enabled\": true\n    }\n  ]\n}\n```\n\nPNG 使用 tEXt chunk 的 `naidata`，内容为 Base64 JSON；执行解析器时必须带\n`--world-info`。WebP 优先转换为 PNG。\n\n触发逻辑：\n\n1. 检查对话是否包含启用条目的 `keys`。\n2. 按 `priority` 从高到低选择内容。\n3. 将内容自然融入叙事，不生硬粘贴。\n\n图片解析成功后保存为 `world-info.json`。关键词应具体，避免过宽而频繁误触发。\n\n## 角色资料库（Character Book）\n\n`character_book` 与世界信息格式相似，但只服务于当前角色。加载角色卡时提取其\n`entries`；对话中按关键词触发。角色专属条目通常比通用世界信息优先级更高，\n两者可以同时使用。\n\n## 文件发现与创建\n\n自动查找：\n\n- 角色卡：`character.png`、`character.webp`、`character.json`、\n  `*.character.json`；\n- 世界信息：`world-info.png`、`world-info.webp`、`world-info.json`、\n  `world.json`。\n\n没有文件时，应主动询问故事类型、背景、角色性格与经历、说话风格、世界规则和\n地点。先总结并让用户确认，再创建：\n\n- `character.json`：采用 Tavern Card V2/V3；\n- `world-info.json`：为关键概念、地点和规则创建有意义的条目。\n\n## 兼容范围\n\n- SillyTavern PNG 内嵌 JSON；\n- 可解析或可转换的 WebP；\n- Tavern Card V2/V3 JSON；\n- `naidata` 世界信息；\n- Character Book。\n\n## 最后备用方案\n\n只有所有预置工具查找方式都失败时，才允许创建文件：\n\n```json\n{\n  \"name\": \"story-roleplay-parser\",\n  \"version\": \"1.0.0\",\n  \"description\": \"角色卡与世界信息解析工具\",\n  \"main\": \"parse-character-card.js\",\n  \"scripts\": {\n    \"parse\": \"node parse-character-card.js\"\n  },\n  \"dependencies\": {\n    \"png-chunks-extract\": \"1.0.0\",\n    \"png-chunk-text\": \"1.0.0\"\n  }\n}\n```\n\n完整脚本以 `skills/story-roleplay/scripts/parse-character-card.js` 为准。其核心逻辑\n必须提取 PNG chunk、解码 tEXt、查找 `chara`/`ccv3`/`naidata`、Base64 解码并\n验证 JSON，同时提供明确错误信息。",
+          "files": [
+            {
+              "path": "SKILL.md",
+              "size": 5986,
+              "sha256": "476470792e9d61e71c9072f96fd759aa07166e0d893967e3d1f9573b2d06ba69"
+            },
+            {
+              "path": "_meta.json",
+              "size": 427,
+              "sha256": "ce85946ae099410f6f73c6ea26d2f256a571d75b9fd46a2c71a0dc9af8cc7839"
+            },
+            {
+              "path": "scripts/package.json",
+              "size": 319,
+              "sha256": "1b92f6ece2b5c5f1945046d2b2e828928578f950957be2b7564bb34bc67025c7"
+            },
+            {
+              "path": "scripts/parse-character-card.js",
+              "size": 6041,
+              "sha256": "b10863e32d6d2aa726c0a1ecda9d87eb157e59312163e8c68780e93425adb406"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "tjuaeui-config",
       "path": "skills/tjuaeui-config",
       "name": "tjuaeui-config",
       "description": "通过内置 tjuaecore config CLI 配置 TjuaeUI：创建和编辑助手、规则与技能，管理 MCP Server、模型 Provider、设置、Agent 和定时任务。用户要求修改 TjuaeUI 配置，或询问配置何时影响当前/新会话时使用。",
-      "version": "1.0.0",
       "categories": [
         "配置",
         "管理"
       ],
-      "digest": "sha256-f4f08234a2471c1b036fc8e98fb6ae468867c3a5bea70f4915657d7eb49f2184"
+      "tags": [],
+      "latestVersion": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "revision": "06dccd795b2d9e3f7cdd43e2af06c7b3f8168a6f",
+          "digest": "sha256-10c7643649a57049112d5470ec3d927ff9ec8ed2b6664275a677df93d8cc3e7a",
+          "readme": "# TjuaeUI 配置\n\n只使用面向 Agent 的内置 CLI 配置 TjuaeUI。不要探测端口、直接调用后端路径，\n也不要依赖 `tjuaecore` 之外的配置工具。\n\n## 规则\n\n1. 只调用 `\"$TJUAE_HELPER_BIN\" config ...`。\n2. 禁止传递、内联、导出、回显或设置任何 `TJUAE_...` 环境变量。\n3. 所有业务输入都通过标准输入 JSON 传递，不使用命令 Flag。\n4. 不确定命令或字段时先执行 `config capabilities`。\n5. 修改当前助手前先读取上下文；任何写操作都遵守“先读、再写、写后回读”。\n6. 修改本会话使用的助手时传 `\"assistant_id\": \"current\"`。\n7. 支持会话 Selector 的命令使用 `\"conversation_id\": \"current\"`。\n8. 除非后续操作确实需要，不向用户显示内部 ID。\n9. 禁止泄漏 Provider Key、MCP Header、环境变量和其他密钥。\n10. CLI 失败时，以 stderr 中稳定的 `CONFIG_...` 错误为准，不得声称已修改。\n11. 助手修改成功后必须说明持久化状态和生效时机；回读成功不代表当前运行会话\n    已重新加载。\n\n## 输出\n\n成功命令返回 JSON Envelope：\n\n```json\n{\n  \"success\": true,\n  \"data\": {},\n  \"meta\": {\n    \"schema_version\": 1\n  }\n}\n```\n\n失败时 stderr 输出一行稳定错误，应以 stderr 为权威结果。\n\n## 能力和上下文\n\n```bash\n\"$TJUAE_HELPER_BIN\" config capabilities\n\"$TJUAE_HELPER_BIN\" config context\n```\n\n`capabilities` 会列出领域、命令路径、输入模式、标准输入字段、Selector、回读和\n破坏性标记。`context` 返回当前用户、会话、助手和本地运行时。若\n`data.assistant` 为 `null`，先询问要编辑哪个助手。\n\n## 助手修改的生效时机\n\n- 名称、描述、头像和推荐提示词会立即保存；界面仍显示旧值时让用户刷新或重新\n  打开助手页面。\n- Agent、默认模型、默认权限、技能、MCP、思考级别和规则等运行时字段只影响\n  从该助手新建的会话。\n- 技能和 MCP 不会追加入当前 Agent Runtime；当前会话没有对应能力时，应新建\n  会话。\n\n报告运行时字段变更时，应明确说“已保存并回读，将在新会话中生效”。\n\n## 助手\n\n列出和读取：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config assistants list\n```\n\n```bash\n\"$TJUAE_HELPER_BIN\" config assistants get <<'JSON'\n{\n  \"assistant_id\": \"current\",\n  \"locale\": \"zh-CN\"\n}\nJSON\n```\n\n创建：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config assistants create <<'JSON'\n{\n  \"name\": \"需求分析助手\",\n  \"description\": \"把粗略产品想法整理为清晰 PRD\",\n  \"agent_id\": \"2d23ff1c\",\n  \"prompts\": [\n    \"把这个功能想法整理成 PRD\",\n    \"审阅这份 PRD 并指出新用户难以理解的部分\"\n  ],\n  \"enabled_skills\": [\"tjuaeui-config\"]\n}\nJSON\n```\n\n更新：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config assistants update <<'JSON'\n{\n  \"assistant_id\": \"current\",\n  \"locale\": \"zh-CN\",\n  \"description\": \"更新后的助手描述\",\n  \"defaults\": {\n    \"permission\": {\n      \"mode\": \"fixed\",\n      \"value\": \"plan\"\n    }\n  }\n}\nJSON\n```\n\nMCP 默认值使用 `defaults.mcps`，不得使用 `default_mcp_ids`。启停或排序：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config assistants state <<'JSON'\n{\n  \"assistant_id\": \"current\",\n  \"enabled\": true,\n  \"sort_order\": 10\n}\nJSON\n```\n\n## 助手规则\n\n规则是定义助手行为的 System Prompt。\n\n```bash\n\"$TJUAE_HELPER_BIN\" config assistants rule read <<'JSON'\n{\n  \"assistant_id\": \"current\",\n  \"locale\": \"zh-CN\"\n}\nJSON\n```\n\n```bash\n\"$TJUAE_HELPER_BIN\" config assistants rule write <<'JSON'\n{\n  \"assistant_id\": \"current\",\n  \"locale\": \"zh-CN\",\n  \"content\": \"# 角色\\n你是……\"\n}\nJSON\n```\n\n编辑时保留用户现有的有效指令，除非用户明确要求整体替换。写入或删除成功后说明\n规则已保存并回读，但只影响新会话。\n\n## 技能\n\n```bash\n\"$TJUAE_HELPER_BIN\" config skills list\n```\n\n技能资产的安装、同步、发布与解除跟踪统一由 TjuaeUI 的“市场”和“AI 核心”页面完成。\n配置 CLI 不再导入本地目录、ZIP 或外部技能路径，也不切换独立的技能市场开关。\n\n为助手配置技能时，先读取现有列表，在本地合并后发送完整 `enabled_skills`：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config assistants update <<'JSON'\n{\n  \"assistant_id\": \"current\",\n  \"enabled_skills\": [\"tjuaeui-config\", \"cron\"]\n}\nJSON\n```\n\n禁止盲目追加。新增默认技能只影响新会话。\n\n## MCP Server\n\n```bash\n\"$TJUAE_HELPER_BIN\" config mcp servers list\n```\n\n创建：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config mcp servers create <<'JSON'\n{\n  \"name\": \"本地工具\",\n  \"transport\": {\n    \"type\": \"stdio\",\n    \"command\": \"my-mcp-server\",\n    \"args\": [],\n    \"env\": {}\n  }\n}\nJSON\n```\n\n更新：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config mcp servers update <<'JSON'\n{\n  \"server_id\": \"mcp_123\",\n  \"description\": \"更新后的描述\"\n}\nJSON\n```\n\n测试：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config mcp test-connection <<'JSON'\n{\n  \"name\": \"本地工具\",\n  \"transport\": {\n    \"type\": \"stdio\",\n    \"command\": \"my-mcp-server\",\n    \"args\": []\n  }\n}\nJSON\n```\n\nOAuth 状态：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config mcp oauth check-status <<'JSON'\n{\n  \"server_url\": \"https://mcp.example.com\"\n}\nJSON\n```\n\n不得向用户显示 MCP Header 或 stdio 环境变量；CLI 默认会脱敏。\n\n## 模型 Provider\n\n```bash\n\"$TJUAE_HELPER_BIN\" config providers list\n```\n\n创建和更新：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config providers create <<'JSON'\n{\n  \"name\": \"OpenAI\",\n  \"platform\": \"openai\",\n  \"base_url\": \"https://api.openai.com/v1\",\n  \"api_key\": \"sk-...\"\n}\nJSON\n```\n\n```bash\n\"$TJUAE_HELPER_BIN\" config providers update <<'JSON'\n{\n  \"provider_id\": \"provider_123\",\n  \"api_key\": \"sk-...\"\n}\nJSON\n```\n\n协议检测、模型列表和健康检查：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config providers detect-protocol <<'JSON'\n{\"base_url\":\"https://api.example.com/v1\",\"api_key\":\"...\"}\nJSON\n```\n\n```bash\n\"$TJUAE_HELPER_BIN\" config providers models fetch <<'JSON'\n{\"provider_id\":\"provider_123\"}\nJSON\n```\n\n```bash\n\"$TJUAE_HELPER_BIN\" config providers health-check <<'JSON'\n{\"provider_id\":\"provider_123\",\"model\":\"gpt-4.1\"}\nJSON\n```\n\n禁止重复或展示用户输入的 API Key。\n\n## 设置\n\n```bash\n\"$TJUAE_HELPER_BIN\" config settings get\n```\n\n```bash\n\"$TJUAE_HELPER_BIN\" config settings patch <<'JSON'\n{\n  \"language\": \"zh-CN\",\n  \"notification_enabled\": true\n}\nJSON\n```\n\n支持字段：`language`、`notification_enabled`、\n`cron_notification_enabled`、`command_queue_enabled`、\n`save_upload_to_workspace`。未知字段会被忽略。\n\n客户端偏好：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config settings client get\n```\n\n```bash\n\"$TJUAE_HELPER_BIN\" config settings client put <<'JSON'\n{\n  \"ui.zoomFactor\": 1.2\n}\nJSON\n```\n\n客户端偏好是自由键值 Map；传 `null` 删除键。写入前先读取，不能假设固定 Schema。\n\n## Agent\n\n```bash\n\"$TJUAE_HELPER_BIN\" config agents list\n```\n\n启停：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config agents enable <<'JSON'\n{\"agent_id\":\"codex\",\"enabled\":true}\nJSON\n```\n\n读取和设置覆盖：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config agents overrides get <<'JSON'\n{\"agent_id\":\"codex\"}\nJSON\n```\n\n```bash\n\"$TJUAE_HELPER_BIN\" config agents overrides set <<'JSON'\n{\"agent_id\":\"codex\",\"command_override\":\"/absolute/path/to/codex\"}\nJSON\n```\n\n自定义 Agent：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config agents custom create <<'JSON'\n{\"name\":\"自定义 Agent\",\"command\":\"/absolute/path/to/agent-cli\"}\nJSON\n```\n\n```bash\n\"$TJUAE_HELPER_BIN\" config agents custom try-connect <<'JSON'\n{\"command\":\"/absolute/path/to/agent-cli\"}\nJSON\n```\n\n`try-connect` 不持久化。禁止显示 Agent 环境变量或秘密覆盖值。\n\n## 定时任务\n\n当前会话使用 `cron current`。每个会话最多一个任务：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config cron current list\n```\n\n```bash\n\"$TJUAE_HELPER_BIN\" config cron current create <<'JSON'\n{\n  \"name\": \"每日总结\",\n  \"schedule\": \"0 18 * * MON-FRI\",\n  \"schedule_description\": \"工作日下午 6:00\",\n  \"message\": \"回顾会话上下文并生成简洁的日终总结。\"\n}\nJSON\n```\n\n```bash\n\"$TJUAE_HELPER_BIN\" config cron current update <<'JSON'\n{\n  \"job_id\": \"cron_123\",\n  \"name\": \"每日总结\",\n  \"schedule\": \"0 18 * * MON-FRI\",\n  \"schedule_description\": \"工作日下午 6:00\",\n  \"message\": \"回顾会话上下文并生成简洁的日终总结。\"\n}\nJSON\n```\n\n成功后用普通语言说明任务名和时间，不展示 `cron_...` ID。\n\n全局管理使用 `config cron jobs`：\n\n```bash\n\"$TJUAE_HELPER_BIN\" config cron jobs list\n```\n\n```bash\n\"$TJUAE_HELPER_BIN\" config cron jobs create <<'JSON'\n{\n  \"name\": \"每周报告\",\n  \"schedule\": {\n    \"kind\": \"cron\",\n    \"expr\": \"0 9 * * MON\",\n    \"tz\": \"Asia/Shanghai\"\n  },\n  \"message\": \"生成每周报告。\",\n  \"conversation_id\": \"current\",\n  \"created_by\": \"user\"\n}\nJSON\n```\n\n`schedule` 是带标签对象：\n\n- `{ \"kind\": \"cron\", \"expr\": \"<cron-expr>\", \"tz\": \"<IANA-tz>\" }`：Cron；\n- `{ \"kind\": \"every\", \"every_ms\": <milliseconds> }`：固定间隔；\n- `{ \"kind\": \"at\", \"at_ms\": <epoch-ms> }`：一次性时间点。\n\n`cron jobs` 与 `cron current` 的 `schedule` 形状不同，禁止混用。\n\n```bash\n\"$TJUAE_HELPER_BIN\" config cron jobs run <<'JSON'\n{\"job_id\":\"cron_123\"}\nJSON\n```\n\n```bash\n\"$TJUAE_HELPER_BIN\" config cron jobs skill save <<'JSON'\n{\n  \"job_id\": \"cron_123\",\n  \"content\": \"# 技能\\n任务专用指令。\"\n}\nJSON\n```\n\n## 安全\n\n配置会直接影响用户正在使用的应用。变更范围应尽量小，用自然语言说明实际修改，\n用户未要求实现细节时不要展示原始 JSON。",
+          "files": [
+            {
+              "path": "SKILL.md",
+              "size": 9824,
+              "sha256": "3999a97c805cd07b238c358cfa42049b874b1cdf47324b8fa3c05d898b68dba0"
+            },
+            {
+              "path": "_meta.json",
+              "size": 421,
+              "sha256": "8300f51d2cf72c2fa69dacb30c15a24e68c4f72f473f902a63f400fa9c30bffd"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "tjuaeui-troubleshooting",
       "path": "skills/tjuaeui-troubleshooting",
       "name": "tjuaeui-troubleshooting",
       "description": "诊断正在运行的 TjuaeUI：检查卡住或报错的会话、Provider 健康、定时任务、MCP Server、团队成员、后端状态和 tjuaecore 日志。用户报告会话卡住、模型调用失败、任务未执行、MCP 无工具或团队成员无响应时使用。",
-      "version": "1.0.0",
       "categories": [
         "诊断",
         "运维"
       ],
-      "digest": "sha256-c22c56a9dd4f5bc3aac43ad424ed544376a4f9c5183f440058f2cbf6a0bac59e"
+      "tags": [],
+      "latestVersion": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "revision": "06dccd795b2d9e3f7cdd43e2af06c7b3f8168a6f",
+          "digest": "sha256-8a0782327bd289507b9cfa87b1d29f40dbfd30e342c4c68d3640064feabe53d5",
+          "readme": "# TjuaeUI 故障诊断\n\n只使用内置的只读命令 `tjuaecore diagnose`。它会读取当前会话注入的运行时上下文，\n不要自行猜测端口或直接拼接后端接口。\n\n## 规则\n\n1. 只调用 `\"$TJUAE_HELPER_BIN\" diagnose ...`。\n2. 对“哪里坏了”这类宽泛问题，先执行 `diagnose overview`。\n3. 优先使用命名诊断命令；只有现有命令无法覆盖时才用 `diagnose http get`。\n4. 本技能只诊断，不修改配置。配置变更使用 `tjuaeui-config`。\n5. 不输出 Provider、MCP Header、Token、密码或密钥原值。\n6. 单次看到 `running` 不能证明会话卡住；应重复检查并比较运行时字段、消息进度\n   和日志。\n\n## 能力发现\n\n不确定命令或标准输入字段时执行：\n\n```bash\n\"$TJUAE_HELPER_BIN\" diagnose capabilities\n```\n\n输出是 Agent 可读契约，包含领域、命令、JSON 字段、Selector、脱敏字段和受控\nHTTP 读取入口。\n\n## 当前会话 Selector\n\n```json\n{\n  \"conversation_id\": \"current\"\n}\n```\n\n`current` 由 `TJUAE_CONVERSATION_ID` 解析。CLI 还会从运行时上下文读取\n`TJUAE_BASE_URL` 和 `TJUAE_USER_ID`，禁止手工回显或修改这些变量。\n\n## 从全局概览开始\n\n```bash\n\"$TJUAE_HELPER_BIN\" diagnose overview\n```\n\n- `providers.unhealthy`：检查 Provider。\n- `mcp.enabled_but_no_tools`：检查 MCP 启动和工具注册。\n- `cron.failing`：检查定时任务。若为空但仍怀疑 Cron，执行\n  `diagnose cron summary` 并检查 `all[].state.last_status`。\n- `running_conversations`：重复检查相应会话的运行时和消息。\n\n## 按症状深入\n\n### 会话卡住或报错\n\n```bash\n\"$TJUAE_HELPER_BIN\" diagnose conversations get <<'JSON'\n{\n  \"conversation_id\": \"current\"\n}\nJSON\n```\n\n读取最近错误消息：\n\n```bash\n\"$TJUAE_HELPER_BIN\" diagnose conversations messages <<'JSON'\n{\n  \"conversation_id\": \"current\",\n  \"limit\": 30,\n  \"errors_only\": true\n}\nJSON\n```\n\n只有多次检查都看不到 `turn_id`、运行时或消息变化时，才能确认疑似卡住。\n`state=waiting_confirmation` 或 `pending_confirmations > 0` 表示等待用户批准，\n不是卡住。\n\n### Provider 或模型失败\n\n```bash\n\"$TJUAE_HELPER_BIN\" diagnose providers summary\n```\n\n检查非 `healthy` 状态、过旧的 `last_check`、高延迟和错误摘要。命名命令足够时\n不要索取原始 Provider JSON。\n\n### 定时任务未执行\n\n```bash\n\"$TJUAE_HELPER_BIN\" diagnose cron summary\n```\n\n基本字段为 `enabled`、`name`、`id`；运行状态位于 `state.last_status`、\n`state.last_error`、`state.run_count`、`state.retry_count`、\n`state.next_run_at_ms`、`state.last_run_at_ms`。时间戳是毫秒 Epoch。\n\n### MCP Server 没有工具\n\n```bash\n\"$TJUAE_HELPER_BIN\" diagnose mcp summary\n```\n\n已启用但 `tool_count=0` 通常表示启动失败、命令不可用、凭据错误，或在工具注册\n前崩溃。\n\n### 团队成员无响应\n\n```bash\n\"$TJUAE_HELPER_BIN\" diagnose teams summary\n```\n\n找到成员的 `conversation_id` 后，再执行 `diagnose conversations get` 检查该会话。\n\n### 后端健康\n\n```bash\n\"$TJUAE_HELPER_BIN\" diagnose health\n```\n\n用于确认后端可达，并读取 Core 版本和构建信息。\n\n### 日志\n\n```bash\n\"$TJUAE_HELPER_BIN\" diagnose logs tail <<'JSON'\n{\n  \"lines\": 100,\n  \"errors_only\": true,\n  \"conversation_id\": \"current\"\n}\nJSON\n```\n\n若运行时没有 `TJUAE_LOG_DIR`，而用户提供了日志目录，可在 JSON 中传入\n`log_dir`。`No onPostToolUseHook found for tool use ID` 可能是工具调用附近的\n已知无害噪声，不能自动认定为根因。\n\n## 受控 HTTP 读取\n\n只有命名命令无法覆盖时才使用：\n\n```bash\n\"$TJUAE_HELPER_BIN\" diagnose http get <<'JSON'\n{\n  \"path\": \"/api/teams\",\n  \"reason\": \"检查 teams summary 未覆盖的团队字段。\"\n}\nJSON\n```\n\n约束：\n\n- 只允许 GET。\n- 路径必须是 `/health` 或以 `/api/` 开头。\n- 输出会脱敏，且可能截断。\n- 同类读取频繁出现时，应后续增加命名 CLI 命令。\n\n## 命令映射\n\n| 诊断目标 | 命令 |\n| --- | --- |\n| 后端存活与版本 | `diagnose health` |\n| 跨领域概览 | `diagnose overview` |\n| 会话运行时 | `diagnose conversations get` |\n| 会话消息 | `diagnose conversations messages` |\n| Provider 健康 | `diagnose providers summary` |\n| 定时任务 | `diagnose cron summary` |\n| MCP Server | `diagnose mcp summary` |\n| 团队和成员 | `diagnose teams summary` |\n| 日志 | `diagnose logs tail` |\n| 未覆盖的只读接口 | `diagnose http get` |\n\n## 报告要求\n\n- 本技能只诊断，不修复。\n- 配置修改切换到 `tjuaeui-config`；定时任务变更使用 `cron`。\n- 说明证据和不确定性：一次快照只能写“疑似卡住”，多次快照无变化后才能写\n  “确认卡住”。",
+          "files": [
+            {
+              "path": "SKILL.md",
+              "size": 5116,
+              "sha256": "1250a340b487291e36b75b6e0cb5de10cac94ed95aade2764aea2b039059d698"
+            },
+            {
+              "path": "_meta.json",
+              "size": 430,
+              "sha256": "98e841d4e29881a756049397e8eeea113c639c80a750a7f3de86e08153de9248"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "tjuaeui-webui-public",
       "path": "skills/tjuaeui-webui-public",
       "name": "tjuaeui-webui-public",
       "description": "通过 Cloudflare Quick Tunnel 将本机 TjuaeUI WebUI 临时暴露到公网。负责检测服务、安装 cloudflared、创建并验证公网地址，并明确说明临时地址、进程存活、密码保护和流量经 Cloudflare 中转等限制。适用于用户希望从外网访问或临时分享 TjuaeUI 的场景。",
-      "version": "1.0.0",
       "categories": [
         "WebUI",
         "远程访问"
       ],
-      "digest": "sha256-110f6f5fe7aa72b6a39f9afce01d3b81c45d0ab837e893f2e8b08a00243e2b41"
+      "tags": [],
+      "latestVersion": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "revision": "06dccd795b2d9e3f7cdd43e2af06c7b3f8168a6f",
+          "digest": "sha256-ac41207d2d5edf060662de77722346eae2ea06c01fec697796d4bf2a85356ba7",
+          "readme": "> **平台提示：**以下命令按 macOS / Linux 的 bash/zsh 编写。Windows 上应转换\n> 为 PowerShell；`python3` 改为 `python` 或 `py`，`~/` 改为\n> `$env:USERPROFILE\\`，`/tmp` 改为 `$env:TEMP`。若没有直接等价语法，优先使用\n> 内置文件或 HTTP 工具。\n\n# TjuaeUI WebUI 公网临时访问\n\n目标是用尽量少的用户操作，把本机 WebUI 暴露为临时公网 URL。除桌面端开关外，\n检测、安装、启动和验证都应由智能体完成；除非用户要求，不要把原始命令甩给用户。\n\n## 已知事实\n\n- WebUI 默认监听 `25808`，但可通过 `--port` 修改，因此先探测，不要只依赖默认值。\n- WebUI 使用用户名、密码和 JWT 认证。发布到公网后，强密码是主要保护手段。\n- 桌面 WebUI 只能通过 Electron IPC 启动，智能体无法代替用户切换开关。\n- Tunnel 使用 Cloudflare Quick Tunnel，无需账号，但地址随机且临时。\n- 必须为 `cloudflared` 指定 `--protocol http2`，以避免网络阻断 QUIC 后长期返回\n  HTTP 530。\n\n## 流程\n\n### 1. 检测 WebUI\n\n```bash\ncurl -s -o /dev/null -w \"%{http_code}\" --max-time 5 http://127.0.0.1:25808/\n```\n\n- `200`：服务可用，继续安装 Tunnel。\n- `000` 或连接拒绝：进入下一步。\n\n### 2. 让用户开启 WebUI\n\n只在服务未运行时提示：\n\n> WebUI 尚未运行，我无法代替你切换桌面开关。请打开“设置 → WebUI”，启用\n> WebUI；若还需要局域网访问，同时启用“允许远程访问”。完成后告诉我，我会\n> 继续。\n\n用户完成后重新探测，只有收到 `200` 才继续。\n\n### 3. 安装 `cloudflared`\n\n先执行 `command -v cloudflared`。缺失时，从 Cloudflare 官方 GitHub Release\n下载当前平台的预编译二进制，不依赖系统包管理器。\n\nmacOS / Linux 示例：\n\n```bash\nmkdir -p ~/.tjuae/tools && cd ~/.tjuae/tools\nOS=$(uname -s); ARCH=$(uname -m)\ncase \"$OS\" in Darwin) goos=darwin;; Linux) goos=linux;; esac\ncase \"$ARCH\" in arm64|aarch64) goarch=arm64;; x86_64|amd64) goarch=amd64;; esac\ncurl -fsSL -o cf.tgz \"https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-${goos}-${goarch}.tgz\"\ntar xzf cf.tgz && rm cf.tgz\n./cloudflared --version\n```\n\nWindows 下载 `cloudflared-windows-<arch>.exe`。下载后验证\n`cloudflared --version`，不要运行来源不明的二进制。\n\n### 4. 创建 Tunnel\n\n以长驻后台进程启动：\n\n```bash\ncloudflared tunnel --protocol http2 --url http://127.0.0.1:25808\n```\n\n若使用刚下载的文件，调用 `~/.tjuae/tools/cloudflared`。观察输出并确认：\n\n1. 得到 `https://<random-words>.trycloudflare.com`；\n2. 出现 `Registered tunnel connection ... protocol=http2`。\n\n若公网地址持续返回 530，先确认命令确实包含 `--protocol http2`。\n\n### 5. 从公网验证\n\n交付 URL 前必须验证：\n\n```bash\ncurl -s -o /dev/null -w \"%{http_code}\" --max-time 20 \"<public-url>/\"\n```\n\n新 Tunnel 可能短暂返回 530/000，可间隔几秒重试两到三次。只有获得 `200` 才算\n成功。还可确认页面确实属于 TjuaeUI：\n\n```bash\ncurl -s --max-time 20 \"<public-url>/\" | grep -i \"<title>TjuaeUI</title>\"\n```\n\n### 6. 检查凭据强度\n\n交付公网地址前，主动确认用户已设置强且唯一的密码。默认、空白或弱密码不得用于\n公网访问。需要修改时，可在本地桌面模式下调用：\n\n```bash\ncurl -s -X POST http://127.0.0.1:25808/api/webui/change-password \\\n  -H \"Content-Type: application/json\" -d '{\"new_password\":\"<new>\"}'\ncurl -s -X POST http://127.0.0.1:25808/api/webui/change-username \\\n  -H \"Content-Type: application/json\" -d '{\"new_username\":\"<new>\"}'\n```\n\n这些接口只在 `tjuaecore` 的本地桌面模式可用；独立服务器模式会返回 `403`，\n应使用部署环境自己的凭据管理方式。不得在聊天或日志中回显密码。\n\n### 7. 交付并说明限制\n\n给出已验证的公网 URL，同时明确：\n\n- 打开后使用 WebUI 用户名和密码登录。\n- 地址随机且临时，Tunnel 或 WebUI 重启后会失效并变化。\n- 进程退出、电脑休眠或关机后地址不可用。\n- Quick Tunnel 适合临时分享和测试，不适合关键或长期生产服务。\n- 知道 URL 的人都能访问登录页；随机 URL 不是安全边界。\n- 流量经过 Cloudflare 边缘并在那里终止 TLS。\n- 使用结束后应停止 Tunnel，并在不再需要时关闭 WebUI。\n\n只有用户体验过临时地址并明确要求固定地址时，才说明 Named Tunnel 方案。固定\n域名需要 Cloudflare 账号和用户拥有的域名，未经明确授权不要配置。\n\n## 工作方式\n\n- 技术操作由智能体完成，用户只负责无法自动完成的桌面开关。\n- 未验证返回 `200` 前，不得承诺地址可用。\n- 在交付时主动说明临时性和安全权衡，不要等故障发生后再补充。",
+          "files": [
+            {
+              "path": "SKILL.md",
+              "size": 5272,
+              "sha256": "cd852191016434051cf659b1c79b86f74e53d00bacbad3ac2079556251587df0"
+            },
+            {
+              "path": "_meta.json",
+              "size": 432,
+              "sha256": "7d3153a6ef0c310c446383955bb2cefe1fe2e7ead637d04d99923138aa7b1cd3"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "tjuaeui-webui-setup",
       "path": "skills/tjuaeui-webui-setup",
       "name": "tjuaeui-webui-setup",
       "description": "TjuaeUI WebUI 配置专家：通过设置界面指导局域网访问、Tailscale VPN 和服务器部署。用户需要配置 WebUI、远程访问、排查连接问题或部署服务器时使用。",
-      "version": "1.0.0",
       "categories": [
         "WebUI",
         "部署"
       ],
-      "digest": "sha256-eb82ef3482614e268a7fef937e0c06acd000721ed3afc3518cb3c57d529f6990"
+      "tags": [],
+      "latestVersion": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "revision": "06dccd795b2d9e3f7cdd43e2af06c7b3f8168a6f",
+          "digest": "sha256-1a94e77e5cdb879f43b69799b6887f959735f351c6c4261508d8fdcc1fb48ce8",
+          "readme": "# TjuaeUI WebUI 配置专家\n\n你是 TjuaeUI WebUI 配置专家，可以帮助用户通过 TjuaeUI 设置界面配置 WebUI 模式，实现远程访问。\n\n## 核心能力\n\n- **三种远程连接方式**：局域网连接、Tailscale VPN、服务器部署\n- **设置界面引导**：引导用户通过 TjuaeUI 设置界面完成配置\n- **跨平台支持**：Windows、macOS、Linux、Android\n- **故障排查**：端口、防火墙、服务启动问题\n- **安全配置**：密码管理、防火墙规则、HTTPS 建议\n\n## 重要原则\n\n**所有 WebUI 配置都应通过 TjuaeUI 设置界面完成，不要使用命令行方式。**\n\n## 快速判断用户需求\n\n根据用户的问题，判断配置需求：\n\n1. **局域网访问**：同一 WiFi 的设备访问 → 引导到设置界面启用 WebUI 和远程访问\n2. **跨网络访问**：办公室访问家庭、手机使用流量 → 引导使用 Tailscale\n3. **服务器部署**：多用户、24/7 运行 → 引导服务器部署方案\n4. **故障排查**：无法访问、服务无法启动 → 参考故障排查部分\n\n## 三种远程连接方式对比\n\n| 连接方式       | 使用场景             | 难度        | 推荐度        |\n| -------------- | -------------------- | ----------- | ------------- |\n| **局域网连接** | 同一 WiFi/LAN 的设备 | ⭐ 简单     | 临时访问      |\n| **Tailscale**  | 跨网络访问           | ⭐ 非常简单 | ⭐⭐⭐ 最推荐 |\n| **服务器部署** | 多用户、24/7         | ⭐⭐ 中等   | 生产环境      |\n\n## 工作流程建议\n\n### 处理用户请求的标准流程\n\n1. **判断用户需求**：\n   - 同一 WiFi → 局域网连接\n   - 跨网络 → Tailscale\n   - 服务器部署 → systemd/LaunchAgent\n\n2. **引导用户到设置界面**：\n   - **明确告诉用户如何打开设置界面**：\n     - \"请点击 TjuaeUI 左下角的**设置图标**（齿轮图标）\"\n     - \"在设置菜单中，点击 **'WebUI'** 选项\"\n     - \"进入 WebUI 配置界面\"\n\n3. **引导配置步骤**：\n   - **第一步**：告诉用户“将 **‘启用 WebUI’** 开关切换到开启状态”。\n   - **第二步**：需要远程访问时，启用 **‘允许远程访问’**。\n   - **第三步**：等待服务启动完成，界面显示 **‘✓ 运行中’**。\n\n4. **引导获取访问信息**：\n   - 告诉用户在设置界面中可以找到：\n     - **访问地址**：本地地址和网络地址（可点击复制）\n     - **登录信息**：用户名（admin）和密码（可点击复制）\n     - **二维码登录**：如果启用了远程访问，可以使用二维码登录\n\n5. **故障排查**：\n   - 如果遇到问题，参考故障排查部分\n   - 引导用户检查设置界面中的状态提示\n\n6. **安全建议**：\n   - 提醒修改初始密码（在设置界面中操作）\n   - 建议使用 Tailscale（跨网络）\n   - 服务器部署时配置防火墙\n\n## 引导式说明模板\n\n### 打开设置界面\n\n\"请按照以下步骤打开 WebUI 设置界面：\n\n1. 在 TjuaeUI 主界面，点击左下角的**设置图标**（齿轮图标）\n2. 在设置菜单中，点击 **'WebUI'** 选项\n3. 进入 WebUI 配置界面\"\n\n### 启用 WebUI\n\n\"在 WebUI 设置界面中：\n\n1. 找到 **'启用 WebUI'** 开关\n2. 将开关切换到**开启**状态\n3. 等待几秒钟，WebUI 服务启动后，会显示 **'✓ 运行中'** 状态\"\n\n### 启用远程访问\n\n\"如果需要远程访问：\n\n1. 在 **'允许远程访问'** 选项中，将开关切换到**开启**状态\n2. 如果 WebUI 正在运行，系统会自动重启以应用新设置\"\n\n### 获取访问信息\n\n\"WebUI 启动后，在设置界面中你可以看到：\n\n1. **访问地址**：\n   - **本地访问**：`http://localhost:25808`（仅本机访问）\n   - **网络访问**：`http://<局域网IP>:25808`（如果启用了远程访问）\n   - 点击地址旁边的**复制图标**可以复制地址\n\n2. **登录信息**：\n   - **用户名**：`admin`（点击旁边的**复制图标**可以复制）\n   - **密码**：首次启动时会显示初始密码（点击旁边的**复制图标**可以复制）\n   - 如果密码已隐藏，点击密码旁边的**重置图标**可以重置密码并显示新密码\n\n3. **二维码登录**（如果启用了远程访问）：\n   - 使用手机扫描二维码，即可在手机浏览器中自动登录\n   - 二维码有效期 5 分钟，过期后点击\"刷新二维码\"\"\n\n## 重要提示\n\n- **默认端口**：25808（可通过配置文件修改）\n- **默认用户名**：admin\n- **初始密码**：首次启动时在设置界面中显示，可点击复制\n- **配置方式**：**所有配置都通过设置界面完成**，不要使用命令行\n- **安全**：远程访问时建议使用 Tailscale 或配置防火墙\n\n## 参考资源\n\n- [TjuaeUI Wiki：远程访问指南](https://github.com/liangboqiang/TjuaeUI/wiki/Remote-Internet-Access-Guide)\n- [TjuaeUI Wiki：WebUI 配置指南](https://github.com/liangboqiang/TjuaeUI/wiki/WebUI-Configuration-Guide)\n- [Tailscale 官方文档](https://tailscale.com/kb/)",
+          "files": [
+            {
+              "path": "SKILL.md",
+              "size": 5322,
+              "sha256": "5bcb4fa8760a125719940b4eb3dd8a5548e0cf97b55ae8dbfd5f04a66f034d38"
+            },
+            {
+              "path": "_meta.json",
+              "size": 425,
+              "sha256": "6fd2068d769c054994d3f01459adb1a3eb3097f074fb39eb8458e42263e2e254"
+            },
+            {
+              "path": "references/tjuaeui-webui.md",
+              "size": 14366,
+              "sha256": "8b5bf4c54ea17b1e590bfa62c4a4347faae36819421642f4db9b521890020898"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "weixin-file-send",
       "path": "skills/weixin-file-send",
       "name": "weixin-file-send",
       "description": "当用户要求把本地文件或图片发回当前聊天时使用，例如“把文件发给我”。",
-      "version": "1.0.0",
       "categories": [
         "文件",
         "消息"
       ],
-      "digest": "sha256-d4377f0b27460237e9b9669446d04af7e7a79fef7c22da91858b496a7dc367aa"
+      "tags": [],
+      "latestVersion": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "revision": "06dccd795b2d9e3f7cdd43e2af06c7b3f8168a6f",
+          "digest": "sha256-db3e5ef95a493da2b81a5b26775113270c41d772ed7a6a50db835eafcbb08fe4",
+          "readme": "# 微信文件发送\n\n在以下情况使用：\n\n- 用户要求发回文件或图片，例如：\n  - “把文件发给我”\n  - “图片发过来”\n  - “把结果传给我”\n  - \"发给我\"\n  - \"图片发过来\"\n  - \"把文件传给我\"\n- 本地文件已存在，需要发送到当前聊天。\n\n只有输出完整协议块后才能声称文件已发送；缺少协议块时，应用不会实际发送。\n\n## 协议\n\n在最终回复末尾追加一个或多个协议块：\n\n```text\n[TJUAE_CHANNEL_SEND]\n{\"type\":\"image\",\"path\":\"./output/chart.png\",\"caption\":\"Chart ready\"}\n[/TJUAE_CHANNEL_SEND]\n```\n\n```text\n[TJUAE_CHANNEL_SEND]\n{\"type\":\"file\",\"path\":\"./output/report.pdf\",\"fileName\":\"report.pdf\",\"caption\":\"Report ready\"}\n[/TJUAE_CHANNEL_SEND]\n```\n\n## 规则\n\n- `type` 只能是 `image` 或 `file`。\n- `path` 必须指向已存在的真实本地文件。\n- 文件位于 workspace 内时使用相对路径。\n- `fileName` 仅用于 `file`，可省略；`caption` 也可省略。\n- 用户明确要求发送时，应输出协议块，不能只在文字中描述文件。\n- 协议块放在用户可见回答之后。\n- JSON 不得包在 Markdown 代码围栏中。\n- 文件不存在时不得输出协议块。\n- 未输出协议块时不得声称文件已发送。\n\n## 示例\n\n带用户提示的图片：\n\n```text\n图表已经生成并发送如下。\n\n[TJUAE_CHANNEL_SEND]\n{\"type\":\"image\",\"path\":\"./output/chart.png\",\"caption\":\"销售图表\"}\n[/TJUAE_CHANNEL_SEND]\n```\n\n只发送文件：\n\n```text\n[TJUAE_CHANNEL_SEND]\n{\"type\":\"file\",\"path\":\"./output/report.pdf\",\"fileName\":\"report.pdf\",\"caption\":\"周报\"}\n[/TJUAE_CHANNEL_SEND]\n```",
+          "files": [
+            {
+              "path": "SKILL.md",
+              "size": 1785,
+              "sha256": "05592cb03cc26d0de7ef52aa3a5f5efd9d45a3a74363656ebf7c3ffc0667bed6"
+            },
+            {
+              "path": "_meta.json",
+              "size": 423,
+              "sha256": "380db17db785f84db939f776f13a5f53151d1959483e2080bb86a5644a6618d5"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "x-recruiter",
       "path": "skills/x-recruiter",
       "name": "x-recruiter",
       "description": "用于在 X (x.com) 发布招聘帖子。包含文案规范、图片生成提示和自动化发布脚本。发布 AI 相关岗位或设计类岗位时优先使用。",
-      "version": "1.0.0",
       "categories": [
         "招聘",
         "社交媒体"
       ],
-      "digest": "sha256-d102221c729563e59ca626fc6478d89b0aa422563b075469dfc8307162e28646"
+      "tags": [],
+      "latestVersion": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "revision": "06dccd795b2d9e3f7cdd43e2af06c7b3f8168a6f",
+          "digest": "sha256-d6cbcc3bd7b727552d8cc97da805770fe933b33cc1fb614a2f543858111f7e59",
+          "readme": "> **平台提示：**下列命令按 **macOS / Linux** 编写。Windows 上应使用\n> `python`（或 `py`）代替 `python3`，将 `~/…` 改为\n> `$env:USERPROFILE\\…`，并把管道、重定向和 `&&` 转换为 PowerShell 语法。\n\n# X 招聘助手\n\n本技能用于快速在 X 发布招聘信息，包含文案规则、封面/详情图提示与自动化发布脚本。\n\n## 核心工作流\n\n### 1. 信息收集\n\n向用户确认：\n\n- **岗位名称**\n- **核心职责 & 要求**\n- **投递邮箱/链接**\n\n### 2. 生成视觉素材\n\n使用 `scripts/generate_images.js` 生成图片。\n\n- **操作**：\n  ```bash\n  node scripts/generate_images.js\n  ```\n- **产出**：`cover.png`, `jd_details.png`\n\n### 3. 生成文案\n\n生成符合 X 调性的文案，控制在 280 字符内。\n\n- **规则**：参考 `assets/rules.md`。\n- **要求**：简洁、清晰、带核心职责与投递方式。\n\n### 4. 自动化发布\n\n使用 `scripts/publish_x.py` 启动浏览器进行发布。\n\n**前置要求**：\n\n- 安装 Playwright: `pip install playwright`\n- 安装浏览器驱动: `playwright install chromium`\n\n**执行命令**：\n\n```bash\npython3 scripts/publish_x.py \"post_content.txt\" \"cover.png\" \"jd_details.png\"\n```\n\n**交互流程（更清晰的步骤说明）**：\n\n1. 观察浏览器窗口：脚本已打开 X 首页或发帖页。\n2. 若出现登录页，请完成登录。\n3. 登录完成后，脚本会自动填充文案与图片。\n4. 请在浏览器中检查内容，确认无误后点击“Post”。\n\n## 资源文件\n\n- `assets/rules.md`：文案规则与限制。\n- `assets/design_philosophy.md`：视觉风格指南。\n- `scripts/generate_images.js`：图片生成脚本。\n- `scripts/publish_x.py`：发布自动化脚本。",
+          "files": [
+            {
+              "path": "SKILL.md",
+              "size": 1944,
+              "sha256": "cda19e904e1369de17b369ecea766c102453d5d459319ab6290741cee5962542"
+            },
+            {
+              "path": "_meta.json",
+              "size": 424,
+              "sha256": "ac39c1ed26acbc23b30c54ce573f3e7694d8b72213f64bb3fb906faf7db8831d"
+            },
+            {
+              "path": "assets/design_philosophy.md",
+              "size": 157,
+              "sha256": "f1f51f4eced57c78f5e836b378f89ee4b4ee6289f0b0c33a7dfbba2476422c89"
+            },
+            {
+              "path": "assets/rules.md",
+              "size": 204,
+              "sha256": "8cc878edede1aa7eea1652c2a369762f2838d4bba243fca8b3fe7c7e28d2d9f2"
+            },
+            {
+              "path": "scripts/generate_images.js",
+              "size": 426,
+              "sha256": "efee7675310d2ecbca0622d62ab36688c6eeebe80536399e52afb260caf7130d"
+            },
+            {
+              "path": "scripts/publish_x.py",
+              "size": 3204,
+              "sha256": "9462dfeb0118d226f0b139d457170cb1666b3298861843cb74bc006fa584a638"
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "xiaohongshu-recruiter",
       "path": "skills/xiaohongshu-recruiter",
       "name": "xiaohongshu-recruiter",
       "description": "用于在小红书上发布高质量的 AI 相关岗位招聘帖子。包含自动生成极客风格的招聘封面图和详情图，并提供自动化发布脚本。当用户需要发布招聘信息、寻找 Agent 设计师或其他 AI 领域人才时使用。",
-      "version": "1.0.0",
       "categories": [
         "招聘",
         "社交媒体"
       ],
-      "digest": "sha256-151340d1ae80dd89c53d375424350bcb811ae63f0a77c4ae9d6097d58a9a369c"
+      "tags": [],
+      "latestVersion": "1.0.0",
+      "versions": [
+        {
+          "version": "1.0.0",
+          "revision": "06dccd795b2d9e3f7cdd43e2af06c7b3f8168a6f",
+          "digest": "sha256-b9acfb94eeaa592bbed1f7fc341ea44e236072ec323ffe43ebd1b94d26f98ddf",
+          "readme": "> **平台提示：**下列命令按 **macOS / Linux** 编写。Windows 上应使用\n> `python`（或 `py`）代替 `python3`，将 `~/…` 改为\n> `$env:USERPROFILE\\…`，并把管道、重定向和 `&&` 转换为 PowerShell 语法。\n> 脚本本身跨平台，只有调用方式不同。\n\n# 小红书招聘助手\n\n本技能旨在帮助用户快速、专业地在小红书发布 AI 岗位的招聘信息。通过 \"Systemic Flux\" 设计理念生成符合极客审美的视觉素材，并提供 Playwright 脚本实现半自动化发布。\n\n## 核心工作流\n\n### 简化模式（默认）\n\n当用户仅给出一句话指令（如“发布一个前端开发工程师的招聘信息到小红书”）时：\n\n1. 不再向用户追问细节，由模型自行补全招聘信息与文案。\n2. 不要求用户提供邮箱或投递方式，模型自动补一个“私信联系/评论联系”的默认投递方式。\n3. 自动生成封面图与详情图，并直接进入发布流程。\n4. 自动打开浏览器，等待用户扫码登录后，自动填写图文信息并一键发布。\n\n### 1. 信息收集\n\n向用户确认（仅在用户明确要求或关键信息冲突时才询问）：\n\n- **岗位名称** (如：Agent Designer)\n- **核心职责 & 要求**\n- **投递邮箱**\n\n### 2. 生成视觉素材\n\n默认使用本地脚本 `scripts/generate_images.js` 生成图片（暂时隐藏/禁用大模型生图流程）。\n\n- **操作**：\n  ```bash\n  node scripts/generate_images.js\n  ```\n  _(注：可视情况修改脚本中的文本配置)_\n- **产出**：`cover.png`, `jd_details.png`\n\n### 3. 生成文案\n\n生成符合小红书调性的文案，保存为 `post_content.txt`。\n\n- **规则**：参考 `assets/rules.md`。\n- **标题**：<20 字。\n- **正文**：包含话题标签。\n\n### 4. 自动化发布\n\n使用 `scripts/publish_xiaohongshu.py` 启动浏览器进行发布。\n\n**前置要求**：\n\n- 安装 Playwright: `pip install playwright`\n- 安装浏览器驱动: `playwright install chromium`\n\n**执行命令**：\n\n```bash\npython3 scripts/publish_xiaohongshu.py \"你的标题\" \"post_content.txt\" \"cover.png\" \"jd_details.png\"\n```\n\n**交互流程（简化一键发布）**：\n\n1. 观察浏览器窗口：脚本已打开小红书创作者中心。\n2. 若出现登录页，请扫码登录。\n3. 登录完成后，脚本自动上传图片并填写标题与正文。\n4. 脚本自动点击“发布”完成发布；浏览器保持打开供用户确认。\n\n## 资源文件\n\n- `assets/design_philosophy.md`：视觉设计哲学。\n- `assets/rules.md`：详细操作规范和平台限制。\n- `scripts/generate_images.js`：图片生成脚本。\n- `scripts/publish_xiaohongshu.py`：发布自动化脚本。",
+          "files": [
+            {
+              "path": "SKILL.md",
+              "size": 3024,
+              "sha256": "2217ef817e3956ab1b1c5e662d348d4eb89290c5122c1790269e2027b3a7804a"
+            },
+            {
+              "path": "_meta.json",
+              "size": 434,
+              "sha256": "9086210d650950355deece1bdc37c300a7835a6d7592b5babdd56fa7ab7655f3"
+            },
+            {
+              "path": "assets/design_philosophy.md",
+              "size": 1816,
+              "sha256": "403c2ce753bfdbcf25a2a9b807053253e92812f7a57b1613b54727452f6bffb0"
+            },
+            {
+              "path": "assets/rules.md",
+              "size": 3822,
+              "sha256": "db53bd12cb631cddfb2feff7379ac60933d6ca96dbd9a638906a9ee2ba4a21bf"
+            },
+            {
+              "path": "references/api_reference.md",
+              "size": 1603,
+              "sha256": "117ea622eda8582fd4197b3134f2716f39505a460fa524062b34c9f6bc66a9a7"
+            },
+            {
+              "path": "scripts/generate_images.js",
+              "size": 8802,
+              "sha256": "0c2d1ffea68543889a759987062791626c5b1611943dda346ed57454e0e378ab"
+            },
+            {
+              "path": "scripts/publish_xiaohongshu.py",
+              "size": 15397,
+              "sha256": "33ac202b903eba7e638073e3fae90ee319abe41df4daa4a02afbcca59ad2bd0a"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
