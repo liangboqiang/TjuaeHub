@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-skill.v1.schema.json",
+  "format": "agent-skill",
+  "formatVersion": 1,
+  "id": "tjuaeui-troubleshooting",
+  "version": "1.0.0",
+  "categories": ["诊断", "运维"],
+  "tags": [],
+  "compatibility": {},
+  "requirements": [],
+  "contentHash": "sha256-855b015782f5faf8eb161e8951586b641c56569642fa56353cf69c1b317ece6c",
+  "extensions": {}
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-skill.v1.schema.json",
+  "format": "agent-skill",
+  "formatVersion": 1,
+  "id": "weixin-file-send",
+  "version": "1.0.0",
+  "categories": ["文件", "消息"],
+  "tags": [],
+  "compatibility": {},
+  "requirements": [],
+  "contentHash": "sha256-d64a65b3190fbe03477061c4b45b8fe190ced4576a544d5882bcf6a32abc38d9",
+  "extensions": {}
+}

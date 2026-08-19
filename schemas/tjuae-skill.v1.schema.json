@@ -2,16 +2,29 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-skill.v1.schema.json",
   "version": "1.0.0",
-  "title": "Tjuae 技能工作区清单 v1",
-  "description": "技能身份、版本、分类、启用偏好和可选市场来源的唯一清单。技能说明与正文由 SKILL.md 承载。",
+  "title": "Tjuae 公共技能包清单 v1",
+  "description": "仅描述可移植技能本身。用户偏好、来源、本地路径、Git 与缓存状态不属于技能包协议。",
   "type": "object",
-  "required": ["$schema", "schemaVersion", "id", "version", "categories", "enabled", "autoInject", "source"],
+  "required": [
+    "$schema",
+    "format",
+    "formatVersion",
+    "id",
+    "version",
+    "categories",
+    "tags",
+    "compatibility",
+    "requirements",
+    "contentHash",
+    "extensions"
+  ],
   "additionalProperties": false,
   "properties": {
     "$schema": {
       "const": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-skill.v1.schema.json"
     },
-    "schemaVersion": { "const": 1 },
+    "format": { "const": "agent-skill" },
+    "formatVersion": { "const": 1 },
     "id": { "$ref": "#/$defs/Slug" },
     "version": { "$ref": "#/$defs/Semver" },
     "categories": {
@@ -20,9 +33,21 @@
       "maxItems": 16,
       "items": { "type": "string", "minLength": 1, "maxLength": 64 }
     },
-    "enabled": { "type": "boolean" },
-    "autoInject": { "type": "boolean" },
-    "source": { "$ref": "#/$defs/Source" }
+    "tags": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 64,
+      "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+    },
+    "compatibility": { "type": "object" },
+    "requirements": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 64,
+      "items": { "type": "string", "minLength": 1, "maxLength": 256 }
+    },
+    "contentHash": { "$ref": "#/$defs/Digest" },
+    "extensions": { "type": "object" }
   },
   "$defs": {
     "Slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 96 },
@@ -30,28 +55,6 @@
       "type": "string",
       "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
     },
-    "Revision": { "type": "string", "pattern": "^[0-9a-f]{40}(?:[0-9a-f]{24})?$" },
-    "Source": {
-      "oneOf": [
-        {
-          "type": "object",
-          "required": ["kind"],
-          "additionalProperties": false,
-          "properties": { "kind": { "const": "local" } }
-        },
-        {
-          "type": "object",
-          "required": ["kind", "marketId", "repository", "path"],
-          "additionalProperties": false,
-          "properties": {
-            "kind": { "const": "market" },
-            "marketId": { "$ref": "#/$defs/Slug" },
-            "repository": { "type": "string", "format": "uri", "pattern": "^https://github\\.com/" },
-            "path": { "type": "string", "pattern": "^skills/[a-z0-9]+(?:-[a-z0-9]+)*$" },
-            "revision": { "$ref": "#/$defs/Revision" }
-          }
-        }
-      ]
-    }
+    "Digest": { "type": "string", "pattern": "^sha256-[0-9a-f]{64}$" }
   }
 }

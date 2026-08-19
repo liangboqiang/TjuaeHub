@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-skill.v1.schema.json",
+  "format": "agent-skill",
+  "formatVersion": 1,
+  "id": "tjuaeui-config",
+  "version": "1.0.0",
+  "categories": ["配置", "管理"],
+  "tags": [],
+  "compatibility": {},
+  "requirements": [],
+  "contentHash": "sha256-66bd73abba4e671fd2c7c3427d60a536b6bdd5f2da778f0b2d6d68fba852b35d",
+  "extensions": {}
+}

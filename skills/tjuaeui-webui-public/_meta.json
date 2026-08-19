@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-skill.v1.schema.json",
+  "format": "agent-skill",
+  "formatVersion": 1,
+  "id": "tjuaeui-webui-public",
+  "version": "1.0.0",
+  "categories": ["WebUI", "远程访问"],
+  "tags": [],
+  "compatibility": {},
+  "requirements": [],
+  "contentHash": "sha256-4402473af552d96a7bfe67d007b258622281d30ef73e73838cff0e61a6a667d2",
+  "extensions": {}
+}

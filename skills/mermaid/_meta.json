@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-skill.v1.schema.json",
+  "format": "agent-skill",
+  "formatVersion": 1,
+  "id": "mermaid",
+  "version": "1.0.0",
+  "categories": ["图表", "开发"],
+  "tags": [],
+  "compatibility": {},
+  "requirements": [],
+  "contentHash": "sha256-c8f83c445aa14dfb6b163222ff45ad2df3ff3300423c107a69ca05e0f5baae68",
+  "extensions": {}
+}

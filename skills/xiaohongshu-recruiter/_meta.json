@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-skill.v1.schema.json",
+  "format": "agent-skill",
+  "formatVersion": 1,
+  "id": "xiaohongshu-recruiter",
+  "version": "1.0.0",
+  "categories": ["招聘", "社交媒体"],
+  "tags": [],
+  "compatibility": {},
+  "requirements": [],
+  "contentHash": "sha256-e63aa128580e5e3b5d122df07b07db53c6a94dc99fdf2efa5e8db0f6a7b79bf2",
+  "extensions": {}
+}

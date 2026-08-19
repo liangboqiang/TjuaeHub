@@ -34,21 +34,67 @@
     "Digest": { "type": "string", "pattern": "^sha256-[0-9a-f]{64}$" },
     "SkillEntry": {
       "type": "object",
-      "required": ["id", "path", "name", "description", "version", "categories", "digest"],
+      "required": ["id", "path", "name", "description", "categories", "tags", "latestVersion", "versions"],
       "additionalProperties": false,
       "properties": {
         "id": { "$ref": "#/$defs/Slug" },
         "path": { "type": "string", "pattern": "^skills/[a-z0-9]+(?:-[a-z0-9]+)*$" },
         "name": { "type": "string", "minLength": 1, "maxLength": 128 },
         "description": { "type": "string", "minLength": 1, "maxLength": 4096 },
-        "version": { "type": "string", "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$" },
+        "latestVersion": { "$ref": "#/$defs/Semver" },
         "categories": {
           "type": "array",
           "uniqueItems": true,
           "maxItems": 16,
           "items": { "type": "string", "minLength": 1, "maxLength": 64 }
         },
-        "digest": { "$ref": "#/$defs/Digest" }
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 64,
+          "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+        },
+        "versions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": { "$ref": "#/$defs/SkillVersion" }
+        }
+      }
+    },
+    "Semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "SkillVersion": {
+      "type": "object",
+      "required": ["version", "revision", "digest", "readme", "files"],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "$ref": "#/$defs/Semver" },
+        "revision": { "$ref": "#/$defs/Revision" },
+        "digest": { "$ref": "#/$defs/Digest" },
+        "readme": { "type": "string", "minLength": 1, "maxLength": 524288 },
+        "files": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2000,
+          "items": {
+            "type": "object",
+            "required": ["path", "size", "sha256"],
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512,
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+              },
+              "size": { "type": "integer", "minimum": 0, "maximum": 5242880 },
+              "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+            }
+          }
+        }
       }
     }
   }

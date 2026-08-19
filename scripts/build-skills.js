@@ -1,4 +1,5 @@
 const crypto = require('node:crypto');
+const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 const Ajv2020 = require('ajv/dist/2020');
@@ -11,7 +12,7 @@ const SKILL_INDEX_SCHEMA_URL =
 const MARKET_ID = 'tjuae-hub';
 const MARKET_NAME = 'TjuaeHub';
 const REPOSITORY_URL = 'https://github.com/liangboqiang/TjuaeHub.git';
-const SKILL_MANIFEST_FILE = '.tjuae-skill.json';
+const SKILL_MANIFEST_FILE = '_meta.json';
 const SKIPPED_NAMES = new Set(['node_modules', '.git', '.DS_Store', '__MACOSX']);
 
 function comparePortable(left, right) {
@@ -54,7 +55,7 @@ function relativePosixPath(root, file) {
 function directoryDigest(skillPath, files = listFiles(skillPath)) {
   const hash = crypto.createHash('sha256');
   hash.update('tjuae-skill-workspace-v1\0');
-  for (const file of files) {
+  for (const file of files.filter((file) => path.basename(file) !== SKILL_MANIFEST_FILE)) {
     const relative = relativePosixPath(skillPath, file);
     const contents = fs.readFileSync(file);
     hash.update(relative);
@@ -63,6 +64,99 @@ function directoryDigest(skillPath, files = listFiles(skillPath)) {
     hash.update('\0');
   }
   return `sha256-${hash.digest('hex')}`;
+}
+
+function fileIndex(skillPath, files = listFiles(skillPath)) {
+  return files.map((file) => {
+    const contents = fs.readFileSync(file);
+    return {
+      path: relativePosixPath(skillPath, file),
+      size: contents.length,
+      sha256: crypto.createHash('sha256').update(contents).digest('hex'),
+    };
+  });
+}
+
+function versionFromGit(repositoryRoot, directoryName, revision) {
+  const prefix = `skills/${directoryName}`;
+  const read = (relative) =>
+    execFileSync('git', ['show', `${revision}:${prefix}/${relative}`], {
+      cwd: repositoryRoot,
+      encoding: null,
+      maxBuffer: 32 * 1024 * 1024,
+    });
+  const manifest = JSON.parse(read(SKILL_MANIFEST_FILE).toString('utf8'));
+  if (manifest.id !== directoryName) throw new Error(`${directoryName}@${revision} 的技能 ID 无效`);
+  const frontmatter = parseFrontmatter(read('SKILL.md').toString('utf8'), `${directoryName}@${revision}/SKILL.md`);
+  const names = execFileSync('git', ['ls-tree', '-r', '--name-only', revision, '--', prefix], {
+    cwd: repositoryRoot,
+    encoding: 'utf8',
+  })
+    .split(/\r?\n/u)
+    .filter(Boolean)
+    .map((name) => name.slice(prefix.length + 1))
+    .sort(comparePortable);
+  const files = names.map((name) => ({ name, contents: read(name) }));
+  const digest = crypto.createHash('sha256');
+  digest.update('tjuae-skill-workspace-v1\0');
+  for (const file of files.filter((file) => file.name !== SKILL_MANIFEST_FILE)) {
+    digest.update(file.name);
+    digest.update('\0');
+    digest.update(file.contents);
+    digest.update('\0');
+  }
+  const contentHash = `sha256-${digest.digest('hex')}`;
+  if (manifest.contentHash !== contentHash) {
+    throw new Error(`${directoryName}@${revision} 的 contentHash 与技能内容不一致`);
+  }
+  return {
+    version: manifest.version,
+    revision,
+    digest: contentHash,
+    readme: frontmatter.body,
+    files: files.map((file) => ({
+      path: file.name,
+      size: file.contents.length,
+      sha256: crypto.createHash('sha256').update(file.contents).digest('hex'),
+    })),
+  };
+}
+
+function skillVersions(repositoryRoot, row, sourceRevision) {
+  const current = {
+    version: row.manifest.version,
+    revision: sourceRevision,
+    digest: row.digest,
+    readme: row.frontmatter.body,
+    files: fileIndex(row.skillPath, row.files),
+  };
+  let revisions = [];
+  try {
+    revisions = execFileSync(
+      'git',
+      ['log', '--format=%H', '--follow', '--', `skills/${row.directoryName}/${SKILL_MANIFEST_FILE}`],
+      { cwd: repositoryRoot, encoding: 'utf8' }
+    )
+      .split(/\r?\n/u)
+      .filter(Boolean);
+  } catch {
+    // A newly-created, uncommitted package has no history yet. The current
+    // version above remains a complete deterministic index entry.
+  }
+  const versions = [current];
+  const seen = new Set([current.version]);
+  for (const revision of revisions) {
+    try {
+      const candidate = versionFromGit(repositoryRoot, row.directoryName, revision);
+      if (!seen.has(candidate.version)) {
+        seen.add(candidate.version);
+        versions.push(candidate);
+      }
+    } catch (error) {
+      if (revision === sourceRevision) throw error;
+    }
+  }
+  return versions;
 }
 
 function parseFrontmatter(source, label) {
@@ -89,7 +183,9 @@ function parseFrontmatter(source, label) {
     description = rawDescription.replace(/^(['"])(.*)\1$/u, '$2');
   }
   if (!description) throw new Error(`${label} 的 description 不能为空`);
-  return { name, description };
+  const body = source.slice(match[0].length).trim();
+  if (!body) throw new Error(`${label} 的正文不能为空`);
+  return { name, description, body };
 }
 
 function createValidator(schemaPath, expectedId) {
@@ -128,17 +224,14 @@ function validateMarketSkills(repositoryRoot) {
     if (manifest.id !== directory.name || ids.has(manifest.id)) {
       throw new Error(`${directory.name} 的技能 ID 与目录不一致或重复`);
     }
-    if (
-      manifest.source.kind !== 'market' ||
-      manifest.source.marketId !== MARKET_ID ||
-      manifest.source.repository !== REPOSITORY_URL ||
-      manifest.source.path !== `skills/${directory.name}`
-    ) {
-      throw new Error(`${directory.name} 的市场来源必须绑定自身 TjuaeHub 路径`);
-    }
     ids.add(manifest.id);
     const frontmatter = parseFrontmatter(fs.readFileSync(entryPath, 'utf8'), `${directory.name}/SKILL.md`);
-    return { directoryName: directory.name, skillPath, manifest, frontmatter };
+    const files = listFiles(skillPath);
+    const digest = directoryDigest(skillPath, files);
+    if (manifest.contentHash !== digest) {
+      throw new Error(`${directory.name} 的 contentHash 与技能内容不一致`);
+    }
+    return { directoryName: directory.name, skillPath, manifest, frontmatter, files, digest };
   });
 }
 
@@ -159,9 +252,10 @@ async function buildOfficialSkills({ repositoryRoot, distDirectory, sourceRevisi
       path: `skills/${row.directoryName}`,
       name: row.frontmatter.name,
       description: row.frontmatter.description,
-      version: row.manifest.version,
       categories: row.manifest.categories,
-      digest: directoryDigest(row.skillPath),
+      tags: row.manifest.tags,
+      latestVersion: row.manifest.version,
+      versions: skillVersions(repositoryRoot, row, sourceRevision),
     })),
   };
   const validateIndex = createValidator(
@@ -182,7 +276,9 @@ module.exports = {
   SKILL_SCHEMA_URL,
   buildOfficialSkills,
   directoryDigest,
+  fileIndex,
   parseFrontmatter,
+  skillVersions,
   validateMarketSkills,
   validateOfficialSkills,
 };

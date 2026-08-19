@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-skill.v1.schema.json",
+  "format": "agent-skill",
+  "formatVersion": 1,
+  "id": "cron",
+  "version": "1.0.0",
+  "categories": ["自动化", "效率"],
+  "tags": [],
+  "compatibility": {},
+  "requirements": [],
+  "contentHash": "sha256-4602e537e4af690b9467f9cc1bce885157df3a1b73c7a2c17c4d27937cf8b0e9",
+  "extensions": {}
+}

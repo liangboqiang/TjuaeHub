@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-skill.v1.schema.json",
+  "format": "agent-skill",
+  "formatVersion": 1,
+  "id": "pdf",
+  "version": "1.0.0",
+  "categories": ["文档", "PDF"],
+  "tags": [],
+  "compatibility": {},
+  "requirements": [],
+  "contentHash": "sha256-87c296852cb36a522e72dc03ec8637de8f71337129652520070575ede687ce2f",
+  "extensions": {}
+}

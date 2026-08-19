@@ -27,7 +27,7 @@ jobs:
       - name: 检出仓库
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: 配置 Node.js
         uses: actions/setup-node@v4
@@ -56,7 +56,7 @@ jobs:
       - name: 检出仓库
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: 配置 Node.js
         uses: actions/setup-node@v4
