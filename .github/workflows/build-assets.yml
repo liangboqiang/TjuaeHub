@@ -74,7 +74,7 @@ jobs:
       - name: 重新生成并验证待发布产物
         run: bun run verify
 
-      - name: 发布 dist 分支
+      - name: 将静态索引提交到 main
         shell: bash
         run: |
           set -euo pipefail
@@ -82,20 +82,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           MAIN_SHA=$(git rev-parse --short HEAD)
-          DIST_TMP=$(mktemp -d)
-          cp dist/skills.json "${DIST_TMP}/"
-
-          if git ls-remote --exit-code origin dist >/dev/null 2>&1; then
-            git fetch origin dist
-            git checkout -B dist FETCH_HEAD
-          else
-            git checkout --orphan dist
-          fi
-
-          git rm -rf --ignore-unmatch .
-          git clean -ffdx
-          cp "${DIST_TMP}/skills.json" .
-          git add -A
+          git add -f dist/skills.json
 
           if git diff --staged --quiet; then
             echo "分发产物没有变化。"
@@ -103,6 +90,4 @@ jobs:
           fi
 
           git commit -m "chore(dist): 基于 main@${MAIN_SHA} 构建"
-          git push origin dist
-          git tag "dist-${MAIN_SHA}"
-          git push origin "dist-${MAIN_SHA}"
+          git push origin HEAD:main

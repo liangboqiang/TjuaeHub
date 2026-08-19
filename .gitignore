@@ -503,3 +503,8 @@ dist
 
 dist/
 .vscode/
+
+# 静态市场索引随 main 分支发布；其他构建产物仍保持忽略。
+!dist/
+dist/*
+!dist/skills.json
