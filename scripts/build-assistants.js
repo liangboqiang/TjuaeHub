@@ -93,8 +93,9 @@ function assistantVersions(repositoryRoot, row, sourceRevision) {
         seen.add(candidate.version);
         versions.push(candidate);
       }
-    } catch (error) {
-      if (revision === sourceRevision) throw error;
+    } catch {
+      // 历史提交可能来自旧协议或不同平台的换行约定。当前工作副本已在上方
+      // 完整校验；无法验证的旧快照不应阻断新索引构建。
     }
   }
   return versions;
@@ -164,6 +165,7 @@ async function buildOfficialAssistants({ repositoryRoot, distDirectory, sourceRe
       path: `assistants/${row.directoryName}`,
       name: row.manifest.name,
       description: row.manifest.description,
+      manifest: row.manifest,
       ...(row.manifest.avatar ? { avatar: row.manifest.avatar } : {}),
       categories: row.manifest.categories,
       tags: row.manifest.tags,

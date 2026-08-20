@@ -92,7 +92,34 @@ JSON
 JSON
 ```
 
-读取和写入助手声明文件或规则文件：
+创建后使用结构化设置协议配置完整助手。不要直接拼接 `_meta.json`；`skills` 的数组顺序就是
+技能进入助手上下文的顺序：
+
+```bash
+"$TJUAE_HELPER_BIN" config assistants settings <<'JSON'
+{
+  "source": "mine",
+  "namespace": "",
+  "slug": "requirement-analyst",
+  "name": "需求分析助手",
+  "description": "把粗略产品想法整理为清晰 PRD",
+  "defaults": {
+    "agent": "codex",
+    "model": { "mode": "auto", "value": null },
+    "permission": { "mode": "auto", "value": null },
+    "thoughtLevel": { "mode": "auto", "value": null },
+    "skills": [
+      { "source": "tjuae-hub", "namespace": "official", "slug": "planning-with-files" }
+    ],
+    "mcps": []
+  },
+  "recommended_prompts": ["把这份需求整理成 PRD"],
+  "rules": "# 角色\n你是需求分析助手……"
+}
+JSON
+```
+
+只有查看或维护目录中的其他文本文件时，才使用文件协议：
 
 ```bash
 "$TJUAE_HELPER_BIN" config assistants file read <<'JSON'

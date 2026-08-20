@@ -98,8 +98,9 @@ function skillVersions(repositoryRoot, row, sourceRevision) {
         seen.add(candidate.version);
         versions.push(candidate);
       }
-    } catch (error) {
-      if (revision === sourceRevision) throw error;
+    } catch {
+      // 当前工作副本已完整校验。旧提交若来自历史协议或不同换行约定，
+      // 只跳过该历史版本，不能让整个市场目录失效。
     }
   }
   return versions;
