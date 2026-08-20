@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-assistant.v1.schema.json",
+  "version": "1.0.0",
+  "title": "Tjuae 公共助手包清单 v1",
+  "description": "仅描述可移植助手本身。启用状态、本机资源绑定、凭据、路径、Git 与缓存状态不属于助手包协议。",
+  "type": "object",
+  "required": [
+    "$schema",
+    "format",
+    "formatVersion",
+    "id",
+    "version",
+    "name",
+    "description",
+    "categories",
+    "tags",
+    "instructions",
+    "defaults",
+    "requirements",
+    "recommendedPrompts",
+    "contentHash",
+    "extensions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-assistant.v1.schema.json"
+    },
+    "format": { "const": "tjuae-assistant" },
+    "formatVersion": { "const": 1 },
+    "id": { "$ref": "#/$defs/Slug" },
+    "version": { "$ref": "#/$defs/Semver" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "nameI18n": { "$ref": "#/$defs/LocalizedString" },
+    "description": { "type": "string", "minLength": 1, "maxLength": 4096 },
+    "descriptionI18n": { "$ref": "#/$defs/LocalizedString" },
+    "categories": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 16,
+      "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+    },
+    "tags": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 64,
+      "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+    },
+    "avatar": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "instructions": {
+      "type": "object",
+      "required": ["default", "locales"],
+      "additionalProperties": false,
+      "properties": {
+        "default": { "$ref": "#/$defs/RelativePath" },
+        "locales": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/RelativePath" }
+        }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "required": ["agent", "model", "permission", "thoughtLevel", "skills", "mcps"],
+      "additionalProperties": false,
+      "properties": {
+        "agent": { "type": ["string", "null"], "maxLength": 128 },
+        "model": { "$ref": "#/$defs/DefaultScalar" },
+        "permission": { "$ref": "#/$defs/DefaultScalar" },
+        "thoughtLevel": { "$ref": "#/$defs/DefaultScalar" },
+        "skills": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/SkillIdentity" } },
+        "mcps": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "required": ["skills", "mcps", "models", "agents"],
+      "additionalProperties": false,
+      "properties": {
+        "skills": { "type": "array", "items": { "$ref": "#/$defs/SkillRequirement" } },
+        "mcps": { "type": "array", "items": { "$ref": "#/$defs/McpRequirement" } },
+        "models": { "type": "array", "items": { "$ref": "#/$defs/ModelRequirement" } },
+        "agents": { "type": "array", "items": { "$ref": "#/$defs/AgentRequirement" } }
+      }
+    },
+    "recommendedPrompts": {
+      "type": "array",
+      "maxItems": 32,
+      "items": { "type": "string", "minLength": 1, "maxLength": 4096 }
+    },
+    "recommendedPromptsI18n": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "maxItems": 32,
+        "items": { "type": "string", "minLength": 1, "maxLength": 4096 }
+      }
+    },
+    "contentHash": { "$ref": "#/$defs/Digest" },
+    "extensions": { "type": "object" }
+  },
+  "$defs": {
+    "Slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 96 },
+    "Semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "Digest": { "type": "string", "pattern": "^sha256-[0-9a-f]{64}$" },
+    "RelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+    },
+    "LocalizedString": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 4096 }
+    },
+    "DefaultScalar": {
+      "type": "object",
+      "required": ["mode"],
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "enum": ["auto", "fixed"] },
+        "value": { "type": ["string", "null"], "maxLength": 256 }
+      }
+    },
+    "SkillIdentity": {
+      "type": "object",
+      "required": ["source", "namespace", "slug"],
+      "additionalProperties": false,
+      "properties": {
+        "source": { "enum": ["mine", "tjuae-hub", "skillhub", "clawhub"] },
+        "namespace": { "type": "string", "maxLength": 128 },
+        "slug": { "$ref": "#/$defs/Slug" }
+      }
+    },
+    "RequirementBase": {
+      "type": "object",
+      "required": ["key", "required"],
+      "properties": {
+        "key": { "$ref": "#/$defs/Slug" },
+        "required": { "type": "boolean" }
+      }
+    },
+    "SkillRequirement": {
+      "allOf": [
+        { "$ref": "#/$defs/RequirementBase" },
+        {
+          "type": "object",
+          "required": ["identity"],
+          "properties": {
+            "identity": { "$ref": "#/$defs/SkillIdentity" },
+            "version": { "$ref": "#/$defs/Semver" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "McpRequirement": {
+      "allOf": [
+        { "$ref": "#/$defs/RequirementBase" },
+        {
+          "type": "object",
+          "properties": {
+            "preferredMcpIds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+            "versionRequirement": { "type": "string", "minLength": 1, "maxLength": 128 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "ModelRequirement": {
+      "allOf": [
+        { "$ref": "#/$defs/RequirementBase" },
+        {
+          "type": "object",
+          "properties": {
+            "preferredModelIds": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "versionRequirement": { "type": "string", "minLength": 1, "maxLength": 128 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "AgentRequirement": {
+      "allOf": [
+        { "$ref": "#/$defs/RequirementBase" },
+        {
+          "type": "object",
+          "properties": {
+            "preferredAgentIds": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "versionRequirement": { "type": "string", "minLength": 1, "maxLength": 128 }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-assistant.v1.schema.json",
+  "format": "tjuae-assistant",
+  "formatVersion": 1,
+  "id": "cowork",
+  "version": "1.0.0",
+  "name": "Cowork",
+  "nameI18n": {
+    "en-US": "Cowork",
+    "zh-CN": "Cowork",
+    "ru-RU": "Cowork",
+    "uk-UA": "Cowork"
+  },
+  "description": "具有文件操作、文档处理和多步骤工作流规划的自主任务执行助手。",
+  "descriptionI18n": {
+    "en-US": "Autonomous task execution with file operations, document processing, and multi-step workflow planning.",
+    "zh-CN": "具有文件操作、文档处理和多步骤工作流规划的自主任务执行助手。",
+    "ru-RU": "Автономный помощник для выполнения задач с работой с файлами, обработкой документов и многошаговым планированием.",
+    "uk-UA": "Автономне виконання завдань з роботою з файлами, обробкою документів та багатокроковим плануванням робочих процесів."
+  },
+  "categories": [],
+  "tags": [],
+  "avatar": "assets/avatar.jpg",
+  "instructions": {
+    "default": "ASSISTANT.md",
+    "locales": {
+      "zh-CN": "ASSISTANT.md",
+      "en-US": "rules/en-US.md",
+      "ru-RU": "rules/ru-RU.md"
+    }
+  },
+  "defaults": {
+    "agent": "tjuaecli",
+    "model": {
+      "mode": "auto",
+      "value": null
+    },
+    "permission": {
+      "mode": "auto",
+      "value": null
+    },
+    "thoughtLevel": {
+      "mode": "auto",
+      "value": null
+    },
+    "skills": [
+      {
+        "source": "tjuae-hub",
+        "namespace": "official",
+        "slug": "skill-creator"
+      },
+      {
+        "source": "tjuae-hub",
+        "namespace": "official",
+        "slug": "pdf"
+      }
+    ],
+    "mcps": []
+  },
+  "requirements": {
+    "skills": [
+      {
+        "key": "skill-1",
+        "required": true,
+        "identity": {
+          "source": "tjuae-hub",
+          "namespace": "official",
+          "slug": "skill-creator"
+        }
+      },
+      {
+        "key": "skill-2",
+        "required": true,
+        "identity": {
+          "source": "tjuae-hub",
+          "namespace": "official",
+          "slug": "pdf"
+        }
+      }
+    ],
+    "mcps": [],
+    "models": [],
+    "agents": [
+      {
+        "key": "primary-agent",
+        "required": true,
+        "preferredAgentIds": ["tjuaecli"]
+      }
+    ]
+  },
+  "recommendedPrompts": ["分析当前项目结构并建议改进方案", "自动化构建和部署流程", "提取并总结所有 PDF 文件的关键信息"],
+  "recommendedPromptsI18n": {
+    "en-US": [
+      "Analyze the current project structure and suggest improvements",
+      "Automate the build and deployment process",
+      "Extract and summarize key information from all PDF files"
+    ],
+    "zh-CN": ["分析当前项目结构并建议改进方案", "自动化构建和部署流程", "提取并总结所有 PDF 文件的关键信息"],
+    "ru-RU": [
+      "Проанализируй структуру текущего проекта и предложи улучшения",
+      "Автоматизируй процесс сборки и развёртывания",
+      "Извлеки и обобщи ключевую информацию из всех PDF-файлов"
+    ],
+    "uk-UA": [
+      "Проаналізувати структуру поточного проекту та запропонувати покращення",
+      "Автоматизувати процес збірки та розгортання",
+      "Витягти та узагальнити ключову інформацію з усіх файлів PDF"
+    ]
+  },
+  "contentHash": "sha256-f5876e51691e38cad872ab05a9b1d31dd729bf0afc75fe53752389c0075bc829",
+  "extensions": {}
+}

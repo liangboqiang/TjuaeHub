@@ -1,9 +1,15 @@
-const crypto = require('node:crypto');
 const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
-const Ajv2020 = require('ajv/dist/2020');
-const addFormats = require('ajv-formats');
+const crypto = require('node:crypto');
+
+const {
+  comparePortable,
+  createValidator,
+  directoryDigest: catalogDirectoryDigest,
+  fileIndex,
+  listFiles,
+} = require('./catalog-utils');
 
 const SKILL_SCHEMA_URL =
   'https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-skill.v1.schema.json';
@@ -13,68 +19,8 @@ const MARKET_ID = 'tjuae-hub';
 const MARKET_NAME = 'TjuaeHub';
 const REPOSITORY_URL = 'https://github.com/liangboqiang/TjuaeHub.git';
 const SKILL_MANIFEST_FILE = '_meta.json';
-const SKIPPED_NAMES = new Set(['node_modules', '.git', '.DS_Store', '__MACOSX']);
-
-function comparePortable(left, right) {
-  return left < right ? -1 : left > right ? 1 : 0;
-}
-
-function assertInside(root, target) {
-  const resolvedRoot = path.resolve(root);
-  const resolvedTarget = path.resolve(target);
-  if (resolvedTarget !== resolvedRoot && !resolvedTarget.startsWith(`${resolvedRoot}${path.sep}`)) {
-    throw new Error(`拒绝访问技能目录范围外路径：${resolvedTarget}`);
-  }
-  return resolvedTarget;
-}
-
-function listFiles(directory) {
-  const root = path.resolve(directory);
-  const files = [];
-  function walk(current) {
-    const entries = fs
-      .readdirSync(current, { withFileTypes: true })
-      .sort((left, right) => comparePortable(left.name, right.name));
-    for (const entry of entries) {
-      if (SKIPPED_NAMES.has(entry.name)) continue;
-      const fullPath = assertInside(root, path.join(current, entry.name));
-      if (entry.isSymbolicLink()) throw new Error(`市场技能禁止符号链接：${path.relative(root, fullPath)}`);
-      if (entry.isDirectory()) walk(fullPath);
-      else if (entry.isFile()) files.push(fullPath);
-      else throw new Error(`市场技能包含不支持的文件类型：${path.relative(root, fullPath)}`);
-    }
-  }
-  walk(root);
-  return files;
-}
-
-function relativePosixPath(root, file) {
-  return path.relative(root, file).split(path.sep).join('/');
-}
-
 function directoryDigest(skillPath, files = listFiles(skillPath)) {
-  const hash = crypto.createHash('sha256');
-  hash.update('tjuae-skill-workspace-v1\0');
-  for (const file of files.filter((file) => path.basename(file) !== SKILL_MANIFEST_FILE)) {
-    const relative = relativePosixPath(skillPath, file);
-    const contents = fs.readFileSync(file);
-    hash.update(relative);
-    hash.update('\0');
-    hash.update(contents);
-    hash.update('\0');
-  }
-  return `sha256-${hash.digest('hex')}`;
-}
-
-function fileIndex(skillPath, files = listFiles(skillPath)) {
-  return files.map((file) => {
-    const contents = fs.readFileSync(file);
-    return {
-      path: relativePosixPath(skillPath, file),
-      size: contents.length,
-      sha256: crypto.createHash('sha256').update(contents).digest('hex'),
-    };
-  });
+  return catalogDirectoryDigest(skillPath, SKILL_MANIFEST_FILE, 'tjuae-skill-workspace-v1', files);
 }
 
 function versionFromGit(repositoryRoot, directoryName, revision) {
@@ -188,21 +134,12 @@ function parseFrontmatter(source, label) {
   return { name, description, body };
 }
 
-function createValidator(schemaPath, expectedId) {
-  const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
-  if (schema.$id !== expectedId || schema.version !== '1.0.0') {
-    throw new Error(`技能模式身份或版本无效：${path.basename(schemaPath)}`);
-  }
-  const ajv = new Ajv2020({ allErrors: true, strict: false });
-  addFormats(ajv);
-  return ajv.compile(schema);
-}
-
 function validateMarketSkills(repositoryRoot) {
   const skillsRoot = path.join(repositoryRoot, 'skills');
   const validate = createValidator(
     path.join(repositoryRoot, 'schemas', 'tjuae-skill.v1.schema.json'),
-    SKILL_SCHEMA_URL
+    SKILL_SCHEMA_URL,
+    '技能'
   );
   const directories = fs
     .readdirSync(skillsRoot, { withFileTypes: true })
@@ -226,7 +163,7 @@ function validateMarketSkills(repositoryRoot) {
     }
     ids.add(manifest.id);
     const frontmatter = parseFrontmatter(fs.readFileSync(entryPath, 'utf8'), `${directory.name}/SKILL.md`);
-    const files = listFiles(skillPath);
+    const files = listFiles(skillPath, '技能');
     const digest = directoryDigest(skillPath, files);
     if (manifest.contentHash !== digest) {
       throw new Error(`${directory.name} 的 contentHash 与技能内容不一致`);
@@ -260,7 +197,8 @@ async function buildOfficialSkills({ repositoryRoot, distDirectory, sourceRevisi
   };
   const validateIndex = createValidator(
     path.join(repositoryRoot, 'schemas', 'skill-index.v1.schema.json'),
-    SKILL_INDEX_SCHEMA_URL
+    SKILL_INDEX_SCHEMA_URL,
+    '技能索引'
   );
   if (!validateIndex(index)) throw new Error(`市场技能索引未通过模式：${JSON.stringify(validateIndex.errors)}`);
   const indexBytes = Buffer.from(`${JSON.stringify(index, null, 2)}\n`);

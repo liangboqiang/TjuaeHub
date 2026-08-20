@@ -2,6 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
 
+const { buildOfficialAssistants } = require('../../scripts/build-assistants');
 const { buildOfficialSkills } = require('../../scripts/build-skills');
 
 function resolveSourceRevision(repositoryRoot) {
@@ -16,13 +17,17 @@ async function buildRepository({ repositoryRoot, sourceRevision = resolveSourceR
   const distDirectory = path.join(repositoryRoot, 'dist');
   fs.rmSync(distDirectory, { recursive: true, force: true });
   fs.mkdirSync(distDirectory, { recursive: true });
-  return buildOfficialSkills({ repositoryRoot, distDirectory, sourceRevision });
+  const [skills, assistants] = await Promise.all([
+    buildOfficialSkills({ repositoryRoot, distDirectory, sourceRevision }),
+    buildOfficialAssistants({ repositoryRoot, distDirectory, sourceRevision }),
+  ]);
+  return { ...skills, ...assistants };
 }
 
 async function main() {
   const repositoryRoot = path.resolve(__dirname, '..', '..');
   const result = await buildRepository({ repositoryRoot });
-  console.log(`已生成 ${result.skillCount} 个技能的静态市场索引。`);
+  console.log(`已生成 ${result.skillCount} 个技能和 ${result.assistantCount} 个助手的静态市场索引。`);
 }
 
 if (require.main === module) {

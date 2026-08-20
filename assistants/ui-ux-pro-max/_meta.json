@@ -1,0 +1,86 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-assistant.v1.schema.json",
+  "format": "tjuae-assistant",
+  "formatVersion": 1,
+  "id": "ui-ux-pro-max",
+  "version": "1.0.0",
+  "name": "UI/UX 专业设计师",
+  "nameI18n": {
+    "en-US": "UI/UX Pro Max",
+    "zh-CN": "UI/UX 专业设计师",
+    "ru-RU": "UI/UX Pro Max",
+    "uk-UA": "UI/UX Pro Max"
+  },
+  "description": "专业 UI/UX 设计智能助手，包含 57 种风格、95 个配色方案、56 个字体配对及技术栈最佳实践。",
+  "descriptionI18n": {
+    "en-US": "Professional UI/UX design intelligence with 57 styles, 95 color palettes, 56 font pairings, and stack-specific best practices.",
+    "zh-CN": "专业 UI/UX 设计智能助手，包含 57 种风格、95 个配色方案、56 个字体配对及技术栈最佳实践。",
+    "ru-RU": "Профессиональный UI/UX-помощник с 57 стилями, 95 цветовыми палитрами, 56 сочетаниями шрифтов и лучшими практиками для разных стеков.",
+    "uk-UA": "Професійний UI/UX-помічник з 57 стилями, 95 кольоровими палітрами, 56 поєднаннями шрифтів та найкращими практиками для різних технологій."
+  },
+  "categories": [],
+  "tags": [],
+  "avatar": "assets/avatar.jpg",
+  "instructions": {
+    "default": "ASSISTANT.md",
+    "locales": {
+      "zh-CN": "ASSISTANT.md",
+      "en-US": "rules/en-US.md",
+      "ru-RU": "rules/ru-RU.md"
+    }
+  },
+  "defaults": {
+    "agent": "tjuaecli",
+    "model": {
+      "mode": "auto",
+      "value": null
+    },
+    "permission": {
+      "mode": "auto",
+      "value": null
+    },
+    "thoughtLevel": {
+      "mode": "auto",
+      "value": null
+    },
+    "skills": [],
+    "mcps": []
+  },
+  "requirements": {
+    "skills": [],
+    "mcps": [],
+    "models": [],
+    "agents": [
+      {
+        "key": "primary-agent",
+        "required": true,
+        "preferredAgentIds": ["tjuaecli"]
+      }
+    ]
+  },
+  "recommendedPrompts": [
+    "为金融科技移动应用设计现代登录页",
+    "创建自然主题网站的配色方案",
+    "为 SaaS 产品设计仪表板界面"
+  ],
+  "recommendedPromptsI18n": {
+    "en-US": [
+      "Design a modern login page for a fintech mobile app",
+      "Create a color palette for a nature-themed website",
+      "Design a dashboard interface for a SaaS product"
+    ],
+    "zh-CN": ["为金融科技移动应用设计现代登录页", "创建自然主题网站的配色方案", "为 SaaS 产品设计仪表板界面"],
+    "ru-RU": [
+      "Разработай современную страницу входа для мобильного финтех-приложения",
+      "Создай цветовую палитру для сайта в природной тематике",
+      "Спроектируй интерфейс дашборда для SaaS-продукта"
+    ],
+    "uk-UA": [
+      "Спроектувати сучасну сторінку входу для мобільного фінтех-додатку",
+      "Створити кольорову палітру для сайту на природну тематику",
+      "Розробити інтерфейс дашборду для SaaS-продукту"
+    ]
+  },
+  "contentHash": "sha256-64cbe1b1f1286abee623465976d6c75593d4e18bc9afbc2138ae9066d78de21b",
+  "extensions": {}
+}

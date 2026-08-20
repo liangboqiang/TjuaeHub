@@ -1,0 +1,86 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-assistant.v1.schema.json",
+  "format": "tjuae-assistant",
+  "formatVersion": 1,
+  "id": "game-3d",
+  "version": "1.0.0",
+  "name": "3D 游戏生成",
+  "nameI18n": {
+    "en-US": "3D Game",
+    "zh-CN": "3D 游戏生成",
+    "ru-RU": "Генератор 3D-игр",
+    "uk-UA": "Генератор 3D-ігор"
+  },
+  "description": "用单个 HTML 文件生成完整的 3D 平台收集游戏。",
+  "descriptionI18n": {
+    "en-US": "Generate a complete 3D platform collection game in one HTML file.",
+    "zh-CN": "用单个 HTML 文件生成完整的 3D 平台收集游戏。",
+    "ru-RU": "Генерирует полноценную 3D-игру-платформер со сбором предметов в одном HTML-файле.",
+    "uk-UA": "Генеруйте повноцінну 3D-гру-платформер зі збором предметів в одному HTML-файлі."
+  },
+  "categories": [],
+  "tags": [],
+  "avatar": "assets/avatar.jpg",
+  "instructions": {
+    "default": "ASSISTANT.md",
+    "locales": {
+      "zh-CN": "ASSISTANT.md",
+      "en-US": "rules/en-US.md",
+      "ru-RU": "rules/ru-RU.md"
+    }
+  },
+  "defaults": {
+    "agent": "tjuaecli",
+    "model": {
+      "mode": "auto",
+      "value": null
+    },
+    "permission": {
+      "mode": "auto",
+      "value": null
+    },
+    "thoughtLevel": {
+      "mode": "auto",
+      "value": null
+    },
+    "skills": [],
+    "mcps": []
+  },
+  "requirements": {
+    "skills": [],
+    "mcps": [],
+    "models": [],
+    "agents": [
+      {
+        "key": "primary-agent",
+        "required": true,
+        "preferredAgentIds": ["tjuaecli"]
+      }
+    ]
+  },
+  "recommendedPrompts": [
+    "创建一个带跳跃机制的 3D 平台游戏",
+    "制作一个带障碍物的金币收集游戏",
+    "构建一个 3D 迷宫探索游戏"
+  ],
+  "recommendedPromptsI18n": {
+    "en-US": [
+      "Create a 3D platformer game with jumping mechanics",
+      "Make a coin collection game with obstacles",
+      "Build a 3D maze exploration game"
+    ],
+    "zh-CN": ["创建一个带跳跃机制的 3D 平台游戏", "制作一个带障碍物的金币收集游戏", "构建一个 3D 迷宫探索游戏"],
+    "ru-RU": [
+      "Создай 3D-платформер с механикой прыжков",
+      "Сделай игру со сбором монет и препятствиями",
+      "Построй 3D-игру с исследованием лабиринта"
+    ],
+    "uk-UA": [
+      "Створити 3D-платформер з механікою стрибків",
+      "Зробити гру зі збором монет та перешкодами",
+      "Побудувати 3D-гру з дослідженням лабіринту"
+    ]
+  },
+  "contentHash": "sha256-3d4fc8da9e4abc259941bff44bb6e07a333bc228abec06d0c3bf4c6cc3674716",
+  "extensions": {}
+}

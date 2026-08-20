@@ -1,0 +1,120 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-assistant.v1.schema.json",
+  "format": "tjuae-assistant",
+  "formatVersion": 1,
+  "id": "social-job-publisher",
+  "version": "1.0.0",
+  "name": "社交招聘发布助手",
+  "nameI18n": {
+    "en-US": "Social Job Publisher",
+    "zh-CN": "社交招聘发布助手",
+    "ru-RU": "Публикатор вакансий в соцсетях",
+    "uk-UA": "Публікатор вакансій"
+  },
+  "description": "扩写招聘需求为完整 JD 与图片，并通过 connector 发布到社交平台。",
+  "descriptionI18n": {
+    "en-US": "Expand hiring requests into a full JD, images, and publish to social platforms via connectors.",
+    "zh-CN": "扩写招聘需求为完整 JD 与图片，并通过 connector 发布到社交平台。",
+    "ru-RU": "Разворачивает запрос на найм в полноценное описание вакансии и изображения, а затем публикует это в соцсетях через коннекторы.",
+    "uk-UA": "Розгортає запит на найм у повноцінний опис вакансії та зображення, а потім публікує це в соцмережах через конектори."
+  },
+  "categories": [],
+  "tags": [],
+  "avatar": "assets/avatar.jpg",
+  "instructions": {
+    "default": "ASSISTANT.md",
+    "locales": {
+      "zh-CN": "ASSISTANT.md",
+      "en-US": "rules/en-US.md",
+      "ru-RU": "rules/ru-RU.md"
+    }
+  },
+  "defaults": {
+    "agent": "tjuaecli",
+    "model": {
+      "mode": "auto",
+      "value": null
+    },
+    "permission": {
+      "mode": "auto",
+      "value": null
+    },
+    "thoughtLevel": {
+      "mode": "auto",
+      "value": null
+    },
+    "skills": [
+      {
+        "source": "tjuae-hub",
+        "namespace": "official",
+        "slug": "xiaohongshu-recruiter"
+      },
+      {
+        "source": "tjuae-hub",
+        "namespace": "official",
+        "slug": "x-recruiter"
+      }
+    ],
+    "mcps": []
+  },
+  "requirements": {
+    "skills": [
+      {
+        "key": "skill-1",
+        "required": true,
+        "identity": {
+          "source": "tjuae-hub",
+          "namespace": "official",
+          "slug": "xiaohongshu-recruiter"
+        }
+      },
+      {
+        "key": "skill-2",
+        "required": true,
+        "identity": {
+          "source": "tjuae-hub",
+          "namespace": "official",
+          "slug": "x-recruiter"
+        }
+      }
+    ],
+    "mcps": [],
+    "models": [],
+    "agents": [
+      {
+        "key": "primary-agent",
+        "required": true,
+        "preferredAgentIds": ["tjuaecli"]
+      }
+    ]
+  },
+  "recommendedPrompts": [
+    "创建一份高级全栈工程师的完整招聘启事",
+    "起草一条适合社交媒体的招聘推文",
+    "创建多平台职位发布（LinkedIn、X、小红书）"
+  ],
+  "recommendedPromptsI18n": {
+    "en-US": [
+      "Create a comprehensive job post for Senior Full-Stack Engineer",
+      "Draft an engaging hiring tweet for social media",
+      "Create a multi-platform job posting (LinkedIn, X, Redbook)"
+    ],
+    "zh-CN": [
+      "创建一份高级全栈工程师的完整招聘启事",
+      "起草一条适合社交媒体的招聘推文",
+      "创建多平台职位发布（LinkedIn、X、小红书）"
+    ],
+    "ru-RU": [
+      "Создай развёрнутую вакансию на позицию Senior Full-Stack Engineer",
+      "Составь привлекательный твит о найме для соцсетей",
+      "Создай публикацию вакансии для нескольких платформ (LinkedIn, X, Xiaohongshu)"
+    ],
+    "uk-UA": [
+      "Створити повний опис вакансії Senior Full-Stack інженера",
+      "Написати цікавий пост про найм для соцмереж",
+      "Створити пост про вакансію для кількох платформ (LinkedIn, X)"
+    ]
+  },
+  "contentHash": "sha256-05e9607439af59e726a2db788ea86d755cfec611e76d3c9416a0d8f7aff926f4",
+  "extensions": {}
+}

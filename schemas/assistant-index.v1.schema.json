@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/assistant-index.v1.schema.json",
+  "version": "1.0.0",
+  "title": "Tjuae 助手静态市场索引 v1",
+  "type": "object",
+  "required": ["$schema", "schemaVersion", "market", "repository", "revision", "assistants"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "const": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/assistant-index.v1.schema.json"
+    },
+    "schemaVersion": { "const": 1 },
+    "market": {
+      "type": "object",
+      "required": ["id", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/Slug" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 }
+      }
+    },
+    "repository": { "type": "string", "format": "uri", "pattern": "^https://github\\.com/" },
+    "revision": { "$ref": "#/$defs/Revision" },
+    "assistants": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/AssistantEntry" }
+    }
+  },
+  "$defs": {
+    "Slug": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 96 },
+    "Revision": { "type": "string", "pattern": "^[0-9a-f]{40}(?:[0-9a-f]{24})?$" },
+    "Digest": { "type": "string", "pattern": "^sha256-[0-9a-f]{64}$" },
+    "Semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[A-Za-z-][0-9A-Za-z-]*))*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+    },
+    "AssistantEntry": {
+      "type": "object",
+      "required": ["id", "path", "name", "description", "categories", "tags", "latestVersion", "versions"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/Slug" },
+        "path": { "type": "string", "pattern": "^assistants/[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "avatar": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "latestVersion": { "$ref": "#/$defs/Semver" },
+        "categories": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 16,
+          "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+        },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 64,
+          "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+        },
+        "versions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "items": { "$ref": "#/$defs/AssistantVersion" }
+        }
+      }
+    },
+    "AssistantVersion": {
+      "type": "object",
+      "required": ["version", "revision", "digest", "readme", "files"],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "$ref": "#/$defs/Semver" },
+        "revision": { "$ref": "#/$defs/Revision" },
+        "digest": { "$ref": "#/$defs/Digest" },
+        "readme": { "type": "string", "minLength": 1, "maxLength": 524288 },
+        "files": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2000,
+          "items": {
+            "type": "object",
+            "required": ["path", "size", "sha256"],
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512,
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+              },
+              "size": { "type": "integer", "minimum": 0, "maximum": 5242880 },
+              "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

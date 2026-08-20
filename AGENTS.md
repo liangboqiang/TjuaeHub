@@ -1,14 +1,17 @@
 # TjuaeHub 协作规范
 
-TjuaeHub 只负责静态技能市场：`skills/<slug>` 是源码，`dist/skills.json` 是唯一分发产物。
+TjuaeHub 只负责静态官方资源市场：`skills/<slug>` 与 `assistants/<slug>` 是源码，
+`dist/skills.json` 与 `dist/assistants.json` 是唯一分发产物。
 
 ## 必须遵守
 
 - 不增加 CLI、引擎、MCP、插件或安装器分发。
-- 不增加 ZIP、离线种子、安装脚本或生命周期钩子。
+- 不增加 ZIP、离线种子、安装脚本或生命周期钩子；桌面安装包需要的只读快照由 TjuaeUI 构建流程生成。
 - 不为第三方市场编写专用适配器；同版索引直接兼容，其他来源走 Git 克隆或文件夹导入。
 - 不增加旧协议别名、回退解析、双读或双写。
-- 不手工编辑 `dist/skills.json`。
+- 不手工编辑 `dist/skills.json` 或 `dist/assistants.json`。
+- 助手公共包不得包含启用状态、本机资源 ID、路径、密钥、令牌、Header、环境变量或第三方 CLI 安装命令。
+- 助手依赖必须区分推荐默认值和必需条件；技能、MCP、模型与智能体要求按独立类型声明。
 - 相对路径必须使用正斜杠，拒绝绝对路径、UNC、盘符、反斜杠、空路径段和 `..`。
 - 面向用户的说明和错误使用简体中文；协议字段和第三方专名保持原样。
 
@@ -18,6 +21,6 @@ TjuaeHub 只负责静态技能市场：`skills/<slug>` 是源码，`dist/skills.
 bun run verify
 ```
 
-该命令必须验证技能 Schema、静态索引确定性和 dist 只有 `skills.json`。
+该命令必须验证技能/助手 Schema、静态索引确定性和 dist 只有两个正式索引文件。
 
 未经用户明确授权不得暂存、提交或推送。

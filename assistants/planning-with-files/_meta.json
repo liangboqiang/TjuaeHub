@@ -1,0 +1,86 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-assistant.v1.schema.json",
+  "format": "tjuae-assistant",
+  "formatVersion": 1,
+  "id": "planning-with-files",
+  "version": "1.0.0",
+  "name": "文件规划助手",
+  "nameI18n": {
+    "en-US": "Planning with Files",
+    "zh-CN": "文件规划助手",
+    "ru-RU": "Планирование с файлами",
+    "uk-UA": "Планування з файлами"
+  },
+  "description": "Manus 风格的文件规划，用于复杂任务。使用 task_plan.md、findings.md 和 progress.md 维护持久化上下文。",
+  "descriptionI18n": {
+    "en-US": "Manus-style file-based planning for complex tasks. Uses task_plan.md, findings.md, and progress.md to maintain persistent context.",
+    "zh-CN": "Manus 风格的文件规划，用于复杂任务。使用 task_plan.md、findings.md 和 progress.md 维护持久化上下文。",
+    "ru-RU": "Файловое планирование в стиле Manus для сложных задач. Использует task_plan.md, findings.md и progress.md для сохранения устойчивого контекста.",
+    "uk-UA": "Файлове планування в стилі Manus для складних завдань. Використовує task_plan.md, findings.md та progress.md для збереження контексту."
+  },
+  "categories": [],
+  "tags": [],
+  "avatar": "assets/avatar.jpg",
+  "instructions": {
+    "default": "ASSISTANT.md",
+    "locales": {
+      "zh-CN": "ASSISTANT.md",
+      "en-US": "rules/en-US.md",
+      "ru-RU": "rules/ru-RU.md"
+    }
+  },
+  "defaults": {
+    "agent": "tjuaecli",
+    "model": {
+      "mode": "auto",
+      "value": null
+    },
+    "permission": {
+      "mode": "auto",
+      "value": null
+    },
+    "thoughtLevel": {
+      "mode": "auto",
+      "value": null
+    },
+    "skills": [],
+    "mcps": []
+  },
+  "requirements": {
+    "skills": [],
+    "mcps": [],
+    "models": [],
+    "agents": [
+      {
+        "key": "primary-agent",
+        "required": true,
+        "preferredAgentIds": ["tjuaecli"]
+      }
+    ]
+  },
+  "recommendedPrompts": [
+    "规划一个包含里程碑的全面重构任务",
+    "将功能实现拆分为可执行的步骤",
+    "创建迁移到新框架的项目计划"
+  ],
+  "recommendedPromptsI18n": {
+    "en-US": [
+      "Plan a comprehensive refactoring task with milestones",
+      "Break down the feature implementation into actionable steps",
+      "Create a project plan for migrating to a new framework"
+    ],
+    "zh-CN": ["规划一个包含里程碑的全面重构任务", "将功能实现拆分为可执行的步骤", "创建迁移到新框架的项目计划"],
+    "ru-RU": [
+      "Спланируй комплексную задачу рефакторинга с вехами",
+      "Разбей реализацию функции на конкретные шаги",
+      "Создай план проекта по миграции на новый фреймворк"
+    ],
+    "uk-UA": [
+      "Спланувати повний рефакториринг з контрольними точками",
+      "Розбити реалізацію функції на конкретні кроки",
+      "Створити план міграції на новий фреймворк"
+    ]
+  },
+  "contentHash": "sha256-74a1ad3e7f851e05fd30c6e8289e5fcdaae3b32466de4ac96e56469b7fa14e74",
+  "extensions": {}
+}

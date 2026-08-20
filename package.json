@@ -2,7 +2,7 @@
   "name": "@tjuae/hub",
   "version": "0.2.0",
   "private": true,
-  "description": "Tjuae 官方技能的静态 Git 市场索引",
+  "description": "Tjuae 官方技能与助手的静态 Git 市场索引",
   "author": {
     "name": "Tjuae"
   },
@@ -17,10 +17,11 @@
   "scripts": {
     "build": "node .github/scripts/build-assets.js",
     "check:build": "node scripts/quality/check-build.js",
+    "check:assistants": "node scripts/quality/check-assistants.js",
     "check:skills": "node scripts/quality/check-skills.js",
-    "format": "prettier --write \".github/**/*.{js,yml}\" \"AGENTS.md\" \"README.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"skills/**/*.json\"",
-    "format:check": "prettier --check \".github/**/*.{js,yml}\" \"AGENTS.md\" \"README.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"skills/**/*.json\"",
-    "test": "bun run check:skills && bun run build && bun run check:build",
+    "format": "prettier --write \".github/**/*.{js,yml}\" \"AGENTS.md\" \"README.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"skills/**/*.json\" \"assistants/**/*.json\"",
+    "format:check": "prettier --check \".github/**/*.{js,yml}\" \"AGENTS.md\" \"README.md\" \"package.json\" \"schemas/**/*.{json,md}\" \"scripts/**/*.js\" \"skills/**/*.json\" \"assistants/**/*.json\"",
+    "test": "bun run check:skills && bun run check:assistants && bun run build && bun run check:build",
     "verify": "bun run format:check && bun run test"
   },
   "dependencies": {},

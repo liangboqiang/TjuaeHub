@@ -1,0 +1,90 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-assistant.v1.schema.json",
+  "format": "tjuae-assistant",
+  "formatVersion": 1,
+  "id": "financial-model-creator",
+  "version": "1.0.0",
+  "name": "财务建模助手",
+  "nameI18n": {
+    "en-US": "Financial Model Creator",
+    "zh-CN": "财务建模助手",
+    "ru-RU": "Создатель финансовых моделей",
+    "uk-UA": "Фінансовий моделіст"
+  },
+  "description": "根据文本描述构建公式驱动的财务模型：三表联动、DCF 估值、股权表、情景分析、敏感性分析和债务计划。所有数值通过公式链从假设条件层层推导。",
+  "descriptionI18n": {
+    "en-US": "Build formula-driven financial models from text prompts: 3-statement models, DCF valuations, cap tables, scenario analyses, sensitivity tables, and debt schedules. All values flow from assumptions through interconnected formula chains.",
+    "zh-CN": "根据文本描述构建公式驱动的财务模型：三表联动、DCF 估值、股权表、情景分析、敏感性分析和债务计划。所有数值通过公式链从假设条件层层推导。",
+    "ru-RU": "Строит финансовые модели на основе текстового запроса: три финансовые формы, DCF-оценка, cap table, сценарный анализ, таблицы чувствительности и долговые графики. Все значения выводятся через связные формульные цепочки от исходных предположений.",
+    "uk-UA": "Будуйте фінансові моделі на основі формул за текстовим запитом: три фінансові форми, DCF-оцінка, Cap Tables, сценарний аналіз та графіки боргів."
+  },
+  "categories": [],
+  "tags": [],
+  "avatar": "assets/avatar.jpg",
+  "instructions": {
+    "default": "ASSISTANT.md",
+    "locales": {
+      "zh-CN": "ASSISTANT.md",
+      "en-US": "rules/en-US.md",
+      "ru-RU": "rules/ru-RU.md"
+    }
+  },
+  "defaults": {
+    "agent": "tjuaecli",
+    "model": {
+      "mode": "auto",
+      "value": null
+    },
+    "permission": {
+      "mode": "auto",
+      "value": null
+    },
+    "thoughtLevel": {
+      "mode": "auto",
+      "value": null
+    },
+    "skills": [],
+    "mcps": []
+  },
+  "requirements": {
+    "skills": [],
+    "mcps": [],
+    "models": [],
+    "agents": [
+      {
+        "key": "primary-agent",
+        "required": true,
+        "preferredAgentIds": ["tjuaecli"]
+      }
+    ]
+  },
+  "recommendedPrompts": [
+    "搭建一个 3 年期 SaaS 财务模型，包含利润表、资产负债表、现金流量表和看板图表",
+    "为制造业公司创建 DCF 估值模型，包含 WACC 计算和敏感性分析表",
+    "搭建股权表，包含种子轮和 A 轮融资、清算优先权和退出瀑布分析"
+  ],
+  "recommendedPromptsI18n": {
+    "en-US": [
+      "Build a 3-year SaaS financial model with income statement, balance sheet, cash flow, and dashboard charts",
+      "Create a DCF valuation for a manufacturing company with WACC calculation and sensitivity table",
+      "Build a cap table with seed and Series A rounds, liquidation preferences, and exit waterfall analysis"
+    ],
+    "zh-CN": [
+      "搭建一个 3 年期 SaaS 财务模型，包含利润表、资产负债表、现金流量表和看板图表",
+      "为制造业公司创建 DCF 估值模型，包含 WACC 计算和敏感性分析表",
+      "搭建股权表，包含种子轮和 A 轮融资、清算优先权和退出瀑布分析"
+    ],
+    "ru-RU": [
+      "Построй трёхлетнюю финансовую модель для SaaS с отчётом о прибылях и убытках, балансом, отчётом о движении денежных средств и графиками дашборда",
+      "Создай DCF-оценку для производственной компании с расчётом WACC и таблицей чувствительности",
+      "Построй cap table с раундами seed и Series A, ликвидационными преференциями и каскадным анализом выхода"
+    ],
+    "uk-UA": [
+      "Побудувати 3-річну фінансову модель SaaS зі звітом про прибутки, балансом та графіками",
+      "Створити оцінку DCF для виробничої компанії з розрахунком WACC та таблицею чутливості",
+      "Побудувати Cap Table з раундами Seed та раундом A, преференціями ліквідації"
+    ]
+  },
+  "contentHash": "sha256-b0bda3a2cb15790935d463bd52fcb8f4dd1bb68eba432490bb489eb2cfd41c34",
+  "extensions": {}
+}

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-assistant.v1.schema.json",
+  "format": "tjuae-assistant",
+  "formatVersion": 1,
+  "id": "human-3-coach",
+  "version": "1.0.0",
+  "name": "HUMAN 3.0 教练",
+  "nameI18n": {
+    "en-US": "HUMAN 3.0 Coach",
+    "zh-CN": "HUMAN 3.0 教练",
+    "ru-RU": "Коуч HUMAN 3.0",
+    "uk-UA": "Коуч HUMAN 3.0"
+  },
+  "description": "基于 HUMAN 3.0 框架的个人发展教练：4 象限（思维/身体/精神/职业）、3 层次、3 成长阶段。",
+  "descriptionI18n": {
+    "en-US": "Personal development coach based on HUMAN 3.0 framework: 4 Quadrants (Mind/Body/Spirit/Vocation), 3 Levels, 3 Growth Phases.",
+    "zh-CN": "基于 HUMAN 3.0 框架的个人发展教练：4 象限（思维/身体/精神/职业）、3 层次、3 成长阶段。",
+    "ru-RU": "Коуч по личному развитию на основе фреймворка HUMAN 3.0: 4 квадранта (ум, тело, дух, призвание), 3 уровня и 3 фазы роста.",
+    "uk-UA": "Коуч з особистого розвитку на основі фреймворка HUMAN 3.0: 4 квадранти (Розум/Тіло/Дух/Призвання), 3 рівні та 3 фази росту."
+  },
+  "categories": [],
+  "tags": [],
+  "avatar": "assets/avatar.jpg",
+  "instructions": {
+    "default": "ASSISTANT.md",
+    "locales": {
+      "zh-CN": "ASSISTANT.md",
+      "en-US": "rules/en-US.md",
+      "ru-RU": "rules/ru-RU.md"
+    }
+  },
+  "defaults": {
+    "agent": "tjuaecli",
+    "model": {
+      "mode": "auto",
+      "value": null
+    },
+    "permission": {
+      "mode": "auto",
+      "value": null
+    },
+    "thoughtLevel": {
+      "mode": "auto",
+      "value": null
+    },
+    "skills": [],
+    "mcps": []
+  },
+  "requirements": {
+    "skills": [],
+    "mcps": [],
+    "models": [],
+    "agents": [
+      {
+        "key": "primary-agent",
+        "required": true,
+        "preferredAgentIds": ["tjuaecli"]
+      }
+    ]
+  },
+  "recommendedPrompts": [
+    "帮我设定涵盖所有生活象限的季度目标",
+    "反思我的职业发展进度并规划下一步",
+    "为未来 3 个月创建个人发展计划"
+  ],
+  "recommendedPromptsI18n": {
+    "en-US": [
+      "Help me set quarterly goals across all life quadrants",
+      "Reflect on my career progress and plan next steps",
+      "Create a personal development plan for the next 3 months"
+    ],
+    "zh-CN": [
+      "帮我设定涵盖所有生活象限的季度目标",
+      "反思我的职业发展进度并规划下一步",
+      "为未来 3 个月创建个人发展计划"
+    ],
+    "ru-RU": [
+      "Помоги мне поставить квартальные цели по всем сферам жизни",
+      "Проанализируй мой карьерный прогресс и спланируй следующие шаги",
+      "Создай план личного развития на ближайшие 3 месяца"
+    ],
+    "uk-UA": [
+      "Допоможи мені встановити квартальні цілі в усіх сферах життя",
+      "Проаналізувати мій кар'єрний шлях та спланувати наступні кроки",
+      "Створити план особистого розвитку на наступні 3 місяці"
+    ]
+  },
+  "contentHash": "sha256-cf6b86377ace58d4fcfe184152bde9107349cb6d3ae57f9d27e6968a37c8035a",
+  "extensions": {}
+}
