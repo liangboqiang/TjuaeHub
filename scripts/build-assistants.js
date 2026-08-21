@@ -3,7 +3,7 @@ const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const { comparePortable, createValidator, directoryDigest, fileIndex, listFiles } = require('./catalog-utils');
+const { comparePortable, createValidator, directoryDigest, listFiles } = require('./catalog-utils');
 
 const ASSISTANT_SCHEMA_URL =
   'https://raw.githubusercontent.com/liangboqiang/TjuaeHub/main/schemas/tjuae-assistant.v1.schema.json';
@@ -65,13 +65,10 @@ function readVersionFromGit(repositoryRoot, directoryName, revision) {
 }
 
 function assistantVersions(repositoryRoot, row, sourceRevision) {
-  const current = {
-    version: row.manifest.version,
-    revision: sourceRevision,
-    digest: row.digest,
-    readme: fs.readFileSync(path.join(row.assistantPath, row.manifest.instructions.default), 'utf8').trim(),
-    files: fileIndex(row.assistantPath, row.files),
-  };
+  const current = readVersionFromGit(repositoryRoot, row.directoryName, sourceRevision);
+  if (current.version !== row.manifest.version) {
+    throw new Error(`${row.directoryName} 的工作副本版本尚未提交到源修订 ${sourceRevision}`);
+  }
   let revisions = [];
   try {
     revisions = execFileSync(
@@ -101,7 +98,10 @@ function assistantVersions(repositoryRoot, row, sourceRevision) {
   return versions;
 }
 
-function validateOfficialAssistants(repositoryRoot) {
+function validateOfficialAssistants(
+  repositoryRoot,
+  sourceRevision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repositoryRoot, encoding: 'utf8' }).trim()
+) {
   const assistantsRoot = path.join(repositoryRoot, 'assistants');
   const validate = createValidator(
     path.join(repositoryRoot, 'schemas', 'tjuae-assistant.v1.schema.json'),
@@ -144,16 +144,16 @@ function validateOfficialAssistants(repositoryRoot) {
     ) {
       throw new Error(`${directory.name} 的头像文件不存在：${manifest.avatar}`);
     }
-    const digest = assistantDigest(assistantPath, files);
-    if (manifest.contentHash !== digest) {
-      throw new Error(`${directory.name} 的 contentHash 与助手内容不一致`);
+    const committed = readVersionFromGit(repositoryRoot, directory.name, sourceRevision);
+    if (manifest.version !== committed.version || manifest.contentHash !== committed.digest) {
+      throw new Error(`${directory.name} 的工作副本清单尚未提交到源修订 ${sourceRevision}`);
     }
-    return { directoryName: directory.name, assistantPath, manifest, files, digest };
+    return { directoryName: directory.name, assistantPath, manifest, files, digest: committed.digest };
   });
 }
 
 async function buildOfficialAssistants({ repositoryRoot, distDirectory, sourceRevision }) {
-  const rows = validateOfficialAssistants(repositoryRoot);
+  const rows = validateOfficialAssistants(repositoryRoot, sourceRevision);
   const index = {
     $schema: ASSISTANT_INDEX_SCHEMA_URL,
     schemaVersion: 1,

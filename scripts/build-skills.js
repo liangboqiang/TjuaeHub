@@ -69,13 +69,10 @@ function versionFromGit(repositoryRoot, directoryName, revision) {
 }
 
 function skillVersions(repositoryRoot, row, sourceRevision) {
-  const current = {
-    version: row.manifest.version,
-    revision: sourceRevision,
-    digest: row.digest,
-    readme: row.frontmatter.body,
-    files: fileIndex(row.skillPath, row.files),
-  };
+  const current = versionFromGit(repositoryRoot, row.directoryName, sourceRevision);
+  if (current.version !== row.manifest.version) {
+    throw new Error(`${row.directoryName} 的工作副本版本尚未提交到源修订 ${sourceRevision}`);
+  }
   let revisions = [];
   try {
     revisions = execFileSync(
@@ -135,7 +132,10 @@ function parseFrontmatter(source, label) {
   return { name, description, body };
 }
 
-function validateMarketSkills(repositoryRoot) {
+function validateMarketSkills(
+  repositoryRoot,
+  sourceRevision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repositoryRoot, encoding: 'utf8' }).trim()
+) {
   const skillsRoot = path.join(repositoryRoot, 'skills');
   const validate = createValidator(
     path.join(repositoryRoot, 'schemas', 'tjuae-skill.v1.schema.json'),
@@ -165,11 +165,11 @@ function validateMarketSkills(repositoryRoot) {
     ids.add(manifest.id);
     const frontmatter = parseFrontmatter(fs.readFileSync(entryPath, 'utf8'), `${directory.name}/SKILL.md`);
     const files = listFiles(skillPath, '技能');
-    const digest = directoryDigest(skillPath, files);
-    if (manifest.contentHash !== digest) {
-      throw new Error(`${directory.name} 的 contentHash 与技能内容不一致`);
+    const committed = versionFromGit(repositoryRoot, directory.name, sourceRevision);
+    if (manifest.version !== committed.version || manifest.contentHash !== committed.digest) {
+      throw new Error(`${directory.name} 的工作副本清单尚未提交到源修订 ${sourceRevision}`);
     }
-    return { directoryName: directory.name, skillPath, manifest, frontmatter, files, digest };
+    return { directoryName: directory.name, skillPath, manifest, frontmatter, files, digest: committed.digest };
   });
 }
 
@@ -178,7 +178,7 @@ function validateOfficialSkills(repositoryRoot) {
 }
 
 async function buildOfficialSkills({ repositoryRoot, distDirectory, sourceRevision }) {
-  const rows = validateMarketSkills(repositoryRoot);
+  const rows = validateMarketSkills(repositoryRoot, sourceRevision);
   const index = {
     $schema: SKILL_INDEX_SCHEMA_URL,
     schemaVersion: 1,
