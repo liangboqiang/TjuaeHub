@@ -14,7 +14,6 @@
     "name",
     "description",
     "categories",
-    "tags",
     "instructions",
     "defaults",
     "requirements",
@@ -39,12 +38,6 @@
       "type": "array",
       "uniqueItems": true,
       "maxItems": 16,
-      "items": { "type": "string", "minLength": 1, "maxLength": 64 }
-    },
-    "tags": {
-      "type": "array",
-      "uniqueItems": true,
-      "maxItems": 64,
       "items": { "type": "string", "minLength": 1, "maxLength": 64 }
     },
     "avatar": { "type": "string", "minLength": 1, "maxLength": 512 },

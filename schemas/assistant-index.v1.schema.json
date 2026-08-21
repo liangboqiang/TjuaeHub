@@ -38,7 +38,7 @@
     },
     "AssistantEntry": {
       "type": "object",
-      "required": ["id", "path", "name", "description", "manifest", "categories", "tags", "latestVersion", "versions"],
+      "required": ["id", "path", "name", "description", "manifest", "categories", "latestVersion", "versions"],
       "additionalProperties": false,
       "properties": {
         "id": { "$ref": "#/$defs/Slug" },
@@ -52,12 +52,6 @@
           "type": "array",
           "uniqueItems": true,
           "maxItems": 16,
-          "items": { "type": "string", "minLength": 1, "maxLength": 64 }
-        },
-        "tags": {
-          "type": "array",
-          "uniqueItems": true,
-          "maxItems": 64,
           "items": { "type": "string", "minLength": 1, "maxLength": 64 }
         },
         "versions": {

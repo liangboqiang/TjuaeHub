@@ -5,7 +5,6 @@
   "id": "weixin-file-send",
   "version": "1.0.0",
   "categories": ["文件", "消息"],
-  "tags": [],
   "compatibility": {},
   "requirements": [],
   "contentHash": "sha256-db3e5ef95a493da2b81a5b26775113270c41d772ed7a6a50db835eafcbb08fe4",

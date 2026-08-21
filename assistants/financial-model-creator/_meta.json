@@ -19,7 +19,6 @@
     "uk-UA": "Будуйте фінансові моделі на основі формул за текстовим запитом: три фінансові форми, DCF-оцінка, Cap Tables, сценарний аналіз та графіки боргів."
   },
   "categories": [],
-  "tags": [],
   "avatar": "assets/avatar.jpg",
   "instructions": {
     "default": "ASSISTANT.md",

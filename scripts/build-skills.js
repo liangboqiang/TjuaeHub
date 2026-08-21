@@ -191,7 +191,6 @@ async function buildOfficialSkills({ repositoryRoot, distDirectory, sourceRevisi
       name: row.frontmatter.name,
       description: row.frontmatter.description,
       categories: row.manifest.categories,
-      tags: row.manifest.tags,
       latestVersion: row.manifest.version,
       versions: skillVersions(repositoryRoot, row, sourceRevision),
     })),

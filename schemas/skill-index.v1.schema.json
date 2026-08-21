@@ -34,7 +34,7 @@
     "Digest": { "type": "string", "pattern": "^sha256-[0-9a-f]{64}$" },
     "SkillEntry": {
       "type": "object",
-      "required": ["id", "path", "name", "description", "categories", "tags", "latestVersion", "versions"],
+      "required": ["id", "path", "name", "description", "categories", "latestVersion", "versions"],
       "additionalProperties": false,
       "properties": {
         "id": { "$ref": "#/$defs/Slug" },
@@ -46,12 +46,6 @@
           "type": "array",
           "uniqueItems": true,
           "maxItems": 16,
-          "items": { "type": "string", "minLength": 1, "maxLength": 64 }
-        },
-        "tags": {
-          "type": "array",
-          "uniqueItems": true,
-          "maxItems": 64,
           "items": { "type": "string", "minLength": 1, "maxLength": 64 }
         },
         "versions": {

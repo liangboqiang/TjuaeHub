@@ -19,7 +19,6 @@
     "uk-UA": "Створюйте структуровані академічні статті, наукові роботи та White Papers: зміст Word, формули LaTeX в OMML, бібліографія (APA/Physics/Chicago), виноски та багатоколонкова верстка."
   },
   "categories": [],
-  "tags": [],
   "avatar": "assets/avatar.jpg",
   "instructions": {
     "default": "ASSISTANT.md",

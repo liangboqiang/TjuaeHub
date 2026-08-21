@@ -19,7 +19,6 @@
     "uk-UA": "Файлове планування в стилі Manus для складних завдань. Використовує task_plan.md, findings.md та progress.md для збереження контексту."
   },
   "categories": [],
-  "tags": [],
   "avatar": "assets/avatar.jpg",
   "instructions": {
     "default": "ASSISTANT.md",

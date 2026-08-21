@@ -19,7 +19,6 @@
     "uk-UA": "Розгортає запит на найм у повноцінний опис вакансії та зображення, а потім публікує це в соцмережах через конектори."
   },
   "categories": [],
-  "tags": [],
   "avatar": "assets/avatar.jpg",
   "instructions": {
     "default": "ASSISTANT.md",

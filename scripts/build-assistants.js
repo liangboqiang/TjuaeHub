@@ -168,7 +168,6 @@ async function buildOfficialAssistants({ repositoryRoot, distDirectory, sourceRe
       manifest: row.manifest,
       ...(row.manifest.avatar ? { avatar: row.manifest.avatar } : {}),
       categories: row.manifest.categories,
-      tags: row.manifest.tags,
       latestVersion: row.manifest.version,
       versions: assistantVersions(repositoryRoot, row, sourceRevision),
     })),
